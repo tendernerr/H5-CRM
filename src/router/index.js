@@ -112,6 +112,9 @@ import purchasingInformation from '../views/personal/purchasingManagement/purcha
 import releasePurchase from '../views/personal/purchasingManagement/releasePurchase'
 import purchaseDetails from '../views/personal/purchasingManagement/purchaseDetails'
 import backupsProject from '../views/backupsProject/backupsProject'
+import buildByOneself from '../views/backupsProject/buildByOneself'
+import recommend from '../views/recommend'
+import mySchedule from '../views/mySchedule/index'
 
 Vue.use(VueRouter)
 
@@ -177,6 +180,16 @@ const routes = [{
   component: ResumeList,
   meta: {
     title: '找项目',
+    keepAlive: true,
+    loginCheck: false
+  }
+},
+{
+  path: '/recommend',
+  name: 'recommend',
+  component: recommend,
+  meta: {
+    title: '智能推荐',
     keepAlive: true,
     loginCheck: false
   }
@@ -841,8 +854,8 @@ const routes = [{
   name: 'CompamyDownload',
   component: CompamyDownload,
   meta: {
-    title: '我的付费',
-    keepAlive: false,
+    title: '我的报价',
+    keepAlive: true,
     loginCheck: true,
     utype: 1
   }
@@ -852,8 +865,8 @@ const routes = [{
   name: 'CompanyInterview',
   component: CompanyInterview,
   meta: {
-    title: '我的报价',
-    keepAlive: false,
+    title: '我的回访',
+    keepAlive: true,
     loginCheck: true,
     utype: 1
   }
@@ -1281,6 +1294,21 @@ const routes = [{
   component: backupsProject,
   meta: {
     title: '备案详情'
+  }
+},{
+  path: '/backupsProject/buildByOneself',
+  name: 'buildByOneself',
+  component: buildByOneself,
+  meta: {
+    title: '自建详情'
+  }
+},
+{
+  path: '/mySchedule',
+  name: 'mySchedule',
+  component: mySchedule,
+  meta: {
+    title: '我的日程',
   }
 },
 {

@@ -25,13 +25,11 @@
           <div class="ico"></div>
           <div class="text">分享</div>
         </div>-->
-        <div style="display: flex; padding-top: 8px;
-    justify-content: space-between;padding: 0 17px;">
+        <div style="display: flex; padding-top: 8px;justify-content: space-between;padding: 0 17px;">
           <div class="tx1">{{ base_info.jobname }}</div>
           <div class="tx2">{{ base_info.wage_text }}</div>
         </div>
-        <div style="display: flex;padding: 0 17px;
-    justify-content: space-between;">
+        <div style="display: flex;padding: 0 17px;justify-content: space-between;">
           <div class="tx3" style="display: flex;flex-wrap:wrap">
             <div v-for="(item,index) in base_info.tag_text_arr" :key="index" style="background-color: fixed;background-color: #e5f1ff;color: #5da9fc;padding: 0 5px;margin-right: 8px;margin-bottom:8px;border-radius:10px;">{{item}}</div>
             <!-- {{ base_info.district_text }} · 更新：{{ base_info.refreshtime }} -->
@@ -194,13 +192,6 @@
           </div>
         </div>
       </div> -->
-      <div class="form_split_10"></div>
-      <div class="box_7">
-        <div class="tx1">如遇无效、虚假、诈骗信息，请立即举报！</div>
-        <div class="tx2">如信息存在涉黄、涉赌、涉毒等不良行为，请立即举报！</div>
-        <div class="report" @click="handlerReport">举报</div>
-      </div>
-      <div class="form_split_10"></div>
       <div class="box_8">
         <div class="put">
           联系方式
@@ -325,6 +316,13 @@
         </div>
       </div>
       <div class="form_split_10"></div>
+      <div class="form_split_10"></div>
+      <div class="box_7">
+        <div class="tx1">如遇无效、虚假、诈骗信息，请立即申诉！</div>
+        <div class="tx2">如信息存在涉黄、涉赌、涉毒等不良行为，请立即申诉！</div>
+        <div class="report" @click="handlerReport">申诉</div>
+      </div>
+      <div class="form_split_10"></div>
       <!-- <div class="box_9">
         <div class="put">
           匹配度分析
@@ -414,8 +412,15 @@
       <Subscribe></Subscribe>
       <div class="form_split_10"></div>
       <div class="box_12">
-        <div class="bottom_bar">
-          <div class="item_call" @click="doTel">电话</div>
+        <div class="bottom_bar" style="height: 50px;">
+          <div @click="doTel" style="width: 50%;background: #ffa500;color: #fff;font-size: 25px;height: 100%;text-align: center;line-height: 50px;border-radius: 5px 0 0 0;">
+            <van-icon name="phone-o" />
+            拨打电话
+          </div>
+          <div @click="doApply" style="width: 50%;background: #007eff;color: #fff;font-size: 25px;height: 100%;text-align: center;line-height: 50px;border-radius: 0px 5px 0 0;">
+            邀请报价
+          </div>
+          <!-- <div class="item_call" @click="doTel">电话</div>
           <div
             :class="has_fav == 1 ? 'item_collect item_collect_ac':'item_collect'"
             @click="doFav"
@@ -423,7 +428,7 @@
 
           <div class="item_chat"></div>
           <div class="item_apply" @click="doApply">{{has_apply==1?'邀请报价':'邀请报价'}}</div>
-          <div class="clear"></div>
+          <div class="clear"></div> -->
         </div>
       </div>
     </van-skeleton>
@@ -512,6 +517,9 @@
       </div>
     </van-dialog>
     <!-- 绑定微信结束 -->
+    <van-popup v-model="IsInviteQuotation" style="width: 90%;border-radius:10px; padding:10px" >
+      <InviteQuotation @submitChange='submitChange' :jobId='this.query_id' />
+    </van-popup>
   </div>
 </template>
 
@@ -525,6 +533,7 @@ import { countDistance } from "@/utils/index";
 import http from "@/utils/http";
 import api from "@/api";
 import Login from "@/components/Login";
+import InviteQuotation from "@/components/inviteQuotation/index";
 import JobCompetitive from "@/components/JobCompetitive";
 import Share from "@/components/share/Share";
 import SharePoster from "@/components/share/SharePoster";
@@ -549,7 +558,8 @@ export default {
     Tipoff,
     Subscribe,
     Share,
-    SharePoster
+    SharePoster,
+    InviteQuotation
   },
   data() {
     return {
@@ -560,6 +570,7 @@ export default {
         a: "",
         btnCn: "立即拔打"
       },
+      IsInviteQuotation:false,
       isRetrunBtn: null,
       showTipoff: false,
       mainLoading: true,
@@ -874,6 +885,10 @@ export default {
         }
       });
     },
+    submitChange(e){
+      console.log(e,123)
+      this.IsInviteQuotation = false
+    },
     doMsg() {
       if (this.is_personal_login === false) {
         this.$dialog
@@ -954,6 +969,9 @@ export default {
       // }
     },
     doApply() {
+      console.log(111)
+      this.IsInviteQuotation = true
+      return
       if (this.$store.state.LoginOrNot === true) {
         if (this.$store.state.LoginType !== 2) {
           this.$dialog
@@ -1082,24 +1100,24 @@ export default {
       window.location.href = url;
     },
     handlerReport() {
-      if (this.is_personal_login === false) {
-        this.$dialog
-          .confirm({
-            title: "提示",
-            message: "当前操作需要登录采购方账号",
-            confirmButtonText: "去登录"
-          })
-          .then(() => {
-            this.showLogin = true;
-            this.after_login_data = {
-              method: "handlerReport"
-            };
-          })
-          .catch(() => {});
-      } else {
+      // if (this.is_personal_login === false) {
+      //   this.$dialog
+      //     .confirm({
+      //       title: "提示",
+      //       message: "当前操作需要登录采购方账号",
+      //       confirmButtonText: "去登录"
+      //     })
+      //     .then(() => {
+      //       this.showLogin = true;
+      //       this.after_login_data = {
+      //         method: "handlerReport"
+      //       };
+      //     })
+      //     .catch(() => {});
+      // } else {
         this.$refs.tipoff.initCB();
         this.showTipoff = true;
-      }
+      // }
     }
   }
 };

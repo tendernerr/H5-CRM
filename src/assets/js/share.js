@@ -52,12 +52,10 @@ function initshare (config, data) {
   })
 }
 function wxshare (wechatShareInfo, page, url) {
-  if (!isWeiXin()) {
-    return false
-  }
-  http
-    .get(api.wechat_share_config, { url: url, alias: page })
-    .then(res => {
+  // if (!isWeiXin()) {
+  //   return false
+  // }
+  http.get(api.wechat_share_config, { url: url, alias: page }).then(res => {
       let shareConfig = {
         appId: res.data.config.appId,
         nonceStr: res.data.config.nonceStr,
@@ -94,7 +92,6 @@ function wxshare (wechatShareInfo, page, url) {
           shareData.imgUrl = store.state.config.square_logo
         }
       }
-      console.log(shareData)
       initshare(shareConfig, shareData)
     })
     .catch(() => { })

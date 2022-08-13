@@ -527,5 +527,37 @@ export default {
   // 备案项目详情
   homeResume_keepShow:'/home/resume_keep/show',
   // 添加沟通记录
-  homeResume_keepAdd_record:'/home/resume_keep/add_record'
+  homeResume_keepAdd_record:'/home/resume_keep/add_record',
+  //移动端获取推荐直采项目接口
+  getZProjectRecommend:'/home/resume/getZProjectRecommend',
+  //移动端获取推荐备案项目接口
+  getBProjectRecommend:'/home/resume_keep/getBProjectRecommend',
+  // 我的回访列表
+  Return_visitIndex:'/company/return_visit/index',
+  //我的报价列表
+  companyDown_resumeIndex:'/company/down_resume/index',
+  // 不合适
+  companyJobEnd:'/company/job/end',
+  // 已成交
+  companyJobCooperation:'/company/job/cooperation',
+  // 我的回访不在跟进
+  return_visitSetState:'/company/return_visit/setState',
+  // 自建项目详情
+  return_visitBuildSelf:'/company/return_visit/buildSelf',
+  // 自建项目详情添加沟通记录
+  companyReturn_visitAdd_record:'/company/return_visit/add_record',
+  // 添加邀请报价
+  addContact:'home/ad/addContact',
+  // 判断备案项目是否收藏
+  checkFav:'home/resume_keep/checkFav',
+  // 收藏备案项目
+  setfac:'home/resume_keep/setfac',
+  // 我的日程
+  getMySchedule:'home/index/getMySchedule',
+  // 用户行为
+  projectApply:'home/resume/projectApply',
+  // 企业详情成功案例的
+  getCustomCaseCategory:"/company/job/getCustomCaseCategory",
+  // 获取用户信息 列表拍的是否会员
+  getMenber:'/member/index/getMenber',
 }

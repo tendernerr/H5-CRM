@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Head>我的报价</Head>
+    <Head>视频报价</Head>
     <ScrollNav :list="navList"></ScrollNav>
     <van-dropdown-menu class="self_drop">
       <van-dropdown-item

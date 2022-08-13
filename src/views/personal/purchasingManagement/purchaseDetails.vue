@@ -272,11 +272,11 @@
 				<div class="form_split_10"></div>
 				<div class="content_wrapper">
 					<div class="box_report">
-						<div class="tx1">如遇无效虚假项目信息，请立即举报！</div>
+						<div class="tx1">如遇无效虚假项目信息，请立即申诉！</div>
 						<div class="tx2">
 							供应商过程中，若联系方式、采购状态不实请反馈。
 						</div>
-						<div class="tx3" @click="handlerReport">举报</div>
+						<div class="tx3" @click="handlerReport">申诉</div>
 					</div>
 				</div>
 				<div class="form_split_10"></div>
@@ -1565,28 +1565,28 @@
 				}
 			},
 			handlerReport() {
-				if (this.is_company_login === false) {
-					this.$dialog
-						.confirm({
-							title: "提示",
-							message: "当前操作需要登录企业账号",
-							confirmButtonText: "去登录",
-						})
-						.then(() => {
-							this.showLogin = true;
-							this.after_login_data = {
-								method: "handlerReport",
-							};
-						})
-						.catch(() => {});
-				} else {
-					if (this.base_info.audit != 1) {
-						this.$notify("该项目还未审核通过，不能继续此操作");
-						return false;
-					}
+				// if (this.is_company_login === false) {
+				// 	this.$dialog
+				// 		.confirm({
+				// 			title: "提示",
+				// 			message: "当前操作需要登录企业账号",
+				// 			confirmButtonText: "去登录",
+				// 		})
+				// 		.then(() => {
+				// 			this.showLogin = true;
+				// 			this.after_login_data = {
+				// 				method: "handlerReport",
+				// 			};
+				// 		})
+				// 		.catch(() => {});
+				// } else {
+				// 	if (this.base_info.audit != 1) {
+				// 		this.$notify("该项目还未审核通过，不能继续此操作");
+				// 		return false;
+				// 	}
 					this.$refs.tipoff.initCB();
 					this.showTipoff = true;
-				}
+				// }
 			},
 			// 预览作品
 			previewImg(index) {

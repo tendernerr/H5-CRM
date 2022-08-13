@@ -27,7 +27,7 @@ export default {
               token: response.data.token,
               mobile: response.data.mobile,
               userIminfo: response.data.user_iminfo,
-				  userInfo : response.data
+				      userInfo : response.data
             })
             if (response.data.utype === 1) {
               this.$router.push('/member/company/index')
@@ -57,6 +57,8 @@ export default {
     },
     init () {
       let code = this.$route.query.code
+      console.log(this.$route,"回调的时候发现路径上的code没有，就去微信接口调用")
+      console.log(this.$store,"本地的api")
       if (code !== undefined) {
         this.getUserinfo(code)
         return false

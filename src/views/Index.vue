@@ -45,7 +45,7 @@
       :immediate-check="true"
     > -->
       <div class="box_3">
-        <div v-for="(item,index) in joblist" :key="index" @click="toDetail(item.id)">
+        <div v-for="(item,index) in joblist" :key="index" @click="go(item.id)">
           <div class="list" style="display: flex;align-items: center;">
            <div style=" margin-right:10px;">
               <img :src="item.company_logo"  style="  width: 100px;height: 100px;"/>

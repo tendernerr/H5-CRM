@@ -1,6 +1,6 @@
 <template>
   <div class="public_head" v-if="$store.state.isHeadShow">
-    <div :class="classname" :style="bgColor!==undefined?'background-color:'+bgColor:''">
+    <div :class="[classname,zIndex===true?'zIndex':'']" :style="bgColor!==undefined?'background-color:'+bgColor:''">
       <router-link class="head_substation" v-if="showSubstationName" to="/subsitelist">
         {{ $store.state.config.subsite_info.district_text }}
       </router-link>
@@ -64,7 +64,7 @@ import http from '@/utils/http'
 import api from '@/api'
 export default {
   name: 'Head',
-  props: ['goback_custom', 'bg', 'show_right', 'show_back', 'bgColor', 'show_sub' , 'subscribeProject'],
+  props: ['goback_custom', 'bg', 'show_right', 'show_back', 'bgColor', 'show_sub' , 'subscribeProject' ,'zIndex'],
   data () {
     return {
       showSubstationName: false,
@@ -332,6 +332,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.zIndex{
+  z-index: 999!important;
+}
 .more_wrapper {
   .item_wrapper_pd{
     padding-bottom: 15px;

@@ -91,12 +91,32 @@
                 </div>
                 <div class="clear"></div>
               </div>
-              <div class="tx2" v-if="item.householdaddress.length > 0">擅长：<span v-for="(ite,inde) in item.householdaddress" :key="inde" style="background-color: #e4f0ff;color: #6fb7ff;font-size: 12px;padding: 2px 8px;margin: 0 2px 4px;">{{ite}}</span></div>
-              <div class="tx3" >
-                售后评分：<span style="color: rgba(255,153,96,1);padding-left: 8px;">{{item.score}}</span> {{item.address}}
-                <!-- {{ item.nature_text }} · {{ item.scale_text }} ·
-                {{ item.trade_text }} -->
+              <div class="tx2" style="display: flex; flex-wrap: wrap; align-items: center;">
+                <div :class="[item.setmeal === '行业大牛'?'setmeal1':item.setmeal === '实力企业'?'setmeal2':item.setmeal === '基础企业'?'setmeal3':'setmeal']">{{item.setmeal}}</div>
+                <!-- <div v-if="item.setmeal === '实力企业'" class="" style="background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;">实力企业</div> -->
+                <!-- <div v-if="item.setmeal === '基础企业'" class="" style="background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;">基础企业</div> -->
+                <div class="" style="width: 5.5em;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 5px 0px 0;border: 2px red solid;">
+                    <span style="background: red;padding:2px 3px 2px 1px">牛</span>
+                    <span style="color: red;padding: 1px;">第{{item.year}}年</span>
+                </div>
+                <div v-if="!item.is_complained" style="width: 1.6em;border: 1px solid #eac97e;text-align:center;color: #eac97e;font-size: 12px;margin: 0px 5px 0 0px;border-radius: 0 0 50% 50%;">保</div>
+                <div class="tx3" style="font-size:13px;padding: 0;display: flex;align-items: center;">
+                  售后评分：<span style="color: rgba(255,153,96,1);font-size:18px;">{{item.score}}</span> 
+                  <!-- {{ item.nature_text }} · {{ item.scale_text }} · -->
+                  <!-- {{ item.trade_text }} -->
+                </div>
               </div>
+              <div class="tx2" style="font-size:13px" v-if="item.householdaddress.length > 0">
+                擅长：
+                <span v-for="(ite,inde) in item.householdaddress" :key="inde" style="background-color: #e4f0ff;color: #6fb7ff;font-size: 12px;padding: 2px 8px;margin: 0 2px 4px;">
+                  {{ite}}
+                </span>
+              </div>
+            </div>
+            <div class="tx2" style="font-size:13px;padding: 7px 0px 21px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" v-if="item.householdaddress.length > 0">
+                <span style="width: 71px;display: inline-block;">{{item.address}}</span>
+                主营产品：
+                <span style="overflow: hidden;text-overflow: ellipsis;">{{item.main_product}}</span>
             </div>
             <div class="down" v-if="item.jobnum>0">
               查看：
@@ -466,6 +486,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.setmeal{background-image: linear-gradient(90deg,#f5dd33, #757547);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal1{background-image: linear-gradient(90deg,#ff0000, #fbb517);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal2{background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal3{background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
 .box_3 {
   .list {
     .down {
@@ -486,11 +510,11 @@ export default {
       position: relative;
       padding: 12.5px 25px 12.5px 0;
       font-size: 13px;
-      color: #666666;
+      color: #353535;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      border-top: 1px dotted #f8f8f8;
+      border-top: 1px solid #f8f8f8;
     }
     .up {
       .tx3 {
@@ -504,7 +528,7 @@ export default {
       .tx2 {
         font-size: 13px;
         color: #999999;
-        padding: 11.5px 0 9.5px;
+        padding: 2px 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -598,6 +622,6 @@ export default {
   }
   width: 100%;
   background-color: #ffffff;
-  padding-top: 11px;
+  padding: 11px 0;
 }
 </style>

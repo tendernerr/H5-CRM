@@ -2,36 +2,46 @@
   <div id="app" class="my_app">
     <Meta v-if="base_info.companyname!==undefined" pagealias="companyshow" :custom_data="{companyname:base_info.companyname,content:base_info.content}" />
     <Head>公司详情</Head>
+    <div style="display: flex;position: sticky;top: 40px;z-index: 999;background: #fff;">
+        <van-notice-bar style="width: 100%;" left-icon="http://www.hangyedaniu.com/upload/resource/img-gongzhonghao/fe0a199208cbf21949f0bafbd8888ee3.png" text="售前售后监督电话 : 17675797686"/>
+    </div>
     <div class="box_1">
       <div class="top">
         <div class="tx1">
           <div class="name">{{ base_info.companyname }}</div>
-          <div class="auth_ico" v-if="base_info.audit == 1"></div>
           <div class="crw_ico" v-if="base_info.setmeal_icon!=''">
             <img :src="base_info.setmeal_icon" />
           </div>
           <div class="clear"></div>
         </div>
         <div class="tx2">
-          <span>售后评分：{{ base_info.score }}</span>
-          <p>擅长：<span v-for="(item,index) in  base_info.householdaddress" :key="index">{{item}} &nbsp;</span></p>
+          <div style="align-items: center;padding: 5px 0;display: flex;">
+            <div v-if="base_info.year" class="" style="width: 63px;padding: 2px 2px 0px 0;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 8px 5px 0;border: 2px red solid;">
+              <span style="background: red;padding:2px 3px 2px 1px">牛</span>
+              <span style="color: red;padding: 1px;">第{{base_info.year}}年</span>
+            </div>
+            <div v-if="base_info.is_complained === 0" style="height:23px;width: 19px;;border: 1px solid #eac97e;color: #eac97e;font-size: 12px;margin: -5px 0 0 0;padding: 2px 3px 1px 2px;border-radius: 0 0 50% 50%;">保</div>
+            <div class="auth_ico" v-if="base_info.audit == 1"></div>
+          </div>
+          <span>售后评分：<span style="color: #fbae00;">{{ base_info.score }}</span></span>
+          <p style="padding: 8px 0 0 0;">擅长：<span v-for="(item,index) in  base_info.householdaddress" :key="index">{{item}} &nbsp;</span></p>
           <!-- <span v-if="base_info.nature_text !== ''">{{ base_info.nature_text }}</span> -->
           <!-- <span v-if="base_info.scale_text !== ''"> · {{ base_info.scale_text }} </span> -->
           <!-- <span v-if="base_info.trade_text !== ''"> · {{ base_info.trade_text }}</span> -->
+          <p style="padding: 8px 0px 0px;white-space: normal;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;word-break: break-all;">
+            主营产品：{{base_info.main_product}}
+            <!-- <span v-for="(item,index) in  base_info.main_product" :key="index">{{item}} &nbsp;</span> -->
+          </p>
         </div>
-        <div class="tx3">
+        <!-- <div class="tx3">
           项目查看率：{{ watch_percent }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           企业粉丝：{{ fans }}
-        </div>
-        <img
-          :src="base_info.logo_src"
-          :alt="base_info.companyname"
-          class="logo"
-        />
-        <div class="collect" @click="doAttention">
+        </div> -->
+        <img :src="base_info.logo_src" :alt="base_info.companyname" class="logo"/>
+        <!-- <div class="collect" @click="doAttention">
           {{ has_attention == 1 ? "已关注" : "关注" }}
         </div>
-        <div class="share" @click="doShare">分享</div>
+        <div class="share" @click="doShare">分享</div> -->
       </div>
       <div class="chat_bar" v-if="report == 1">
         该企业已通过实地认证
@@ -112,24 +122,35 @@
           </swiper>
         </div>
       </div>
+      <div class="box_3">
+        <div class="put">工商信息</div>
+        <div class="content">
+          <div>
+            <p style="padding: 0 0 5px;">公司规模：{{business.scale}}</p>
+            <p style="padding: 0 0 5px;">所属行业：{{business.trade}}</p>
+            <p style="padding: 0 0 5px;">注册资金：{{business.registered}}</p>
+            <p style="padding: 0 0 15px;">企业网站：{{business.website}}</p>
+            <p style="padding: 0 0 15px; color: #0072ff;" @click="goTyc()">查看更多工商信息></p>
+          </div>
+        </div>
+      </div>
       <div class="form_split_10"></div>
       <Subscribe></Subscribe>
       <div class="form_split_10"></div>
     </div>
     <div class="box_job_some" v-if="comShow === 'job'">
+      <div>
+        <span @click="classification(item,index)" :class="['classification',pick!==item.id?'classification1':'']" v-for="(item,index) in picks" :key="index">{{item.name}}</span>
+      </div>
       <van-empty description="该企业还没有发布案例" v-if="joblist.length==0" />
-      <van-list
-        v-else
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-        :immediate-check="false"
-      >
+      <van-list v-else v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="false">
         <div class="box_7">
           <div class="box_7-list" v-for="(item,index) in joblist" :key="index" @click="toDetail(item.id)">
               <div class="box_7-content-img">
                 <img width="100%" height="100%" :src="item.company_logo" />
+                <div v-if="item.hasVideo" style="width: 50px;height: 50px;border: 1px solid #CCC;border-radius: 50%;top: 50%;left: 50%;position: absolute;transform: translate(-50%,-50%);">
+                  <div style="border: 15px #ccc solid;position: absolute;border-color: transparent transparent transparent #ccc;top: 50%;left: 50%;transform: translate(-16%, -48%);"></div>
+                </div>
               </div>
               <div class="box_7-content-box2">
                 <div class="box_7-content-box2-1">
@@ -138,14 +159,15 @@
                    <div class="box_7-content-box2-1-pay">{{item.wage_text}}<span style="color: #A8A8A8;font-size: 12px;" v-if="item.wage_text != '电议'">元</span></div>
                 </div>
                 <div class="box_7-content-box2-2">
-                    <span class="box_7-content-box2-2span" v-for="(item,index) in item.tag" :key="index">{{item}}</span>
+                    <span class="box_7-content-box2-2span" v-for="(ite,inde) in item.tag" :key="inde">{{ite}}</span>
                 </div>
                 <div class="box_7-content-box2-3">
-                  设备交期:10天
+                  设备交期:{{item.delivery_date}}天
                 </div>
                 <div class="box_7-content-box2-4">
-                   <div class="box_7-content-box2-4-1">广东 深圳</div>
-                   <div class="box_7-content-box2-4-2" @click.stop="doApply">邀请报价</div>
+                   <!-- <div class="box_7-content-box2-4-1">设备类别（暂无返回）</div> -->
+                   <div class="box_7-content-box2-4-2">查看详情</div>
+                   <!-- <div class="box_7-content-box2-4-2" @click.stop="doApply">邀请报价</div> -->
                 </div>
               </div>
               <!-- <div class="tx1">
@@ -206,7 +228,35 @@
       style="width:100%;height:100%">
       <Report @closePopout="showReport=false" :report-info="reportInfo"></Report>
     </van-popup>
-    <div class="generate_posters" @click="handlePoster">生成<br />海报</div>
+    <div class="generate_posters" @click="handlePoster">联系<br />方式</div>
+    <van-popup v-model="contact" style="width: 80%;
+    z-index: 2004;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #000;">
+      <div>
+        <p style="padding: 0px 0 15px;font-size: 16px;">联系我们</p>
+        <p style="padding: 0 0 5px;">联系人：{{contacts.contact}}</p>
+        <p style="padding: 0 0 5px;">岗位：{{contacts.post}}</p>
+        <p style="padding: 0 0 5px;">电话：{{contacts.mobile}}</p>
+        <p style="padding: 0 0 5px;">微信：{{contacts.weixin}}</p>
+        <p style="padding: 0 0 15px;">邮箱：{{contacts.email}}</p>
+        <div>
+          <div class="box_4" v-if="base_info.address != ''">
+            <div class="address">
+              {{ base_info.address }}
+            </div>
+            <div class="bg">
+              <div class="box" style="width: 96%;" @click="locationToBdmap">
+                <div class="tx1">{{ base_info.companyname }}</div>
+                <div class="tx2">{{ base_info.address }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -240,6 +290,24 @@ export default {
   },
   data () {
     return {
+      pick:'',
+      picks:[],
+      business:{
+        registered: "",
+        scale: "",
+        trade: "",
+        website: "",
+      },
+      contacts:{
+        contact: "",
+        email: "",
+        mobile: "",
+        post: "",
+        weixin: "",
+        content: "",
+        district_text: "",
+      },
+      contact:false,
       query_id: '',
       loading: false,
       finished: false,
@@ -285,6 +353,11 @@ export default {
     }
   },
   created () {
+    this.getCustomCaseCategory()
+    console.log(this.$route.query.job,"5555555")
+    if(this.$route.query.job){
+        this.gettab (this.$route.query.job)
+    }
     this.query_id = this.$route.params.id
     this.is_personal_login =
       !!(this.$store.state.LoginOrNot === true && this.$store.state.LoginType === 2)
@@ -309,12 +382,28 @@ export default {
     }
   },
   methods: {
+    goTyc(){
+      location.href = 'https://m.tianyancha.com/search?key='+this.base_info.companyname
+    },
+    classification(item,index){
+      if(item.id !== this.pick){
+        this.pick = item.id
+      } else{
+        this.pick = ''
+      }
+      this.getJoblist()
+    },
     gettab (comShow) {
       this.comShow = comShow
       this.page = 1
     },
     handlerMap ({ BMap, map }) {
       this.BMap = BMap
+    },
+    getCustomCaseCategory(){
+      http.get(api.getCustomCaseCategory,{}).then(res=>{
+        this.picks = res.data
+      })
     },
     getPosition (mapLat, mapLng) {
       if (!this.BMap || this.BMap.Geolocation === undefined) {
@@ -351,11 +440,13 @@ export default {
         .get(api.joblist, {
           company_id: this.query_id,
           pagesize: this.pagesize,
+          cate_id:this.pick,
           count_total: 1
         })
         .then(res => {
           this.page++
           this.joblist = [...res.data.items]
+          console.log(this.joblist,"333")
           this.jobnum = res.data.total
         })
         .catch(() => {})
@@ -376,6 +467,8 @@ export default {
       } = { ...res.data }
       this.field_rule = field_rule
       this.base_info = base_info
+      this.contacts = res.data.base_info.contact
+      this.business = res.data.base_info.business
       this.img_list = img_list
       this.report = report
       this.fans = fans
@@ -514,8 +607,9 @@ export default {
       }
     },
     handlePoster () {
-      this.shareid = this.query_id
-      this.showPoster = true
+      this.contact = true
+      // this.shareid = this.query_id
+      // this.showPoster = true
     },
     closePoster () {
       this.showPoster = false
@@ -569,13 +663,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.auth_ico {
+        float: left;
+        margin-left: 6px;
+        width: 15px;
+        height: 27px;
+        background: url('../assets/images/jobs_list_auth_ico.png') no-repeat top center / 100% 100%;
+      }
+
+
+>>>.van-notice-bar{background: rgba(0,0,0,0);}
+ >>>.van-notice-bar__left-icon{
+    padding: 0 5px 0 0;
+    width: 119px;
+ }
+ >>>.van-icon__image{width: 100%;height: 100%;}
   .generate_posters {
     position: fixed;z-index: 1;width: 41px;height: 41px;border-radius: 999px;background-color: rgba(0,0,0,0.7);
     right: 15px;bottom: 100px;font-size: 12px;color: #ffffff;line-height: 14px;text-align: center;padding-top: 7px;
   }
+  .classification{padding: 2px 10px;font-size: 15px;color: #409EFF;border: 1px solid #409EFF;background: #e9f8ff;margin:5px 10px;display: inline-block;border-radius: 5px;
+    &1{color: #717171;background: #f2f2f2;border: 1px solid #d9d9d9;}
+  }
 .box_7 {width: 100%;
-  .box_7-list {width: 100%;padding: 0 6px 10px 17px;display: flex; padding-top: 10px; align-items: center; border-bottom: 1px solid rgb(245, 239, 239);
-    .box_7-content-img{width: 100px; height: 100px;}
+  .box_7-list {width: 100%;padding: 0 13px 10px 13px;display: flex; padding-top: 10px; align-items: center; border-bottom: 1px solid rgb(245, 239, 239);
+    .box_7-content-img{width: 100px; height: 100px;position: relative;}
     .box_7-content-box2{flex: 1;display: flex;flex-direction: column; justify-content: center; padding-left: 10px;
      .box_7-content-box2-1{padding-bottom: 6px;display: flex;align-items: center;width: 100%;
         .box_7-content-box2-1-1{color: #000;font-size: 16px;overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; word-break: break-all; font-weight: 500;}

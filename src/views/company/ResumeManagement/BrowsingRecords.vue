@@ -55,10 +55,10 @@ export default {
   data () {
     return {
       navList: [
-		  { text: '智能推荐', href: '/member/company/intelligenceInquiry', active: false },
-        { text: '主动询价', href: '/member/company/jobapply', active: false },
-        { text: '我的付费', href: '/member/company/download', active: false },
-        { text: '我的报价', href: '/member/company/interview', active: false },
+		//   { text: '智能推荐', href: '/member/company/intelligenceInquiry', active: false },
+        // { text: '主动询价', href: '/member/company/jobapply', active: false },
+        { text: '我的报价', href: '/member/company/download', active: false },
+        { text: '我的回访', href: '/member/company/interview', active: false },
         // { text: '视频报价', href: '/member/company/interview_video', active: false },
         { text: '我的收藏', href: '/member/company/fav', active: false },
         { text: '浏览记录', href: '/member/company/view_resume', active: true }

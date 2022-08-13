@@ -2,27 +2,31 @@
   <div id="app">
 		<Head :prepare='true'>项目详情</Head>
 		<div class="headBox">
-			<div class="headBox1">
+			<!-- <img width="100%" height="200" src="http://www.hangyedaniu.com/upload/resource/fg.png" /> -->
+			<div class="headBox1" v-if="true">
 				<div class="headBox1User">
 					<div class="headBox1UserImg"><img v-if="dataMes.basehead" :src="dataMes.basehead.pimg" /></div>
 					<div class="headBox1UserName">
 						<div class="headBox1UserNameTop">
 							<div class="headBox1UserNameTop1">{{dataMes.basehead&&dataMes.basehead.title}}</div>
-							<div class="headBox1UserNameTop2">项目总投资：{{dataMes.basehead&&dataMes.basehead.project_investment}}</div>
+							<!-- <div class="headBox1UserNameTop2">项目总投资：{{dataMes.basehead&&dataMes.basehead.project_investment}}</div> -->
 						</div>
 						<div class="headBox1UserNameBottom">
 							<div class="headBox1UserNameBottom1">{{dataMes.basehead&&dataMes.basehead.end_time}} <span class="lable">{{dataMes.basehead&&dataMes.basehead.type}}</span></div>
-							<div class="headBox1UserNameBottom2">被浏览{{dataMes.basehead&&dataMes.basehead.click}}次</div>
+							<!-- <div class="headBox1UserNameBottom2">被浏览{{dataMes.basehead&&dataMes.basehead.click}}次</div> -->
 						</div>
 					</div>
 				</div>
+				<p style="padding: 10px 0 0;" v-if="dataMes.basehead&&dataMes.basehead.category.length>0">包含但不限于以下工艺的设备</p>
 				<div class="lableList">
 					<div class="lableListBox" v-for="(item,index) in dataMes.basehead&&dataMes.basehead.category" :key="index">
 						{{item}}
 					</div>
 				</div>
 				<div class="address">
-					项目所在地 ：{{dataMes.basehead&&dataMes.basehead.address}}
+					<span>{{dataMes.basehead&&dataMes.basehead.add_time}}</span>
+					<span>{{dataMes.basehead&&dataMes.basehead.address}}</span>
+					<span>总投资：{{dataMes.basehead&&dataMes.basehead.project_investment}}</span>
 				</div>
 			</div>
 		</div>
@@ -31,10 +35,17 @@
 			  <van-tab title="项目信息">
 				  <div class="tab1">
 						<div class="tab1List">
+							<span style="display: flex;align-items: center;margin: 0 0 0 auto;" @click="collection">
+								<img width="15" v-if="!isCollection" src="http://qiniucdn.hangyedaniu.com/img/startbefore.png" >
+								<img width="15" v-if="isCollection" src="http://qiniucdn.hangyedaniu.com/img/starafter.png" >
+								收藏
+							</span>
+						</div>
+						<!-- <div class="tab1List">
 							<div class="tab1List1">备案项目编号</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.number}}</div>
-						</div>
+						</div> -->
 						<div class="tab1List">
 							<div class="tab1List1">项目名称</div>
 							<div class="tab1List2">：</div>
@@ -65,38 +76,64 @@
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.authoritykeep}}</div>
 						</div>
-						<div class="tab1List">
+						<!-- <div class="tab1List">
 							<div class="tab1List1">备案申报日期</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.declaration_date}}</div>
-						</div>
-						<div class="tab1List">
+						</div> -->
+						<!-- <div class="tab1List">
 							<div class="tab1List1">复合通过日期</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.through_date}}</div>
-						</div>
+						</div> -->
 						<div class="tab1List">
 							<div class="tab1List1">项目起止年限</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.start_time}}</div>
 						</div>
-						<div class="tab1List">
+						<!-- <div class="tab1List">
 							<div class="tab1List1">项目当前状态</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.audit}}</div>
+						</div> -->
+						<div class="tab1List" style="padding: 20px 0 5px;color: #8a8a8a;flex-wrap:wrap">
+							<div class="tab1List1" style="width: 60px;">商机分析</div>
+							<div class="tab1List2">：</div>
+							该项目可能会需要运用到以下工艺的产品！
+							<div class="tab1List3" style="display:flex;flex-wrap: wrap;">
+								<span v-for="(ite,inde) in dataMes.basehead.category" :key="inde" style="flex:none;padding: 3px 10px 4px;color: #409EFF;background: #e9f8ff;font-size: 12px;border-radius: 6px; margin:2px 5px 3px 0">
+									{{ite}}
+								</span>
+							</div>
 						</div>
 				  </div>
 			  </van-tab>
-			  <van-tab title="联系方式">
+			  <van-tab v-if="!dataMes.userinfo.isMember" title="项目进展">
+				<div class="tab2" v-if="!dataMes.isLogin">
+					<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
+					<p style="color: #0095ff;text-align:center;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">去登录>></p>
+				</div>
+				<div class="tab2" v-else>
+					<p style="color: #000;text-align:left;padding: 16px 0;"><span>{{dataMes.basehead&&dataMes.basehead.add_time}}</span>（备案）：***</p>
+					<p style="color: #000;text-align:left;padding: 16px 0;">
+						想要深入了解项目详情，点击<span style="color: #409eff;" @click="contactUs();"> 联系我们 </span>预计30分钟内项目经理会联系您，请注意来电提醒
+					</p>
+				</div>
+			  </van-tab>
+			  <van-tab title="项目联系人">
 				  <div class="tab2" v-if="!dataMes.isLogin">
-				  		您尚未登录，点击登录后可查看联系方式
-					<span class="tab2Span" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">
-						去登录>>
-					</span>
+				  	<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
+					<p style="color: #0095ff;text-align:center;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">去登录>></p>
 				  </div>
-				  <div class="tab2" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
+				  <div class="tab2" style="color: #000;" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
+						<p style="padding: 0 52px;color: #000;">姓名：***</p>
+						<p style="padding: 0 52px;color: #000;">岗位：***</p>
+						<p style="padding: 0 52px 10px;color: #000;">联系电话：135****</p>
+						想要深入了解项目详情，点击<span style="color: #409eff; padding:0 4px;" @click="contactUs();">联系我们</span>预计30分钟内项目经理会联系您，请注意来电提醒
+				  </div>
+				  <!-- <div class="tab2" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
 					  非常抱歉，改内容仅对"行业大牛"会员查阅；开通"行业大牛"会员，第一时间获取相关采购商机，了解<span class="tab2Span" @click="$router.push('/member/order/add/common?type=setmeal')">会员特权>></span>
-				  </div>
+				  </div> -->
 				  <div class="tab2" v-if="dataMes.userinfo.phone == '' && dataMes.userinfo.isMember">
 					  <div class="tab2Text1">
 						  非常抱歉，系统暂无联系方式！ <span class="tab2Text1Span">建议您试试以下渠道</span>
@@ -149,13 +186,19 @@
 		</div>
 		<!-- 沟通记录弹框 -->
 		<van-popup v-model="show" position="bottom" :style="{ height: '65%'}">
-			<div class="popupDiv">
+			<div class="popupDiv" v-if="dataMes.all_record&&dataMes.all_record.length>0">
 				<div class="popupDivHaed">
 					<div class=""></div>
 					<div class="popupDivHaedText">添写沟通记录</div>
 					<div class="popupDivHaedGb" @click="show = false"><van-icon name="cross" size="26" color="#000000" /></div>
 				</div>
 				<div class="popupCenter">
+					<div style="display: flex; justify-content: space-around;align-items: center;">
+						<div >项目进展:</div>
+						<div @click="process_type = 0" :class="{'process_type':process_type === 0}" style="padding: 5px 10px;background: #ccc;color: #fff;">厂房建设</div>
+						<div @click="process_type = 1" :class="{'process_type':process_type === 1}" style="padding: 5px 10px;background: #ccc;color: #fff;">暂无需求</div>
+						<div @click="process_type = 2" :class="{'process_type':process_type === 2}" style="padding: 5px 10px;background: #ccc;color: #fff;">采购洽谈</div>
+					</div>
 					<div class='popupCenterDivTextarea'>
 						<div class="popupCenterDivTextareaText"><span style='color: red;'>*</span>本次沟通内容 ：</div>
 						<div class="textarea">
@@ -178,6 +221,9 @@
 					 </div>
 				</div>
 			</div>
+			<div v-else style="font-size: 15px;color: #000;padding: 61px 40px;text-indent: .8em;line-height: 30px;">
+				为了您的操作更便捷，首次沟通记录需在您在电脑端添加!
+			</div>
 		</van-popup>
 		<!-- 时间选择器 -->
 		<van-popup v-model="dateBox" position="bottom" :style="{ height: '65%'}">
@@ -194,15 +240,18 @@
 <script>
 import http from '@/utils/http'
 import api from '@/api'
+import wxshare from "@/assets/js/share.js";
 import {mapState} from 'vuex'
 export default {
   data () {
     return {
+		 isCollection:0,
 		 active:0,
 		 id:'',				//详情id
 		 dataMes:{			//页面数据
 			 userinfo:{}
 		 },
+		 process_type:0,
 		 textareaText:'',			//文本域
 		 textareainput1:'',		//设备型号
 		 textareainput2:'',		//下次联系时间
@@ -214,6 +263,7 @@ export default {
   },
   created () {
 	  this.id = this.$route.query.id
+	  this.checkFav()
 	  this.homeResumeKeepShow()
   },
   mounted () {
@@ -229,6 +279,17 @@ export default {
 		  if( n == 2){
 			  location.href = 'https://m.baidu.com/s?wd='+this.dataMes.basemain.construction_unit
 		  }
+	  },
+	  checkFav(){
+		http.get(api.checkFav,{id:this.id}).then(res=>{
+			this.isCollection = res.data.has_fav
+		})
+	  },
+	  collection(){
+		http.post(api.setfac,{type:this.isCollection,id:this.id}).then(res=>{
+			this.isCollection = this.isCollection?0:1;
+			this.$notify({ type: 'success', message: res.message });
+		})
 	  },
 	  // 添加沟通记录
 	  homeResumeKeepAddRecord(){
@@ -248,6 +309,7 @@ export default {
 				facilityname:this.textareainput1,//设备名称   (post)
 				content:this.textareaText,  //内容        
 				interview_date:this.textareainput2,  //下次沟通时间
+				process_type:this.process_type,
 				rid:this.id,  //备案项目id
 		  }).then(res=>{
 			  let date = new Date()
@@ -266,11 +328,30 @@ export default {
 			  this.textareaText = ''
 		  })
 	  },
+	  contactUs(){
+		http.post(api.projectApply,{id:this.query_id}).then(res=>{
+			console.log(res,"11111")
+			this.$notify({ type: 'success', message: '已收到您的申请，预计30分钟内平台项目经理会联系您，请您注意来电提醒'});
+		})
+	  },
 	  // 获取项目详情
 	  homeResumeKeepShow(){
 		  http.get(api.homeResume_keepShow,{id:this.id}).then(res=>{
-			  console.log(res,"数据")
 			  this.dataMes = res.data
+			  let text = ''
+			  for (let i = 0; i < this.dataMes.basehead.category.length; i++) {
+				if(i!==0){
+					text += '/'+res.data.basehead.category[i]
+				} else{
+					text = res.data.basehead.category[i]
+				}
+			  }
+			  let fullname = this.dataMes.basehead.title+'-'+text
+			  let wechatShareInfo = {
+			  fullname,
+			  imgUrl: this.dataMes.basehead.pimg,
+      		};
+			wxshare(wechatShareInfo, "backupsProject", location.href);
 		  })
 	  },
 	  confirm(v){
@@ -302,6 +383,7 @@ export default {
 				.popupDivHaedGb{}
 			}
 			.popupCenter{ margin-top: 15px; display: flex; flex-direction: column; height:calc( 100% - 40px - 15px ) ;
+				.process_type{color: #0095ff  !important;}
 				.popupCenterDivTextarea{padding: 10px;
 					.popupCenterDivTextareaText{font-size: 15px; color: #000; padding-bottom: 8px;}
 					.textarea{width: 100%; height: 130px;
@@ -341,14 +423,15 @@ export default {
 						}
 					}
 				}
-				.lableList{display: flex;flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 20px 0px;
+				.lableList{display: flex;flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 10px 0px 0px;
 					.lableListBox{ background-color: #f4f9ff; padding: 3px 8px; margin-right: 10px; border-radius: 5px; margin-bottom: 8px; }
 				}
+				.address{padding: 15px 0 0;display: flex;justify-content:space-between;}
 			}
 		}
 		.tab{
 			.tab1{padding: 20px; border-top:5px solid #f4f4f4;
-				.tab1List{padding-bottom: 8px;font-size: 13px; color: #000; display: flex;
+				.tab1List{padding-bottom: 18px;font-size: 13px; color: #000; display: flex; 
 					.tab1List1{width: 7em; text-align-last: justify; flex: none;}
 					.tab1List2{margin:0 .5em 0 .2em; }
 					.tab1List3{overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all; display: block;

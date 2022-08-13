@@ -53,10 +53,10 @@
 					<van-button class="btn_mb" type="info" size="large" round @click="handleSubmit">
 						{{ layout.utype_current_text }}登录/注册
 					</van-button>
-					<van-button v-if="!single_login" type="info" size="large" round plain hairline
+					<!-- <van-button v-if="!single_login" type="info" size="large" round plain hairline
 						@click="$router.push(layout.utype_other_login_route)">
 						{{ layout.utype_other_text }}登录/注册
-					</van-button>
+					</van-button> -->
 				</div>
 			</div>
 			<div class="bottom_other_loginButton"  @click="wxLogin">
@@ -64,7 +64,7 @@
 				<div style="width: 25px;height: 25px; flex: none;" ><img style="width: 100%;height: 100%;" src="../assets/freelance/images/wx.png" /></div>
 				<div style="text-indent: 8px;">微信快速登录/注册</div>
 			</div>
-			<div class="bottom_other_loginButton" style="background-color: #dadada;" v-if="!isWx"  @click="isWx = true">
+			<div class="bottom_other_loginButton" style="background-color: #dadada;" v-if="!isWx"  @click="isWxPopup()">
 				<!-- <div class="other_cell c_qq" @click="qqLogin" v-if="$store.state.config.account_qqlogin_open==1">QQ登录</div> -->
 				<div style="width: 30px;height: 30px; flex: none;" ><img style="width: 100%;height: 100%;" src="../assets/freelance/images/sj.png" /></div>
 				<div style="text-indent:3px; color: #000;">账号密码登录</div>
@@ -155,6 +155,11 @@
 			}
 		},
 		methods: {
+			isWxPopup(){
+				this.isWx = true ;
+				console.log(this.layout)
+				if(this.layout.utype_other_text === '供应方'){this.$router.replace(this.layout.utype_other_login_route)}
+			},
 			handlerReg() {
 				if (this.$store.state.LoginOrNot) {
 					this.$dialog

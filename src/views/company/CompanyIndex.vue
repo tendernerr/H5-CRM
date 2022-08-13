@@ -212,12 +212,12 @@
           账号管理
         </div>
       </div>
-      <div class="form_split_10"></div>
+      <!-- <div class="form_split_10"></div>
       <div class="box_9 no_mb">
         <div class="handle_line l5" @click="showSwitchType = true">
           我要采购
         </div>
-      </div>
+      </div> -->
       <div class="form_split_18"></div>
     </van-pull-refresh>
     <BottomNav></BottomNav>

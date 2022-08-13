@@ -5,6 +5,14 @@
     <van-popup v-model="show" position="top" :overlay="true" :style="{ height: '90%', width: '100%' }">
       <TopSearch type="resume" @hideSearch="toggleSearch" @doSearch="doSearchByKeyword"></TopSearch>
     </van-popup>
+    <!-- 搜索按钮 -->
+    <div @click.stop="search = !search" class="searchDiv" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
+      <van-icon v-if="!search" name="search" />
+      <van-icon v-else name="cross" />
+    </div>
+    <div @click.stop v-if="search" class="searchDiv2" :style="[top2]">
+      <input class="searchInput" style="border-radius: 5px;width: 100%;height: 100%;padding: 0 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
+    </div>
 		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky>
 		  <van-tab title="直采项目">
 			  <div class="box_2">
@@ -84,7 +92,10 @@
 			  </div>
 		  </van-tab>
 		  <van-tab title="备案项目" v-if="true">
-			  <div class="box_2">
+			  <div class="box_2" style="display: flex;justify-content:space-around;margin: 4px 8px 8px;font-size:12px" v-if="menber.is_setmeal">
+          <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
+          <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
+          <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
 			   <!-- <van-dropdown-menu class="filter_menu">
 			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
 			        <DistrictFilter :districts="[params.district1, params.district2, params.district3]" :type="true" @doSearch="doSearchByDistrict"></DistrictFilter>
@@ -93,13 +104,13 @@
 			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
 			      />
 			    </van-dropdown-menu> -->
-				 <van-dropdown-menu class="filter_menu">
+				 <!-- <van-dropdown-menu class="filter_menu">
 				    <van-dropdown-item :title="title1" ref="items">
 				 						 <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2" @cancel='$refs.items.toggle();'/>
 				    </van-dropdown-item>
 				    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
 				    <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-				  </van-dropdown-menu>
+				  </van-dropdown-menu> -->
 			  </div>
 			  <div class="form_split_10"></div>
 			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
@@ -110,18 +121,18 @@
 						 <div class="listTab2HeadName">
 							 <div class="listTab2HeadName1">
 								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
-								 <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
 							 </div>
 							 <div class="listTab2HeadName2">{{item.end_time}}  <span class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
 						 </div>
 					 </div>
 					 <div class="listTab2Label">
-					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde">
+					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde" v-if="inde<10">
 								{{ite}}
 							</div>
 					 </div>
 					 <div class="updateTime">
-					 		{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span>
+            <span>{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span></span>
+            <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
 					 </div>
 				 </div>
 			  </van-list>
@@ -152,6 +163,7 @@ import { obj2Param } from "@/utils/index";
 import http from "@/utils/http";
 import api from "@/api";
 import DistrictFilter from "@/components/DistrictFilter";
+import {mapState} from "vuex"
 export default {
   name: "ResumeList",
   components: {
@@ -159,11 +171,18 @@ export default {
   },
   data() {
     return {
+      menber:{},
+      top:{left: '8px',top:'140px'},
+      top2:{left: '64px',top:'140px'},
+      search:false,
       dataset: [],
+      box_2Div:0,
       loading: false,
       finished: false,
       show_empty: false,
       params: {
+        date:'',
+        hasPhone:0,
         keyword: "",
         district1: 0,
         district2: 0,
@@ -234,6 +253,24 @@ export default {
     };
   },
   watch: {
+    "params.keyword":{
+      handler(e){
+        this.loading = false ;
+        this.finished = false ; 
+        this.dataset = []
+        this.page = 1
+        this.fetchData()
+      }
+    },
+    'params.hasPhone':{
+      handler(e){
+        this.loading = false ;
+        this.finished = false ; 
+        this.dataset = []
+        this.page = 1
+        this.fetchData()
+      }
+    },
   //   $route(to, from) {
 		//  console.log(to, from,"监听路由")
   //     // 对路由变化作出响应...
@@ -260,6 +297,9 @@ export default {
 		 }
 	 }
   },
+  computed:{
+    ...mapState(['userInfo'])
+  },
   beforeRouteLeave(to, from, next) {
     if (to.name === "resumeShow" || to.name === "backupsProject") {
       if (!from.meta.keepAlive) {
@@ -272,11 +312,18 @@ export default {
     }
   },
   created() {
+    if(this.$route.query.active || this.$route.query.active==='0'){
+      this.active = this.$route.query.active
+    }
+    if(this.$route.query.times){
+      this.params.date = this.$route.query.times
+    }
+    this.getMenber()
 	 // 请求列表数据
     // this.initQuery(this.$route.query);
     this.fetchData(true);		//获取列表信息
 	 this.classify()				//获取下啦数据
-	 console.log(23456)
+   wxshare({}, "resumelist", location.href);
 	 return
     this.$store.dispatch("getClassify", "citycategory");
     this.$store.dispatch("getClassify", "experience").then(() => {
@@ -311,7 +358,6 @@ export default {
       this.optionResumeTag = storeResumeTag;
       this.restoreFilter();
     });
-    wxshare({}, "resumelist", location.href);
   },
   mounted() {
     // 重构筛选项数据格式
@@ -322,6 +368,27 @@ export default {
     this.restoreFilter();
   },
   methods: {
+    getMenber(){
+      http.get(api.getMenber,{}).then(res=>{
+        console.log(res,"1111111")
+        this.menber = res.data
+      })
+    },
+    down(e){
+      console.log(e,"222")
+    },
+    move(e){
+      console.log(e,"111")
+      document.body.style.overflow = 'hidden'
+      this.top.top = e.touches[0].clientY-25+'px'
+      this.top.left = e.touches[0].clientX-25+'px'
+      this.top2.top = e.touches[0].clientY-25+'px'
+      this.top2.left = e.touches[0].clientX+29+'px'
+    },
+    end(e){
+      document.body.style.overflow = 'auto'
+      console.log(e,"333")
+    },
 	  // 获取选项信息
 	  classify(){
 		  http.get(api.classify,{type:'citycategorys,householdaddress,education'}).then(res=>{
@@ -770,6 +837,7 @@ export default {
     },
     // 请求列表数据，init为true时直接更改dataset值，false时代表上拉加载回的数据追加进dataset
     fetchData(init) {
+      console.log(init,this.params,"222222")
 		let params = {...this.params,}
 		params.page = this.page
 		params.pagesize = this.pagesize
@@ -821,7 +889,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	
+.searchDiv{
+background: #cfe1fb;position: fixed;line-height: 51px;width: 50px;height: 50px;z-index: 999;border-radius: 50%;text-align: center;color: #fff;
+}
+
+.searchDiv2{
+  position: fixed;z-index: 999;width: 14.5em;height: 46px;font-size: 16px;padding: 11px 0px 1px;
+}
+
+.searchInput{
+  border: 1px #e2ebf8 solid;
+}
+	.searchInput:focus{
+              outline: none;
+              border: 1px #cfe1fb solid;
+  }
 	>>> .van-tabs__line{background-color: #00aaff!important;}
 	
 	>>> .van-tab--active{
@@ -836,7 +918,7 @@ export default {
 			}
 			.listTab2HeadName{display: flex; flex-direction: column; justify-content: space-around; padding:0 5px; flex: 1;
 				.listTab2HeadName1{display: flex; justify-content: space-between; align-items: center;
-					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; -webkit-line-clamp: 1; margin-right: 15px; font-weight: 700;}
+					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; -webkit-line-clamp: 1; font-weight: 700;}
 					.listTab2HeadName1Text2{ font-size: 13px; flex: none;}
 				}
 				.listTab2HeadName2{font-size: 13px;
@@ -847,7 +929,7 @@ export default {
 		.listTab2Label{display: flex; flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 5px 20px;
 			.listTab2LabelList{background-color: #f4f9ff; padding: 3px 8px; margin-right: 8px; border-radius: 5px; margin-bottom: 5px;}
 		}
-		.updateTime{padding: 0px 20px 15px; font-size: 12px;
+		.updateTime{padding: 0px 20px 15px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;
 			.updateTimeSpan{margin-left: 10px;}
 		}
 		
@@ -1090,6 +1172,9 @@ export default {
     &::after {
       border: 0;
     }
+  }
+  .box_2Div{
+    background: #4ea8e8 !important;
   }
 }
 .box_5 {

@@ -15,6 +15,7 @@
     />
     <!-- <Head>{{ base_info.fullname }}的项目</Head> -->
     <Head>项目详情</Head>
+    <van-notice-bar scrollable left-icon="volume-o" text="此项目已经过人工核实，可放心参与！"/>
     <van-skeleton title avatar :row="10" :loading="mainLoading">
       <div class="box_1">
         <div class="content">
@@ -62,12 +63,9 @@
 
             <div>{{ base_info.updatetime }}更新</div>
           </div>
-          <div
-            class="down"
-            style="display: flex; justify-content: space-between"
-          >
+          <div class="down" style="display: flex; justify-content: space-between">
             <div>
-              项目在：{{ intention_list[0].address }}
+              <span v-if="base_info.is_setmeal || !base_info. isFortyEightHours" style="color: rgb(255 177 0);font-size: 14px;">{{!base_info.isbuy?'所需点券':'买断所需点券'}}：{{base_info.service_amount}}</span>
               <!-- <div
               class="right"
               @click="showDetail = !showDetail"
@@ -144,15 +142,18 @@
                   <!-- 所属行业：{{ base_info.major_text || '不限' }} -->
                   所属行业：{{ base_info.majorName || "不限" }}
                 </div>
-					 <div class="Industry">
-					   采购数量：{{ base_info.purchase_quantity || "" }}
-					 </div>
+                <div class="Industry">
+                  采购数量：{{ base_info.purchase_quantity || "" }}
+                </div>
                 <div class="Industry">
                   地区要求：{{ base_info.classifiy || "" }}
                 </div>
-					 <div class="Industry">
-					   发票类型：{{ base_info.invoice_type || "" }}
-					 </div>
+                <div class="Industry">
+                  发票类型：{{ base_info.invoice_type || "" }}
+                </div>
+                <div class="Industry">
+                  项目在：{{ intention_list[0].address || '' }}
+                </div>
               </div>
             </div>
           </div>
@@ -209,8 +210,8 @@
 				    项目来源：{{ contact_info.project_source }}
 				  </div>
           <div class="getMore">
-            <span v-if="isLogin && !base_info.isbuy"    @click="windolLoca('https://work.weixin.qq.com/kfid/kfc15ede4e155433f71')">
-              联系客服，咨询更多项目信息>>
+            <span v-if="isLogin && !base_info.isbuy" @click="doDownload">
+              我要查看更多联系信息>>
             </span>
             <span v-if="!isLogin" @click="goLogin('/member/login/company')"> 立即登录，获取更多报价信息
             </span>
@@ -439,14 +440,13 @@
 			<div class="form_split_10"></div>
         <div class="content_wrapper">
           <div class="box_report">
-            <div class="tx1">如遇无效虚假项目信息，请立即举报！</div>
+            <div class="tx1">项目经人工审核无误后发布，请及时参与报价！</div>
             <div class="tx2">
-              供应商过程中，若联系方式、采购状态不实请反馈。
+              若发现采购已经结束，请立即申请退款
             </div>
             <div class="tx3" @click="handlerReport" style="display: flex; justify-content: space-between; flex-direction: column;">
-					<span></span>
-					<span>举报</span>
-				</div>
+				    	<span>我要申诉</span>
+				    </div>
           </div>
         </div>
         <div class="form_split_10"></div>
@@ -462,15 +462,19 @@
               {{ has_fav == 1 ? "已收藏" : "收藏" }}
             </div>
             <div :class="['item_chat',!isSubscribe?'':'item_chat1' ]" @click="doMsg">{{isSubscribe?'已订阅':'订阅项目'}}</div>
-            <div v-if="!base_info.isbuy" class="item_apply" @click="doDownload">获取电话</div>
-				<div v-if="base_info.isbuy" class="item_apply" @click="doDownload">买断项目</div>
+            <div v-if="!base_info.isbuy" class="item_apply" @click="doDownload">获取联系方式</div>
+				<div v-if="base_info.isbuy" class="item_apply" @click="doDownload1">买断项目</div>
             <!-- <div class="item_apply" v-if="show_contact===0" @click="doDownload">立即报价</div> -->
             <!-- <div class="item_apply" v-else @click="doInterview">我的报价</div> -->
             <!-- <div class="clear"></div> -->
           </div>
         </div>
       </div>
-      <div class="box_video_some" v-if="resumeShow === 'video'">
+      <div v-if="!isLogin" style="text-align:center;font-size:15px;padding:20px 0">
+          <p>您尚未登录，点击登录后可获取联系方式</p>
+          <p style="padding: 5px;color: #0072ff;" @click="showLogin = true">去登录>></p>
+      </div>
+      <div class="box_video_some" v-if="resumeShow === 'video' && isLogin">
         <div style="font-size: 16px; padding: 20px; color: #000">
           参考图片：
         </div>
@@ -518,13 +522,7 @@
       ></Login>
     </van-popup>
 
-    <van-dialog
-      v-model="showDirectService"
-      title="立即报价"
-      show-cancel-button
-      :confirm-button-text="directServiceInfo.btnCn"
-      @confirm="handlerDirectService"
-    >
+    <!-- <van-dialog v-model="showDirectService" title="立即报价" show-cancel-button :confirm-button-text="directServiceInfo.btnCn" @confirm="handlerDirectService">
       <div class="dialog_tip_wrapper">
         <div class="tx1" v-if="directServiceInfo.use_type == 'points'">
           你的立即报价点数不足，下载该项目需要支付
@@ -537,17 +535,66 @@
           元。
         </div>
         <div class="tx2" v-if="parseInt(directServiceInfo.discount) > 0">
-          购买项目包价格低至<span class="red">{{
-            directServiceInfo.discount
-          }}</span
-          >折，<router-link
-            to="/member/order/add/common?type=service&service_type=resume_package"
-            class="blue"
-            >立即了解</router-link
-          >
+          购买项目包价格低至<span class="red">{{directServiceInfo.discount}}</span>折，
+          <router-link to="/member/order/add/common?type=service&service_type=resume_package"class="blue">
+            立即了解
+          </router-link>
         </div>
       </div>
-    </van-dialog>
+    </van-dialog> -->
+
+    <van-popup v-model="showDirectService" closeable round :style="{ width: '85%' }">
+      <div style="padding: 0 0 20px 0;">
+        <div style="font-size: 18px;text-align: center;height: 50px;line-height: 50px;color: #000;font-weight: 500;">
+          选择支付方式
+        </div>
+        <div style="font-size: 18px;text-align: center;height: 50px;line-height: 50px;color: #000;font-weight: 500;background: #e4e4e4;">
+          ￥{{base_info.service_amount}}
+        </div>
+        <div v-if="false" style="border-bottom: 1px solid #eaeaea;font-size: 13px;text-align: center;height: 50px;line-height: 50px;color: rgb(0, 0, 0);font-weight: 500;display: flex;padding: 0 20px 0 20px;">
+          <div style="display: flex;align-items: center;">
+            <img width="22" src="@/assets/images/u69.png" /> 积分<span style="color: red;">免费</span>兑换项目
+          </div>
+          <div style="flex: 1;text-align: right;color: #4690ff;font-size: 13px;">
+            去获取 >
+          </div>
+        </div>
+        <div @click="go('/member/order/add/common?type=setmeal')" style="border-bottom: 1px solid #eaeaea;font-size: 13px;text-align: center;height: 50px;line-height: 50px;color: rgb(0, 0, 0);font-weight: 500;display: flex;padding: 0 20px 0 20px;">
+          <div style="display: flex;align-items: center;">
+            <img width="22" src="@/assets/images/u65.png" /> 点券支付（充值优惠）(<span style="color: red;">{{base_info.download_resume_point}}</span>)
+          </div>
+          <div style="flex: 1;text-align: right;color: #4690ff;font-size: 13px;">
+             >
+          </div>
+        </div>
+        <div v-if="!base_info.is_setmeal" @click="appearPayment(2)" style="border-bottom: 1px solid #eaeaea;font-size: 13px;text-align: center;height: 50px;line-height: 50px;color: rgb(0, 0, 0);font-weight: 500;display: flex;padding: 0 20px 0 20px;">
+          <div style="display: flex;align-items: center;">
+            <img width="22" src="https://www.hangyedaniu.com/upload/resource/img-guanwang/weixin.png"/> 微信支付(推荐)
+          </div>
+          <div style="flex: 1;text-align: right;color: #4690ff;font-size: 13px;">
+             >
+          </div>
+        </div>
+        <div style="font-size: 13px;padding: 10px;font-weight: 500;">
+            平台承诺：所有采购项目均为真实有效，若发现信息虚假，可全额退款！
+            <span style="color: #4690ff;" @click="rotate = !rotate">展开更多<span :class="{'rotate':rotate}" style="transform: rotate(90deg);transition-duration: .5s;display: inline-block;" >></span></span>
+        </div>
+        <span v-show="rotate">
+          <div style="font-size: 13px;padding: 5px;font-weight: 500;">
+              项目满足以下任意条件可<span style="color: red;">全额退款</span>：
+          </div>
+          <div style="font-size: 13px;padding: 5px;font-weight: 500;">
+              1.支付服务费用后，打给采购方，采购方电话显示为空号；
+          </div>
+          <div style="font-size: 13px;padding: 5px;font-weight: 500;">
+              2.支付服务费用后，打给采购方，采购方明确告知供应方已经确定下来了；
+          </div>
+          <div style="font-size: 13px;padding: 5px;font-weight: 500;">
+              注：款项退款时间3小时内（咨询：<span style="color: #4690ff;"><a href="tel:17675797686">17675797686</a></span>）
+          </div>
+        </span>
+      </div>
+    </van-popup>
 
     <van-dialog
       v-model="codePro.show"
@@ -889,6 +936,33 @@
 		</div>
 	</div>
 	<div v-if="appear" style="position: fixed;top: 0; left: 0; right: 0; bottom: 0; z-index: 9; "></div>
+
+  <van-popup v-model="DownloadSucceeded" :style="{ width: '85%' }" round closeable >
+      <div style="padding: 0 0 0px 0;">
+        <div style="font-size: 15px;text-align: center;height: 45px;line-height: 45px;">下载成功 </div>
+        <p style="font-size: 15px;padding: 0px 13px 12px;">温馨提示：若项目匹配度高，建议您买断该项目！买断后，任何人不得参与此项目，会大大提高您的成交率！</p>
+        <div style="font-size:15px;display: flex;">
+          <div @click="DownloadSucceeded = false" style="text-align: center;width: 50%;background: rgb(220 220 220);color: rgb(0 0 0);height: 40px;border-radius: 10px 0px 0px 10px;line-height: 40px;">取消</div>
+          <div @click="doDownload1" style="text-align: center;width: 50%;background: #fb2;color: #fff;height: 40px;border-radius: 0 10px 10px 0;line-height: 40px;">立刻买断</div>
+        </div>
+      </div>
+  </van-popup>
+  <van-popup v-model="insufficientConsumption" :style="{ width: '85%' }" round closeable >
+      <div style="padding: 0 0 10px 0;">
+        <div style="font-size: 15px;text-align: center;height: 45px;line-height: 45px;background: #e2e2e2;color: #131313;">点券支付</div>
+        <div style="font-size: 15px;padding: 8px 20px;color: #000;">参与项目<span style="padding:0 0 0 30px;">{{base_info.fullname}}</span></div>
+        <div style="font-size: 15px;padding: 8px 20px;color: #000;">所需点券<span style="padding:0 0 0 30px;color: #FF6600;">￥{{base_info.service_amount}}</span></div>
+        <div style="font-size: 15px;padding: 8px 20px;color: #000;">
+          支付方式
+          <span class="insufficientConsumptionSpan" style="">
+               点券支付（充值更优惠）
+          </span>
+        </div>
+        <div style="font-size: 12px;padding: 8px 20px;text-align: right; color: #409EFF;"> 我的点券：{{base_info.download_resume_point}}  个去充值> </div>
+        <p style="font-size:12px;padding: 8px 20px;">买断该项目后，该项目会立即下线，其他人不能再通过购买项目方式联系采购方；将会大大提高您的中签率！！</p>
+      </div>
+  </van-popup>
+  
   </div>
 </template>
 
@@ -948,7 +1022,6 @@ export default {
       moreDetailBtn: false,
       showDetail: false,
       showPayment: false,
-      showDirectService: false,
       directServiceInfo: {},
       enableClick: true,
       mainLoading: true,
@@ -1030,19 +1103,20 @@ export default {
 	  appear:false,
 	  showWeixin:false,	//微信弹框
 	  params:{},
-	  insufficient:false,		//点券不住弹框
+    showDirectService: false, //点券不足弹框
+	  insufficient:false,		//点券不足弹框  暂时不用
 	  company_auth:0,				//是否企业认证 0未认证
 	  company_auth_pop:false,	//企业认证的弹框
 	  prove:false,
+    insufficientConsumption:false,
+    DownloadSucceeded:false,   //立刻买断
+    rotate:false,
     };
   },
   computed:{
 	  ...mapState(['userInfo','userIminfo','openId'])
   },
   created() {
-	  console.log(this.userIminfo,'vuexxxxxxxxxxxxxxxxxxxxx')
-	  console.log(this.userInfo,'vuexxxxxxxxxxxxxxxxxxxxx')
-	  console.log(this.$route,'$route$route$route$route$route$route')
     this.query_id = this.$route.params.id;
     this.is_company_login = !!(
       this.$store.state.LoginOrNot === true && this.$store.state.LoginType == 1
@@ -1464,13 +1538,13 @@ export default {
       }
     },
     doDownload1() {
-      this.$dialog
-        .confirm({
+      this.doDownload(1);
+      return
+      this.$dialog.confirm({
           title: "提示",
           message: "您确定买断该项目吗？",
           confirmButtonText: "立即买断",
-        })
-        .then(() => {
+        }).then(() => {
           // this.showLogin = true
           this.doDownload(1);
         })
@@ -1482,37 +1556,51 @@ export default {
 			 return false
 		 }
       if (this.is_company_login === false) {
-        this.$dialog
-          .confirm({
+        this.$dialog.confirm({
             title: "提示",
             message: "当前操作需要登录企业账号",
             confirmButtonText: "去登录",
-          })
-          .then(() => {
+          }).then(() => {
             this.showLogin = true;
             this.after_login_data = {
               method: "doDownload",
             };
-          })
-          .catch(() => {});
+          }).catch(() => {});
       } else {
-			console.log(this.company_auth,"微信微信微信")
-			
-			// 判断项目是否过期
-			if(this.base_info.statetext == '已停止'){
-				Dialog({ message: '项目已停止' });
-				return
-			}
-			
-			if(this.company_auth === 0){  //company_auth == 0 未得到企业认证
-				this.company_auth_pop = true
-			} else{
-				this.appear = true
-				this.params = {
-				  resume_id: this.query_id,
-				  buyout: is_ == 1 ? 1 : 0,
-				};
-			}
+        // 判断是否会员,不是会员=>判断是不是24小时项目
+        if(!this.base_info.is_setmeal){
+          //  记录一次用户行为
+            http.post(api.projectApply,{id:this.query_id}).then(res=>{console.log(res,"11111")})
+          // 如果不是48小时，允许购买 跳过 is_setmeal 这个判断
+            if(this.base_info.isFortyEightHours){
+            this.$dialog.confirm({
+                title: "非常抱歉",
+                message: `<div style='text-align: left;color: #ffba20;padding: 3px 0;'>该项目为会员项目，您无权参与该报价！</div><div  style='text-align: left;padding: 3px 0;'>项目报价原则：</div><div  style='text-align: left;padding: 3px 0;'>1.会员单位优先于非会员单位<span style='color:#0089ff'>>查看会员价格<</span></div><div  style='text-align: left;padding: 3px 0;'>2.会员单位报价后，非会员单位不得参与报价；</div><div  style='text-align: left;padding: 3px 0;'>3.会员单位48小时内不参与报价，非会员会员方可参与报价；</div>`,
+                confirmButtonText: "查看会员价格",
+              }).then(() => {
+                this.go('/member/order/add/common?type=service')
+              })
+              .catch(() => {});
+            return
+          }
+        }
+        // 判断项目是否过期
+        if(this.base_info.statetext == '已停止'){
+          Dialog({ message: '项目已停止' });
+          return
+        }
+        if(this.company_auth === 0){  //company_auth == 0 未得到企业认证
+          this.company_auth_pop = true
+        } else{
+          // 让用户显示确认弹框
+          // this.appear = true
+          this.params = {
+            resume_id: this.query_id,
+            buyout: is_ == 1 ? 1 : 0,
+          };
+          // 直接点券支付
+          this.appearPayment(1)
+        }
       }
     },
 	 attention(){
@@ -1546,13 +1634,41 @@ export default {
 		 // 点券支付
 		 if(isT === 1){
 			 http.post(api.resumedownload, this.params).then((res) => {
+        console.log(res,"1111")
+        console.log(this.base_info.isbuy,"1111")
+         if(this.base_info.isbuy){
+          // 之前是不是买过  isbuy == true 买过 == 买断项目
+          console.log(res.data.done,"2222")
+            if(res.data.done === 0){
+              // 如果购买失败 == 点券不足
+                // this.showDirectService = true;
+                this.DownloadSucceeded = false
+                this.showDirectService = true
+                this.directServiceInfo = {
+                    use_type: res.data.use_type,
+                    need_points: res.data.need_points,
+                    need_expense: res.data.need_expense,
+                    discount: res.data.discount,
+                    resume: this.query_id,
+                    btnCn: res.data.use_type == "points" ? "立即兑换" : "立即支付",
+                };
+                return
+            } else{
+               this.fetchData();
+               this.DownloadSucceeded = false
+               this.$notify({ type: "success", message: res.message });
+               return
+            }
+         }
+         this.fetchData();
 			 	 this.enableClick = true;
 				 this.appear = false
 				 //res.data.done == 0 , 点券不足，跳转到其他页面
+         console.log(res,"点券不足，跳转到其他页面")
 			 	 if (res.data.done == 0) {
-					 this.go('/member/order/add/common/?type=service&resumePackage=resume_package')
-					 // this.insufficient = true
-					 return
+					//  this.go('/member/order/add/common/?type=service&resumePackage=resume_package')
+					//  return
+          // 弹窗:不足提示
 			 		this.showDirectService = true;
 			 		this.directServiceInfo = {
 			 		  use_type: res.data.use_type,
@@ -1562,19 +1678,38 @@ export default {
 			 		  resume: this.query_id,
 			 		  btnCn: res.data.use_type == "points" ? "立即兑换" : "立即支付",
 			 		};
+          // 小提示充值
+          // this.insufficient = true
 			 		return false;
 			 	 } else {
+          // 购买成功
 					 // 显示上方的购买次数
-					 if(this.base_info.isbuy){
-						 this.base_info.involved_count=this.base_info.involved
-					 }else{
-						 this.base_info.isbuy = true
-						 this.base_info.involved_count++
-					 }
+					//  if(this.base_info.isbuy){
+					// 	 this.base_info.involved_count=this.base_info.involved
+					//  }else{
+					// 	 this.base_info.isbuy = true
+					// 	 this.base_info.involved_count++
+					//  }
 					 // 重新渲染
-					 this.fetchData();
+					//  this.fetchData();
+          //  判断是不是会员
+          if(this.base_info.is_setmeal){
+            // true==会员
+            this.DownloadSucceeded = true
+          } else{
+            this.$dialog.confirm({
+              title: "下载成功",
+              message: "温馨提示：由于您是<span style='color:#ffb50f;'>非会员单位</span>，只能查看发布48小时后的项目，平台仅对项目电话真实性负责，不再对项目的有效性负责；",
+              confirmButtonText: "了解会员特权",
+              cancelButtonText:'知道了',
+            }).then(() => {
+              this.go('/member/order/add/common?type=service')
+            }).catch(() => {
+              this.DownloadSucceeded = true
+            });
+           }
 					 //下载成功
-			 		this.$notify({ type: "success", message: res.message });
+			 		// this.$notify({ type: "success", message: res.message });
 			 	 }
 			   }).catch(() => {
 			 	 this.enableClick = true;
@@ -1584,12 +1719,12 @@ export default {
 		 if(isT === 2){
 			 let openId = localStorage.getItem("weixinOpenid");
 			 let params = {
-			 				 service_type : 'single_resume_down',   //single_resume_down 快捷消费-下载单份项目   single_job_refresh  快捷消费-刷新项目
-			 				 deduct_points : 0,    //积分  负值为扣积分  正值加积分
-			 				 payment : "wxpay",  //支付方式  wxpay 微信支付、其他
-			 				 resumeid : this.query_id,   //项目id
-			 				 return_url : `http://www.hangyedaniu.com/m/resume/${this.query_id}`,   //页面的路径
-			 				 openid : openId,    //微信的openid
+          service_type : 'single_resume_down',   //single_resume_down 快捷消费-下载单份项目   single_job_refresh  快捷消费-刷新项目
+          deduct_points : 0,    //积分  负值为扣积分  正值加积分
+          payment : "wxpay",  //支付方式  wxpay 微信支付、其他
+          resumeid : this.query_id,   //项目id
+          return_url : `http://www.hangyedaniu.com/m/resume/${this.query_id}`,   //页面的路径
+          openid : openId,    //微信的openid
 			 }
 			 http.post(api.company_pay_direct_service,params).then((res) => {
 				 this.appear = false
@@ -1758,28 +1893,28 @@ export default {
       }
     },
     handlerReport() {
-      if (this.is_company_login === false) {
-        this.$dialog
-          .confirm({
-            title: "提示",
-            message: "当前操作需要登录企业账号",
-            confirmButtonText: "去登录",
-          })
-          .then(() => {
-            this.showLogin = true;
-            this.after_login_data = {
-              method: "handlerReport",
-            };
-          })
-          .catch(() => {});
-      } else {
-        if (this.base_info.audit != 1) {
-          this.$notify("该项目还未审核通过，不能继续此操作");
-          return false;
-        }
+      // if (this.is_company_login === false) {
+      //   this.$dialog
+      //     .confirm({
+      //       title: "提示",
+      //       message: "当前操作需要登录企业账号",
+      //       confirmButtonText: "去登录",
+      //     })
+      //     .then(() => {
+      //       this.showLogin = true;
+      //       this.after_login_data = {
+      //         method: "handlerReport",
+      //       };
+      //     })
+      //     .catch(() => {});
+      // } else {
+      //   if (this.base_info.audit != 1) {
+      //     this.$notify("该项目还未审核通过，不能继续此操作");
+      //     return false;
+      //   }
         this.$refs.tipoff.initCB();
         this.showTipoff = true;
-      }
+      // }
     },
     // 预览作品
     previewImg(index) {
@@ -1793,12 +1928,9 @@ export default {
       });
     },
     fetchVideonum() {
-      http
-        .get(api.shortvideo_total, { rid: this.query_id })
-        .then((res) => {
+      http.get(api.shortvideo_total, { rid: this.query_id }).then((res) => {
           this.videonum = res.data;
-        })
-        .catch(() => {});
+        }).catch(() => {});
     },
     //图片放大缩小
   },
@@ -1810,6 +1942,14 @@ export default {
   font-size: 10px;
   color:#101010;
 }
+
+.rotate{
+      transform: rotate(-90deg)!important;transition-duration: .5s!important;
+	}
+.insufficientConsumptionSpan{
+  padding: 5px 5px 5px 20px;margin-left: 28px;border: 1px solid #FF6600;background: url('../assets/images/u65.png') no-repeat 1px center / 20px 20px; text-indent: 4em;
+}
+
 .imgs_srcp {
   position: absolute;
     width: 100%;
@@ -1857,14 +1997,13 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    width: 45px;
+    width: 53px;
     height: 100%;
     padding-top: 45px;
     color: #ff6600;
     font-size: 12px;
     text-align: center;
-    background: url("../assets/images/report_ico_js.png") center 14px no-repeat;
-    background-size: 19px 23pxp
+    background: url("../assets/images/zixun-tousu.png")  no-repeat center 12px/30px 30px;
   }
   .tx1 {
     font-size: 13px;

@@ -1,28 +1,22 @@
 <template>
   <div id="app">
-    <Head>我的付费</Head>
+    <Head>我的报价</Head>
     <ScrollNav :list="navList"></ScrollNav>
-    <div class="form_split_10"></div>
-    <van-empty
-      image="search"
-      description="没有找到对应的信息"
-      style="background-color: #fff"
-      v-if="show_empty === true"
-    />
-    <van-list
-      v-if="dataset.length > 0"
-      v-model="loading"
-      :finished="finished"
-      :finished-text="finished_text"
-      @load="onLoad"
-      :immediate-check="true"
-    >
+     <div style="display: flex;font-size: 12px;position: sticky;top: 53px;background: #fff;z-index: 999;border-bottom: solid 4px rgba(243,243,243);">
+      <div @click="bc=0" :class="{'bc':bc!==0}" style="padding: 5px 13px;border-radius: 9px;margin: 10px;background-color: rgb(54 157 255);color: #fff;">
+          <van-icon name="contact" /> 未处理
+      </div>
+      <div @click="bc=4" :class="{'bc':bc!==4}" style="padding: 5px 13px;border-radius: 9px;margin: 10px;background-color: rgb(54 157 255);color: #fff;">
+          <van-icon name="envelop-o" /> 已成交
+      </div>
+      <div @click="bc=3" :class="{'bc':bc!==3}" style="padding: 5px 13px;border-radius: 9px;margin: 10px;background-color: rgb(54 157 255);color: #fff;">
+          <van-icon name="wap-home-o" /> 不适合
+      </div>
+    </div>
+    <van-empty image="search" description="没有找到对应的信息" style="background-color: #fff" v-if="show_empty === true"/>
+    <van-list v-if="dataset.length > 0" v-model="loading" :finished="finished" :finished-text="finished_text" @load="onLoad" :immediate-check="true">
       <div class="list_wrapper">
-        <div
-          v-for="(item, index) in dataset"
-          :key="index"
-          @click="$router.push('/resume/' + item.resume_id)"
-        >
+        <div v-for="(item, index) in dataset" :key="index" @click="$router.push('/resume/' + item.resume_id)">
           <div class="list">
             <div class="tx1">
               <div class="avatar_box">
@@ -32,71 +26,41 @@
                 <div class="name_txt">{{ item.fullname }}</div>
                 <div class="level" v-if="item.high_quality == 1"></div>
                 <div class="clear"></div>
-                <div class="wagw">采购预算：{{ item.minwage }}</div>
-                <!-- <div class="time">{{ item.addtime | timeFilter }}</div> -->
               </div>
-              <!-- <div class="some">
-                {{ item.age }}岁 · {{ item.sex_text }} ·
-                {{ item.education_text }} · {{ item.experience_text }}
-              </div> -->
               <div style="display: flex; justify-content: space-between">
                 <div class="oop">
                   <div class="txs2">{{ item.birthday || "半年后" }}截止</div>
                   <div class="tes1">{{ item.education_text }}</div>
                 </div>
-                <div class="chuli" >{{item.status}}</div>
+                <div class="chuli" :class="{'chuli-span':item.status==='未处理'}" >{{item.status}}</div>
               </div>
             </div>
-            <!-- <div class="tx2">
-              想找
-              <span class="text">{{ item.intention_jobs }}</span>
-              案例
-            </div> -->
-
-            <!-- <div class="tx2">
-              想在
-              <span class="text">{{ item.intention_district }}</span>
-              案例
-            </div> -->
-            <!-- <div class="tx3" v-if="item.recent_work != ''">
-              最近案例：{{ item.recent_work }}
-            </div> -->
-            <div
-              class="ppos"
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-              "
-            >
+            <div class="ppos timew" style="padding: 0;">
+                {{item.householdaddress_name}}
+            </div>
+            <div class="ppos" style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: flex">
                 <div class="timew">{{ item.refreshtime }}更新</div>
                 <div class="timew" style="margin-left: 20px">
                   项目在：{{ item.address }}
                 </div>
               </div>
-              <div
-                class="timew"
-                style="
-                  wdith: 60px;
-                  height: 30px;
-                  background-color: #1787fb;
-                  border-radius: 5px;
-                  align-items: center;
-                  color: #e5f1ff;
-                  display: flex;
-                  padding: 10px;
-                "
-              >
+              <div class="timew" style="wdith: 60px; height: 30px; background-color: #1787fb; border-radius: 5px; align-items: center; color: #e5f1ff; display: flex; padding: 10px;">
                 已参与{{ item.involved_count }}/{{ item.involved }}
               </div>
             </div>
             <div class="tx4">
-              <div class="list_btn" @click.stop="handlerRemark(item)">
-                不合适
+              <!-- <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn2':'list_btn2-orange']" @click.stop="openAddInvitation(item,index,item.status!=='不适合'&&item.status!=='已成交')">
+                填写沟通记录
+              </div> -->
+               <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn2':'list_btn2-orange']">
+                填写沟通记录
               </div>
-              <div class="list_btn" @click.stop="openAddInvitation(item)">
-                联系报价
+              <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn':'list_btn-orange']" @click.stop="completePop(item,index,item.status!=='不适合'&&item.status!=='已成交')">
+                已成交
+              </div>
+              <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn':'list_btn-orange']" @click.stop="handlerRemark(item,index,item.status!=='不适合'&&item.status!=='已成交')">
+                不合适
               </div>
               <div class="clear"></div>
             </div>
@@ -105,86 +69,40 @@
         </div>
       </div>
     </van-list>
-    <van-popup
-      :lazy-render="false"
-      v-model="showInvite"
-      position="right"
-      :overlay="false"
-      style="width: 100%; height: 100%"
-    >
-      <AddInvitation
-        ref="child"
-        from="download"
-        :apply_fullname="apply_fullname"
-        :resume_id="apply_resume_id"
-        @closePopup="closeAddInvitation"
-      ></AddInvitation>
+    <van-popup :lazy-render="false" v-model="showInvite" position="right" :overlay="false" style="width: 100%; height: 100%">
+      <AddInvitation ref="child" from="download" :apply_fullname="apply_fullname" :resume_id="apply_resume_id" @closePopup="closeAddInvitation"></AddInvitation>
     </van-popup>
-    <van-popup
-      v-model="showRemark"
-      position="right"
-      :overlay="false"
-      style="width: 100%; height: 100%"
-    >
-      <Head :goback_custom="true" @gobackCustomMethod="showRemark = false">
-      </Head>
-
-      <!-- <van-form @submit="submitRemark">
-        <van-field
-          type="textarea"
-          rows="2"
-          name="remark"
-          v-model="remark_item.remark"
-          label=""
-          placeholder="请输入备注内容3"
-        />
-        <div style="margin: 16px">
-          <van-button round block type="info" native-type="submit">
-            确定
-          </van-button>
-        </div>
-      </van-form> -->
+    <van-popup v-model="showRemark" position="right" :overlay="false" style="width: 100%; height: 100%" >
+      <Head :goback_custom="true" @gobackCustomMethod="showRemark = false"></Head>
     </van-popup>
     <van-popup v-model="dialong">
-      <div style="width: 300px;    height: 220px;">
-        <div style="padding: 20px; text-align: center;font-size: 20px;">填写不适合理由</div>
-        <div style="padding: 20px;    margin-top: -15px;">
+      <div style="width: 300px;height: 220px;">
+        <div style="padding: 20px;text-align: center;font-size: 20px;">填写不适合理由</div>
+        <div style="padding: 20px;margin-top: -15px;">
           <span style="font-size: 12px">不合适理由</span>
-          <select style="    width: 170px;
-    height: 30px;
-    border-radius: 6px;
-    margin-left: 5px;">
-            <option value="222">111</option>
-            <option value="111">1131</option>
-            <option value="333">1114</option>
+          <select v-model="reason" style="width: 170px; height: 30px; border-radius: 6px; margin-left: 5px;">
+            <option value="项目不适合，主动放弃">项目不适合，主动放弃</option>
+            <option value="客户已和他人合作">客户已和他人合作</option>
+            <option value="自身原因，终止采购">自身原因，终止采购</option>
           </select>
         </div>
-        <div style="    display: flex;
-    justify-content: space-around;margin-top: 25px;">
-          <van-button type="info" style="    width: 70px;
-    height: 28px;
-    line-height: 2px;" @click="dialog=false" v-model="show" >确定</van-button>
-          <van-button type="default"  style="    width: 70px;
-    height: 28px;
-    line-height: 2px;" @click="dialong = false">取消</van-button>
+        <div style="display: flex;justify-content: space-around;margin-top: 25px;">
+          <van-button type="info" style="width: 70px;height: 28px;line-height: 2px;" @click="companyJobEnd">确定</van-button>
+          <van-button type="default"  style="width: 70px; height: 28px;line-height: 2px;" @click="dialong = false">取消</van-button>
         </div>
       </div>
     </van-popup>
-    <!-- <div class="offd" v-if="dialong">
-      <div style="padding:20px;text-align:center;">填写不适合理由</div>
-      <div style="padding: 20px">
-        <span style="font-size:12px">不合适理由</span>
-        <select style="width: 100px">
-          <option value="222">111</option>
-          <option value="111">1131</option>
-          <option value="333">1114</option>
-        </select>
+    <van-popup closeable close-icon-position="top-right" v-model="completePopd" :style="{ width: '80%',padding:'10px' }">
+      <div>
+        <p style="font-size: 16px;text-align: center;font-weight: 700;color: #000;">确认已成交</p>
+        <p style="padding: 10px;font-size: 16px;color: #000;">注意：</p>
+        <p style="font-size: 14px;padding: 0px 0 12px 22px;">若客户未与您成交，请点击“取消”;<br/>否则将由您负责该项目的售后问题</p>
+        <div style="    font-size: 14px;padding: 10px;justify-content: space-around;display: flex;">
+          <span style="padding: 4px 10px; border-radius: 8px; background: #3c9cff; color: #fff;" @click="complete">确认已成交</span>
+          <span style="padding: 4px 10px; border-radius: 8px;border: 1px solid #ccc;" @click="completePopd = false">误操作，取消</span>
+        </div>
       </div>
-      <div style="display: flex; justify-content: space-around; padding: 40px">
-        <div>确定</div>
-        <div>取消</div>
-      </div>
-    </div> -->
+    </van-popup>
   </div>
 </template>
 
@@ -207,6 +125,10 @@ export default {
   },
   data() {
     return {
+      completePopd:false,
+      reason:'',
+      id:'',
+      bc:0,
       show:false,
       dialong: false,
       apply_resume_id: 0,
@@ -219,40 +141,36 @@ export default {
       finished: false,
       finished_text: "",
       show_empty: false,
+      indexs:0,
       params: {
         page: 1,
-        pagesize: 15,
+        pagesize: 10,
+        status:0,
       },
      
       navList: [
-			{ text: '智能推荐', href: '/member/company/intelligenceInquiry', active: false },
-        { text: "主动询价", href: "/member/company/jobapply", active: false },
-        { text: "我的付费", href: "/member/company/download", active: true },
-        { text: "我的报价", href: "/member/company/interview", active: false },
-        // {
-        //   text: '视频报价',
-        //   href: '/member/company/interview_video',
-        //   active: false
-        // },
+			// { text: '智能推荐', href: '/member/company/intelligenceInquiry', active: false },
+        // { text: "主动询价", href: "/member/company/jobapply", active: false },
+        { text: "我的报价", href: "/member/company/download", active: true },
+        { text: "我的回访", href: "/member/company/interview", active: false },
+        // { text: '视频报价', href: '/member/company/interview_video', active: false },
         { text: "我的收藏", href: "/member/company/fav", active: false },
-        {
-          text: "浏览记录",
-          href: "/member/company/view_resume",
-          active: false,
-        },
+        { text: "浏览记录", href: "/member/company/view_resume", active: false,},
       ],
     };
   },
   created() {
     this.fetchData(true);
   },
+  watch:{
+    'bc':{
+      handler(ne){
+        this.params.status = ne
+        this.fetchData(true)
+      }
+    }
+  },
   methods: {
-    queding(){
-
-    },
-    quxiao(){
-
-    },
     fetchData(init) {
       this.show_empty = false;
       if (init === true) {
@@ -260,9 +178,8 @@ export default {
         this.finished = false;
         this.finished_text = "";
       }
-      http
-        .get(api.company_downresume_list, this.params)
-        .then((res) => {
+      http.get(api.companyDown_resumeIndex, this.params).then((res) => {
+        console.log(res,"1111111111")
           if (init === true) {
             this.dataset = [...res.data.items];
           } else {
@@ -270,7 +187,6 @@ export default {
           }
           // 加载状态结束
           this.loading = false;
-
           // 数据全部加载完成
           if (res.data.items.length < this.params.pagesize) {
             this.finished = true;
@@ -280,14 +196,32 @@ export default {
               this.show_empty = true;
             }
           }
-        })
-        .catch(() => {});
+        }).catch(() => {});
     },
     onLoad() {
       this.params.page++;
       this.fetchData(false);
     },
-    openAddInvitation(item) {
+    complete(){
+        http.get(api.companyJobCooperation,{rid:this.id}).then(res=>{
+          console.log(res,"提交成功")
+          this.completePopd = false
+          this.$notify({type: "success",message:res.message,});
+          this.dataset.splice(this.indexs,1)
+        })
+    },
+    completePop(item,index,is){
+      if(!is){
+        return
+      }
+      this.indexs = index
+      this.id = item.id
+      this.completePopd = true
+    },
+    openAddInvitation(item,index,is) {
+      if(!is){
+        return
+      }
       if (item.audit != 1) {
         this.$notify("该项目尚未通过审核，不能继续此操作");
         return false;
@@ -300,7 +234,20 @@ export default {
     closeAddInvitation() {
       this.showInvite = false;
     },
-    handlerRemark(item) {
+    companyJobEnd(){
+        http.get(api.companyJobEnd, {rid:this.id,reason:this.reason}).then((res) => {
+          this.dialong = false;
+          this.dataset.splice(this.indexs,1)
+           this.$notify({type: "success",message:res.message,});
+        })
+        .catch(() => {});
+    },
+    handlerRemark(item,index,is) {
+      if(!is){
+        return
+      }
+      this.id = item.id
+      this.indexs = index
       this.dialong = true;
       console.log(item, "我是数据");
       // this.$dialog
@@ -327,9 +274,7 @@ export default {
 
     submitRemark(values) {
       values.resume_id = this.remark_item.resume_id;
-      http
-        .post(api.remark_resume, values)
-        .then((res) => {
+      http.post(api.remark_resume, values).then((res) => {
           this.dataset.forEach((element) => {
             if (element.resume_id == this.remark_item.resume_id) {
               element.remark = values.remark;
@@ -344,6 +289,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.bc{
+  background: #fff!important;
+  border: 1px solid #ccc!important;
+  color: #000!important;
+}
+
 .van-popup--center {
     top: 50%;
     left: 50%;
@@ -352,23 +304,23 @@ export default {
     border-radius: 10px;
 }
 .offd {
-        width: 370px;
-      height: 220px;
-      background-color: #eee;
-      border-radius: 10px;
+  width: 370px;
+  height: 220px;
+  background-color: #eee;
+  border-radius: 10px;
   position: absolute;
   top: 50%;
   z-index: 9999;
 }
 .chuli {
   width: 20%;
-  font-size: 0.32rem;
-  color: #fff;
-  background-color: #fd7900;
-  border-radius: 0.133333rem;
+  font-size: 0.37rem;
+  color: #8a8484;
   padding: 0px 0px 0px 10px;
   height: 20px;
   line-height: 20px;
+  &-span{position: relative;
+    &::after{position: absolute;content: "";width: 6px;background: red;height: 6px;border-radius: 50%;left: 0;top: 6px;}}
 }
 .wagw {
   font-size: 12px;
@@ -378,7 +330,7 @@ export default {
   top: 25px;
 }
 .timew {
-  margin-top: 60px;
+  margin-top: 25px;
 }
 .ppos {
   font-size: 13px;
@@ -410,10 +362,36 @@ export default {
         background-color: #fff;
         border: 1px solid #e2e2e2;
         margin-left: 12px;
-        border-radius: 5px;
-        &.orange {
-          border-color: #ff5d24;
-          color: #ff5d24;
+        border-radius: 20px;
+        &-orange {
+          float: right;
+          font-size: 12px;
+          padding: 4px 18px;
+          background-color: #fff;
+          border: 1px solid #e2e2e2;
+          margin-left: 12px;
+          border-radius: 20px;
+          color: #e2e2e2;
+        }
+      }
+      .list_btn2 {
+        float: right;
+        font-size: 12px;
+        padding: 4px 18px;
+        background: #2c90f7;
+        border: 1px solid #e2e2e2;
+        color: #fff;
+        margin-left: 12px;
+        border-radius: 20px;
+        &-orange {
+          float: right;
+          font-size: 12px;
+          padding: 4px 18px;
+          border: 1px solid #e2e2e2;
+          margin-left: 12px;
+          border-radius: 20px;
+          background-color: #fff;
+          color: #e2e2e2;
         }
       }
       position: relative;
@@ -499,7 +477,7 @@ export default {
           font-weight: bold;
           color: #333333;
           padding-right: 8px;
-          max-width: 175px;
+          max-width: 100%;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;

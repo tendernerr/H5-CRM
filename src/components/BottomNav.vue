@@ -69,13 +69,13 @@ export default {
         // 企业
 		  this.secondClass = 'resume'
 		  this.secondText = '找项目'
-		  
-		  
-        this.secondTo = '/resumelist'
-        this.thirdClass = 'personal'
-        this.thirdText = '项目管理'
-        this.thirdTo = '/member/company/intelligenceInquiry'
-        this.mineTo = '/member/company/index'
+      this.secondTo = '/resumelist'
+      this.thirdClass = 'personal'
+      // this.thirdText = '项目管理'
+      // this.thirdTo = '/member/company/intelligenceInquiry'
+      this.thirdText = '智能推荐'
+      this.thirdTo = '/recommend'
+      this.mineTo = '/member/company/index'
       } else {
         // 个人
         this.secondClass = 'job'
@@ -107,8 +107,10 @@ export default {
 		      this.secondText = '找项目'
 		      this.secondTo = '/resumelist'
 		      this.thirdClass = 'personal'
-		      this.thirdText = '项目管理'
-		      this.thirdTo = '/member/company/intelligenceInquiry'
+		      // this.thirdText = '项目管理'
+		      // this.thirdTo = '/member/company/intelligenceInquiry'
+          this.thirdText = '智能推荐'
+          this.thirdTo = '/recommend'
 		      this.mineTo = '/member/company/index'
 		    } else {
 		      // 个人

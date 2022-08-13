@@ -37,6 +37,9 @@ export default {
 <style lang="scss" scoped>
 .inv-top-menu-bar {
   background: #ffffff;
+  position: sticky;
+  z-index: 999;
+  top:0;
   .top-menu {
     overflow: hidden;
     overflow-x: scroll;

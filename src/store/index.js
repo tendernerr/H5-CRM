@@ -104,11 +104,20 @@ const store = new Vuex.Store({
 	userInfo:{
 		
 	},
+  userInfo:{
+		
+	},
+  userInfos:{
+		
+	},
 	openId:''
   },
   mutations: {
 	  setopenId (state,data){
 		  state.openId = data
+	  },
+    setuserInfos (state,data){
+		  state.userInfos = data
 	  },
     setLoginState (state, data) {
 			console.log(state,data,'vuexxxxxxxxxx')

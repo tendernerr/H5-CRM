@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <Head :goback_custom="true" @gobackCustomMethod="$emit('closePopout')"
-    >举报{{typeCn}}</Head>
+    >申诉{{typeCn}}</Head>
     <div class="form_split_10"></div>
-    <div class="notice_bar">举报{{typeCn}}：{{type===1?jobname:fullname}}<div class="right_txt" @click="$emit('closePopout')">查看{{typeCn}}</div></div>
+    <div class="notice_bar">申诉{{typeCn}}：{{type===1?jobname:fullname}}<div class="right_txt" @click="$emit('closePopout')">查看{{typeCn}}</div></div>
     <div class="form_split_10"></div>
     <div class="feed_container">
-      <div class="feed_title">举报原因</div>
+      <div class="feed_title">申诉原因</div>
       <div class="feed_type">
         <div class="type_item" :class="item.id == reason ? 'selected' : ''" v-for="(item, index) in options_tipoff" :key="index" @click="handlerReason(item)">{{ item.text }}</div>
         <div class="clear"></div>
@@ -16,10 +16,10 @@
         v-model="content"
         class="feed_area"
         rows="8"
-        placeholder="请简要描述您的问题，以便我们尽快核实解决！若您是购买项目后发现号码错误或信息虚假，经核实清楚后，款项会第一时间退还给您！"
+        placeholder="请简要描述您的问题，以便我们尽快核实解决！若您是购买项目后发现号码错误或采购已结束，经核实清楚后，款项会3小时内退还给您！"
       ></textarea>
       <div class="feed_title">上传凭证</div>
-      <div class="up_text">请提供明确指向举报原因的证据，如聊天截图、门店招 牌等信息</div>
+      <div class="up_text">请提供明确指向申诉原因的证据，如聊天记录等信息</div>
       <div class="feed_up">
         <div class="img_item" v-for="(item, index) in imgList" :key="index">
           <img
@@ -68,9 +68,13 @@ export default {
   },
   computed: {
     options_tipoff () {
+      let arr = [{id:1,text:"号码错误"},{id:2,text:"同行套方案"},{id:3,text:"采购已结束"},{id:4,text:"其他"}]
+      return arr
       if (this.type === 1) {
+        console.log(this.$store.state.classifyTipoffJob,"1111")
         return this.$store.state.classifyTipoffJob
       } else {
+        console.log(this.$store.state.classifyTipoffResume,"222")
         return this.$store.state.classifyTipoffResume
       }
     }
@@ -101,7 +105,7 @@ export default {
     // 提交
     handleSubmit () {
       if (this.reason == 0) {
-        this.$notify('请选择举报原因')
+        this.$notify('请选择申诉原因')
         return false
       }
       if (this.content == '') {
@@ -116,9 +120,7 @@ export default {
       this.imgList.forEach(element => {
         imgArr.push(element.img)
       })
-      http
-        .post(api.tipoff, { target_id: this.target_id, type: this.type, reason: this.reason, content: this.content, img: imgArr })
-        .then(res => {
+      http.post(api.tipoff, { target_id: this.target_id, type: this.type, reason: this.reason, content: this.content, img: imgArr }).then(res => {
           this.$notify({
             type: 'success',
             message: res.message
