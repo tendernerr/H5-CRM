@@ -95,10 +95,10 @@
                 <div :class="[item.setmeal === '行业大牛'?'setmeal1':item.setmeal === '实力企业'?'setmeal2':item.setmeal === '基础企业'?'setmeal3':'setmeal']">{{item.setmeal}}</div>
                 <!-- <div v-if="item.setmeal === '实力企业'" class="" style="background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;">实力企业</div> -->
                 <!-- <div v-if="item.setmeal === '基础企业'" class="" style="background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;">基础企业</div> -->
-                <div class="" style="width: 5.5em;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 5px 0px 0;border: 2px red solid;">
+                <!-- <div class="" style="width: 5.5em;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 5px 0px 0;border: 2px red solid;">
                     <span style="background: red;padding:2px 3px 2px 1px">牛</span>
                     <span style="color: red;padding: 1px;">第{{item.year}}年</span>
-                </div>
+                </div> -->
                 <div v-if="!item.is_complained" style="width: 1.6em;border: 1px solid #eac97e;text-align:center;color: #eac97e;font-size: 12px;margin: 0px 5px 0 0px;border-radius: 0 0 50% 50%;">保</div>
                 <div class="tx3" style="font-size:13px;padding: 0;display: flex;align-items: center;">
                   售后评分：<span style="color: rgba(255,153,96,1);font-size:18px;">{{item.score}}</span> 

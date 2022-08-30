@@ -32,15 +32,8 @@
 		</div>
 		<div class="tab">
 			<van-tabs v-model="active">
-			  <van-tab title="项目信息">
+			  <van-tab title="项目介绍">
 				  <div class="tab1">
-						<div class="tab1List">
-							<span style="display: flex;align-items: center;margin: 0 0 0 auto;" @click="collection">
-								<img width="15" v-if="!isCollection" src="http://qiniucdn.hangyedaniu.com/img/startbefore.png" >
-								<img width="15" v-if="isCollection" src="http://qiniucdn.hangyedaniu.com/img/starafter.png" >
-								收藏
-							</span>
-						</div>
 						<!-- <div class="tab1List">
 							<div class="tab1List1">备案项目编号</div>
 							<div class="tab1List2">：</div>
@@ -71,11 +64,11 @@
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.construction_unit}}</div>
 						</div>
-						<div class="tab1List">
+						<!-- <div class="tab1List">
 							<div class="tab1List1">备案机关</div>
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.authoritykeep}}</div>
-						</div>
+						</div> -->
 						<!-- <div class="tab1List">
 							<div class="tab1List1">备案申报日期</div>
 							<div class="tab1List2">：</div>
@@ -101,7 +94,7 @@
 							<div class="tab1List2">：</div>
 							该项目可能会需要运用到以下工艺的产品！
 							<div class="tab1List3" style="display:flex;flex-wrap: wrap;">
-								<span v-for="(ite,inde) in dataMes.basehead.category" :key="inde" style="flex:none;padding: 3px 10px 4px;color: #409EFF;background: #e9f8ff;font-size: 12px;border-radius: 6px; margin:2px 5px 3px 0">
+								<span v-for="(ite,inde) in dataMes.basehead&&dataMes.basehead.category" :key="inde" style="flex:none;padding: 3px 10px 4px;color: #409EFF;background: #e9f8ff;font-size: 12px;border-radius: 6px; margin:2px 5px 3px 0">
 									{{ite}}
 								</span>
 							</div>
@@ -207,10 +200,6 @@
 							</textarea>
 						</div>
 					</div>
-					<div class='popupCenterDiv bor'>
-						<div class="popupCenterDivText"><span style='color: red;'>*</span>设备型号 ：</div>
-						<div class="inputDiv"><input  v-model="textareainput1" class="input" type="text"/></div>
-					</div>
 					<div class='popupCenterDiv'  @click="dateBox = true">
 						<div class="popupCenterDivText"><span style='color: red;'>*</span>下次联系时间 ：</div>
 						<div class="inputDiv"><input  v-model="textareainput2" class="input" type="text"/></div>
@@ -231,9 +220,21 @@
 		</van-popup>
 		<!-- 拨打电话 -->
 		<van-popup v-model="call" position="bottom" style="background-color: rgba(0, 0, 0, 0);">
-			<div class="callMe"><a :href="'tel:'+dataMes.userinfo.phone">{{dataMes.userinfo.phone}}</a></div>
+			<div v-if="dataMes.userinfo.phone" class="callMe"><a :href="'tel:'+dataMes.userinfo.phone">{{dataMes.userinfo.phone}}</a></div>
+			<div v-else="dataMes.userinfo.phone" class="callMe">暂无号码</div>
 			<div class="callCancel" @click="call = false">取消</div>
 		</van-popup>
+		<div style="display: flex;border-top: 1px solid #ccc;position: fixed;bottom: 0;left: 0;right: 0;background: #fff;">
+			<div style="width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
+				<div @click="call = true" style="font-size:18px"><van-icon name="phone-o" /></div>
+				<div>电话</div>
+			</div>
+			<div @click="collection" :class="{'star-size':isCollection}" style="width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;padding: 0 13px 0 0;">
+				<div style="font-size:18px"><van-icon :name="isCollection?'star':'star-o'" /></div>
+				<div>收藏</div>
+			</div>
+			<div @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
+		</div>
   </div>
 </template>
 
@@ -286,19 +287,38 @@ export default {
 		})
 	  },
 	  collection(){
+		if(!this.dataMes.isLogin){
+			this.active = 1
+			this.$notify({ type: 'warning', message: '尚未登录' });
+			return
+		}
 		http.post(api.setfac,{type:this.isCollection,id:this.id}).then(res=>{
 			this.isCollection = this.isCollection?0:1;
 			this.$notify({ type: 'success', message: res.message });
 		})
 	  },
+	  resume_keepProjectApply(){
+		if(!this.dataMes.isLogin){
+			this.active = 1
+			this.$notify({ type: 'warning', message: '尚未登录' });
+			return
+		}
+		//  不是会员
+		if(!this.dataMes.userinfo.is_setmeal){
+			http.post(api.resume_keepProjectApply,{id:this.id}).then(res=>{
+				this.$notify({ type: 'success', message: res.message });
+			})
+		}
+		// 是会员
+		if(this.dataMes.userinfo.is_setmeal){
+			this.active = 2
+			this.show = true
+		}
+	  },
 	  // 添加沟通记录
 	  homeResumeKeepAddRecord(){
 		  if(this.textareaText == ''){
 			  this.$notify({ type: 'warning', message: '请输入沟通内容' });
-			  return
-		  }
-		  if(this.textareainput1 == ''){
-			  this.$notify({ type: 'warning', message: '请输入设备型号' });
 			  return
 		  }
 		  if(this.textareainput2 == ''){
@@ -365,6 +385,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.star-size{color: #f90 !important;}
 	#app{ font-size: 13px; height: 100vh;
 		>>> .van-tabs__line{background-color: #00aaff!important;}
 		>>> .van-tab--active{
@@ -412,7 +433,7 @@ export default {
 					}
 					.headBox1UserName{ display: flex; flex-direction: column; justify-content: space-around; flex: 1;
 						.headBox1UserNameTop{display: flex; justify-content: space-between;
-							.headBox1UserNameTop1{font-size: 15px;color: #000; font-weight: 700;word-break: break-all; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;}
+							.headBox1UserNameTop1{font-size: 15px;color: #000; font-weight: 700;word-break: break-all; overflow: hidden; text-overflow: ellipsis; display: block; -webkit-box-orient: vertical; -webkit-line-clamp: 1;}
 							.headBox1UserNameTop2{padding-left: 5px; flex: none;}
 						}
 						.headBox1UserNameBottom{display: flex; justify-content: space-between;
@@ -429,7 +450,7 @@ export default {
 				.address{padding: 15px 0 0;display: flex;justify-content:space-between;}
 			}
 		}
-		.tab{
+		.tab{padding: 0 0 50px;
 			.tab1{padding: 20px; border-top:5px solid #f4f4f4;
 				.tab1List{padding-bottom: 18px;font-size: 13px; color: #000; display: flex; 
 					.tab1List1{width: 7em; text-align-last: justify; flex: none;}

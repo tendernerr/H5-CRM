@@ -13,6 +13,7 @@
           <van-icon name="wap-home-o" /> 不适合
       </div>
     </div>
+    <div style="background: #ffa500;color: #fff;font-size: 13px;padding: 7px 0;text-align: center;">及时填写与客户的沟通记录，加强与客户的联系有利于成单！</div>
     <van-empty image="search" description="没有找到对应的信息" style="background-color: #fff" v-if="show_empty === true"/>
     <van-list v-if="dataset.length > 0" v-model="loading" :finished="finished" :finished-text="finished_text" @load="onLoad" :immediate-check="true">
       <div class="list_wrapper">
@@ -45,15 +46,15 @@
                   项目在：{{ item.address }}
                 </div>
               </div>
-              <div class="timew" style="wdith: 60px; height: 30px; background-color: #1787fb; border-radius: 5px; align-items: center; color: #e5f1ff; display: flex; padding: 10px;">
+              <!-- <div class="timew" style="wdith: 60px; height: 30px; background-color: #1787fb; border-radius: 5px; align-items: center; color: #e5f1ff; display: flex; padding: 10px;">
                 已参与{{ item.involved_count }}/{{ item.involved }}
-              </div>
+              </div> -->
             </div>
             <div class="tx4">
               <!-- <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn2':'list_btn2-orange']" @click.stop="openAddInvitation(item,index,item.status!=='不适合'&&item.status!=='已成交')">
                 填写沟通记录
               </div> -->
-               <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn2':'list_btn2-orange']">
+               <div @click.stop="addRecord(item,index)"  :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn2':'list_btn2-orange']">
                 填写沟通记录
               </div>
               <div :class="[item.status!=='不适合'&&item.status!=='已成交'?'list_btn':'list_btn-orange']" @click.stop="completePop(item,index,item.status!=='不适合'&&item.status!=='已成交')">
@@ -103,6 +104,55 @@
         </div>
       </div>
     </van-popup>
+    <van-popup v-model="show" position="bottom" :style="{ height: '65%'}">
+              <div>{{listItem.record}}</div>
+              <div class="popupDiv" v-if="listItem.records&&listItem.records.length>0">
+                <div class="popupDivHaed">
+                  <div class=""></div>
+                  <div class="popupDivHaedText">添写沟通记录</div>
+                  <div class="popupDivHaedGb" @click="show = false"><van-icon name="cross" size="26" color="#000000" /></div>
+                </div>
+                <div class="popupCenter">
+                  <div v-if="listItem.product_source === '备案项目'"  style="display: flex; justify-content: space-around;align-items: center;">
+                    <div style="font-size: 16px;">项目进展:</div>
+                    <div @click="process_type = 0" :class="{'process_type':process_type === 0}" style="padding: 5px 10px;background: #ccc;color: #fff;font-size:12px;">厂房建设</div>
+                    <div @click="process_type = 1" :class="{'process_type':process_type === 1}" style="padding: 5px 10px;background: #ccc;color: #fff;font-size:12px;">暂无需求</div>
+                    <div @click="process_type = 2" :class="{'process_type':process_type === 2}" style="padding: 5px 10px;background: #ccc;color: #fff;font-size:12px;">采购洽谈</div>
+                  </div>
+                  <div class='popupCenterDivTextarea'>
+                    <div class="popupCenterDivTextareaText"><span style='color: red;'>*</span>本次沟通内容 ：</div>
+                    <div class="textarea">
+                      <textarea v-model="textareaText"></textarea>
+                    </div>
+                  </div>
+                  <div class='popupCenterDiv'  @click="dateBox = true">
+                    <div class="popupCenterDivText"><span style='color: red;'>*</span>下次联系时间 ：</div>
+                    <div class="inputDiv"><input  v-model="textareainput2" class="input" type="text"/></div>
+                  </div>
+                  <div class='popupCenterDiv' style="border:0">
+                    <div class="popupCenterDivText">沟通记录 ：</div>
+                  </div>
+                  <div style="padding: 0 0 55px;font-size: 15px;">
+                      <div style="padding: 0 0 15px;" v-for="(item,index) in listItem.records">
+                        <p style="padding: 0 17px 0;">{{item.addtime}}</p>
+                        <p style="padding: 0 19px 0;">沟通内容：</p>
+                        <p style="padding: 0 18px;text-indent: 1.5em;word-break: break-all;">{{item.content}}</p>
+                        <p style="padding: 0 17px 0;">下次沟通时间：{{item.lasttime}}</p>
+                      </div>
+                  </div>
+                  <div class="button"> 
+                    <div class="button2" @click="homeResumeKeepAddRecord">确认</div>
+                  </div>
+                </div>
+              </div>
+              <div v-else style="font-size: 15px;color: #000;padding: 61px 40px;text-indent: .8em;line-height: 30px;">
+                为了您的操作更便捷，首次沟通记录需在您在电脑端添加!
+              </div>
+            </van-popup>
+            <!-- 时间选择器 -->
+            <van-popup v-model="dateBox" position="bottom" :style="{ height: '65%'}">
+              <van-datetime-picker type="date" title="选择联系时间" @cancel='dateBox = false' :min-date="minDate" @confirm='confirm' />
+            </van-popup>
   </div>
 </template>
 
@@ -125,8 +175,15 @@ export default {
   },
   data() {
     return {
+      listItem:"",
+      textareaText:'',
+      listIndex:"",
+      show:false,
       completePopd:false,
       reason:'',
+      textareainput2:'',
+      dateBox:false,
+      minDate: new Date(),
       id:'',
       bc:0,
       show:false,
@@ -218,6 +275,32 @@ export default {
       this.id = item.id
       this.completePopd = true
     },
+     addRecord(e,i){
+      console.log(e,i,"11111")
+      this.listItem = e
+      this.listIndex = i
+      this.show = true
+    },
+    homeResumeKeepAddRecord(){
+		  if(this.textareaText == ''){
+			  this.$notify({ type: 'warning', message: '请输入沟通内容' });
+			  return
+		  }
+		  if(this.textareainput2 == ''){
+			  this.$notify({ type: 'warning', message: '请选择下次联系时间' });
+			  return
+		  }
+        http.post(api.companyReturn_visitAdd_record,{
+          content:this.textareaText,  //内容        
+          interview_date:this.textareainput2,  //下次沟通时间
+          resume_id:this.listItem.rid,  //备案项目id
+        }).then(res=>{
+          this.dataset[this.listIndex].records.unshift(res.data)
+          this.textareaText = ''
+          this.textareainput2 = ''
+          this.$notify({type: "success",message:res.message,});
+        })
+	  },
     openAddInvitation(item,index,is) {
       if(!is){
         return
@@ -242,6 +325,12 @@ export default {
         })
         .catch(() => {});
     },
+    confirm(v){
+		let date = v.getMonth()
+			date = + date +1
+		  this.textareainput2 = v.getFullYear() +'-' + date +'-' + v.getDate()
+		  this.dateBox = false
+	  },
     handlerRemark(item,index,is) {
       if(!is){
         return
@@ -289,6 +378,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.popupDiv{color: #000; height: 100%; 
+			.popupDivHaed{display: flex; justify-content: space-between; align-items: center; padding: 5px 5px; background: #fff; position: sticky; top: 0;
+				.popupDivHaedText{font-size: 18px; font-weight: 700;}
+				.popupDivHaedGb{}
+			}
+			.popupCenter{ margin-top: 15px; display: flex; flex-direction: column; height:calc( 100% - 40px - 15px ) ;
+				.process_type{color: #0095ff  !important;}
+				.popupCenterDivTextarea{padding: 10px;
+					.popupCenterDivTextareaText{font-size: 15px; color: #000; padding-bottom: 8px;}
+					.textarea{width: 100%; height: 90px;font-size: 13px;;
+						textarea{width: 100%; height: 100%; border-radius: 5px; border: 1px solid #dadada;}
+					}
+				}
+				.popupCenterDiv{display: flex; align-items: center; border-bottom: #eaeaea solid 1px;padding: 10px;
+					&.bor{border-top: 1px solid #eaeaea;}
+					.inputDiv{flex: 1; font-size: 13px;;
+						.input{border: 0; flex: 1; height: 100%; width: 100%;}
+					}
+					.popupCenterDivText{
+						padding-right: 5px; font-size: 15px;
+            .inputDiv{font-size: 13px;}
+					}
+				}
+				.button{display: flex; flex-direction: column; justify-content: space-between; flex: 1; padding: 3px 8px 0; position: fixed; bottom: 0; width: 100%; background: #fff;
+					.button2{margin: auto 0 0 5px;border-radius: 10px; background-color: #00aaff; text-align: center; height: 40px; line-height: 40px; color: #fff;  flex:none; margin-bottom: 8px;}
+				}
+			}
+		}
 
 .bc{
   background: #fff!important;

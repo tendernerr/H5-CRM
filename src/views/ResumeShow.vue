@@ -66,6 +66,7 @@
           <div class="down" style="display: flex; justify-content: space-between">
             <div>
               <span v-if="base_info.is_setmeal || !base_info. isFortyEightHours" style="color: rgb(255 177 0);font-size: 14px;">{{!base_info.isbuy?'所需点券':'买断所需点券'}}：{{base_info.service_amount}}</span>
+              <span v-else style="font-size: 14px;">{{ intention_list[0].address || '' }}</span>
               <!-- <div
               class="right"
               @click="showDetail = !showDetail"
@@ -244,70 +245,6 @@
 
         <div class="form_split_10"></div>
         <div class="content_wrapper">
-          <!--教育经历-->
-          <!-- <div class="box_6" v-if="education_list.length > 0">
-            <div class="box_head"><div class="txt">教育经历</div></div>
-            <div class="box_content">
-              <div
-                class="tx1"
-                v-for="(item, index) in education_list"
-                :key="index"
-              >
-                <div class="t1">{{ item.school }}</div>
-                <div class="t2">
-                  {{ item.starttime | monthTimeFilter }}
-                  <span v-if="item.todate == 1">至今</span>
-                  <span v-else>至 {{ item.endtime | monthTimeFilter }}</span>
-                </div>
-                <div class="t3">{{ item.education_text }}{{ field_rule.education.major!==undefined && field_rule.education.major.is_display === 1 && item.major ? `，${item.major}` : '' }}</div>
-              </div>
-            </div>
-          </div> -->
-          <!--案例经历-->
-          <!-- <div class="box_7" v-if="work_list.length > 0">
-            <div class="box_head"><div class="txt">项目动态</div></div>
-            <div class="box_content">
-              <div class="tx1" v-for="(item, index) in work_list" :key="index">
-                <div class="t1">{{ item.companyname }}</div>
-                <div class="t2">
-                  {{ item.starttime | monthTimeFilter }}
-                  <span v-if="item.todate == 1">至今</span>
-                  <span v-else>至 {{ item.endtime | monthTimeFilter }}</span>
-                </div>
-                <div class="t3">{{ item.jobname }}</div>
-                <div class="t4">
-                  {{ item.duty }}
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <!--培训经历-->
-          <!-- <div
-            class="box_8"
-            v-if="
-              resume_module.training!==undefined && resume_module.training.is_display == 1 && training_list.length > 0
-            "
-          >
-            <div class="box_head"><div class="txt">培训经历</div></div>
-            <div class="box_content">
-              <div
-                class="tx1"
-                v-for="(item, index) in training_list"
-                :key="index"
-              >
-                <div class="t1">{{ item.agency }}</div>
-                <div class="t2">
-                  {{ item.starttime | monthTimeFilter }}
-                  <span v-if="item.todate == 1">至今</span>
-                  <span v-else>至 {{ item.endtime | monthTimeFilter }}</span>
-                </div>
-                <div class="t3">{{ item.course }}</div>
-                <div class="t4">
-                  {{ item.description }}
-                </div>
-              </div>
-            </div>
-          </div> -->
           <!--项目经历-->
           <div
             class="box_9"
@@ -360,56 +297,6 @@
             language_list.length > 0
           "
         >
-          <!--获得证书-->
-          <!-- <div
-            class="box_10"
-            v-if="
-            resume_module.certificate!==undefined &&
-              resume_module.certificate.is_display == 1 &&
-                certificate_list.length > 0
-            "
-          >
-            <div class="box_head"><div class="txt">获得证书</div></div>
-            <div class="box_content">
-              <div
-                class="tx1"
-                v-for="(item, index) in certificate_list"
-                :key="index"
-              >
-                {{ item.name }}
-                <div class="right_txt">
-                  {{ item.obtaintime | monthTimeFilter }}
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <!--语言能力-->
-          <!-- <div
-            class="box_11"
-            v-if="
-            resume_module.language!==undefined &&resume_module.language.is_display == 1 && language_list.length > 0
-            "
-          >
-            <div class="box_head"><div class="txt">语言能力</div></div>
-            <div class="box_content">
-              <div
-                class="tx1"
-                v-for="(item, index) in language_list"
-                :key="index"
-              >
-                {{ item.language_text }}，{{ item.level_text }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="form_split_10"
-          v-if="resume_module.img!==undefined &&resume_module.img.is_display == 1 && img_list.length > 0"
-        ></div>
-        <div
-          class="content_wrappe
-          v-if="resume_module.img!==undefined &&resume_module.img.is_display == 1 && img_list.length > 0"
-        > -->
           <!--我的作品-->
           <div class="box_12">
             <div class="box_head"><div class="txt">我的作品</div></div>
@@ -461,9 +348,20 @@
             >
               {{ has_fav == 1 ? "已收藏" : "收藏" }}
             </div>
-            <div :class="['item_chat',!isSubscribe?'':'item_chat1' ]" @click="doMsg">{{isSubscribe?'已订阅':'订阅项目'}}</div>
+            <!-- <div :class="['item_chat',!isSubscribe?'':'item_chat1' ]" @click="doMsg">{{isSubscribe?'已订阅':'订阅项目'}}</div> -->
+            <!-- base_info.isbuy：是否本人买过 -->
+            <!-- base_info.is_user_buyout：是否本人买断 -->
             <div v-if="!base_info.isbuy" class="item_apply" @click="doDownload">获取联系方式</div>
-				<div v-if="base_info.isbuy" class="item_apply" @click="doDownload1">买断项目</div>
+            <!-- 买过 -->
+            <div v-else-if="base_info.involved_count != base_info.involved" class="item_apply" @click="doDownload1">买断项目</div>
+            <div v-else-if="base_info.is_user_buyout" class="item_apply" @click="doDownload">
+              你已买断
+            </div>
+            <div class="item_apply" @click="doDownload" v-else>
+                该项目参与人数已满
+            </div>
+            <!-- base_info.involved_count}}/{{base_info&&base_info.involved}} -->
+            
             <!-- <div class="item_apply" v-if="show_contact===0" @click="doDownload">立即报价</div> -->
             <!-- <div class="item_apply" v-else @click="doInterview">我的报价</div> -->
             <!-- <div class="clear"></div> -->
@@ -521,27 +419,6 @@
         :after_login_data="after_login_data"
       ></Login>
     </van-popup>
-
-    <!-- <van-dialog v-model="showDirectService" title="立即报价" show-cancel-button :confirm-button-text="directServiceInfo.btnCn" @confirm="handlerDirectService">
-      <div class="dialog_tip_wrapper">
-        <div class="tx1" v-if="directServiceInfo.use_type == 'points'">
-          你的立即报价点数不足，下载该项目需要支付
-          <span class="red">{{ directServiceInfo.need_points }}</span>
-          {{ $store.state.config.points_byname }}。
-        </div>
-        <div class="tx1" v-if="directServiceInfo.use_type == 'money'">
-          你的立即报价点数不足，下载该项目需要支付
-          <span class="red">{{ directServiceInfo.need_expense }}</span>
-          元。
-        </div>
-        <div class="tx2" v-if="parseInt(directServiceInfo.discount) > 0">
-          购买项目包价格低至<span class="red">{{directServiceInfo.discount}}</span>折，
-          <router-link to="/member/order/add/common?type=service&service_type=resume_package"class="blue">
-            立即了解
-          </router-link>
-        </div>
-      </div>
-    </van-dialog> -->
 
     <van-popup v-model="showDirectService" closeable round :style="{ width: '85%' }">
       <div style="padding: 0 0 20px 0;">
@@ -1571,11 +1448,11 @@ export default {
         if(!this.base_info.is_setmeal){
           //  记录一次用户行为
             http.post(api.projectApply,{id:this.query_id}).then(res=>{console.log(res,"11111")})
-          // 如果不是48小时，允许购买 跳过 is_setmeal 这个判断
-            if(this.base_info.isFortyEightHours){
+          // 如果不2小时，允许购买 跳过 is_setmeal 这个判断 或者是不是会员买过，如果会员买过也不能购买
+            if(this.base_info.isFortyEightHours || this.base_info.is_setmeal_buy){
             this.$dialog.confirm({
                 title: "非常抱歉",
-                message: `<div style='text-align: left;color: #ffba20;padding: 3px 0;'>该项目为会员项目，您无权参与该报价！</div><div  style='text-align: left;padding: 3px 0;'>项目报价原则：</div><div  style='text-align: left;padding: 3px 0;'>1.会员单位优先于非会员单位<span style='color:#0089ff'>>查看会员价格<</span></div><div  style='text-align: left;padding: 3px 0;'>2.会员单位报价后，非会员单位不得参与报价；</div><div  style='text-align: left;padding: 3px 0;'>3.会员单位48小时内不参与报价，非会员会员方可参与报价；</div>`,
+                message: `<div style='text-align: left;color: #ffba20;padding: 3px 0;'>该项目为会员项目，您无权参与该报价！</div><div  style='text-align: left;padding: 3px 0;'>项目报价原则：</div><div  style='text-align: left;padding: 3px 0;'>1.会员单位优先于非会员单位<span style='color:#0089ff'>>查看会员价格<</span></div><div  style='text-align: left;padding: 3px 0;'>2.会员单位报价后，非会员单位不得参与报价；</div><div  style='text-align: left;padding: 3px 0;'>3.会员单位2小时内不参与报价，非会员会员方可参与报价；</div>`,
                 confirmButtonText: "查看会员价格",
               }).then(() => {
                 this.go('/member/order/add/common?type=service')
@@ -1699,7 +1576,7 @@ export default {
           } else{
             this.$dialog.confirm({
               title: "下载成功",
-              message: "温馨提示：由于您是<span style='color:#ffb50f;'>非会员单位</span>，只能查看发布48小时后的项目，平台仅对项目电话真实性负责，不再对项目的有效性负责；",
+              message: "温馨提示：由于您是<span style='color:#ffb50f;'>非会员单位</span>，只能查看发布2小时后的项目，平台仅对项目电话真实性负责，不再对项目的有效性负责；",
               confirmButtonText: "了解会员特权",
               cancelButtonText:'知道了',
             }).then(() => {
@@ -1893,28 +1770,28 @@ export default {
       }
     },
     handlerReport() {
-      // if (this.is_company_login === false) {
-      //   this.$dialog
-      //     .confirm({
-      //       title: "提示",
-      //       message: "当前操作需要登录企业账号",
-      //       confirmButtonText: "去登录",
-      //     })
-      //     .then(() => {
-      //       this.showLogin = true;
-      //       this.after_login_data = {
-      //         method: "handlerReport",
-      //       };
-      //     })
-      //     .catch(() => {});
-      // } else {
-      //   if (this.base_info.audit != 1) {
-      //     this.$notify("该项目还未审核通过，不能继续此操作");
-      //     return false;
-      //   }
+      if (this.is_company_login === false) {
+        this.$dialog
+          .confirm({
+            title: "提示",
+            message: "当前操作需要登录企业账号",
+            confirmButtonText: "去登录",
+          })
+          .then(() => {
+            this.showLogin = true;
+            this.after_login_data = {
+              method: "handlerReport",
+            };
+          })
+          .catch(() => {});
+      } else {
+        if (this.base_info.audit != 1) {
+          this.$notify("该项目还未审核通过，不能继续此操作");
+          return false;
+        }
         this.$refs.tipoff.initCB();
         this.showTipoff = true;
-      // }
+      }
     },
     // 预览作品
     previewImg(index) {
@@ -2036,7 +1913,7 @@ export default {
   background-color: #286e34;
   color: #ffffff;
   font-size: 15px;
-  width: 100px;
+  flex: 1;
   margin-right: 15px;
   border-radius: 5px;
   flex-shrink: 0;
@@ -2188,7 +2065,7 @@ export default {
     height: 63px;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     &::after {
       position: absolute;

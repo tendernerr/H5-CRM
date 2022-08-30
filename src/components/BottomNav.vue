@@ -73,7 +73,7 @@ export default {
       this.thirdClass = 'personal'
       // this.thirdText = '项目管理'
       // this.thirdTo = '/member/company/intelligenceInquiry'
-      this.thirdText = '智能推荐'
+      this.thirdText = '商机订阅'
       this.thirdTo = '/recommend'
       this.mineTo = '/member/company/index'
       } else {
@@ -109,7 +109,7 @@ export default {
 		      this.thirdClass = 'personal'
 		      // this.thirdText = '项目管理'
 		      // this.thirdTo = '/member/company/intelligenceInquiry'
-          this.thirdText = '智能推荐'
+          this.thirdText = '商机订阅'
           this.thirdTo = '/recommend'
 		      this.mineTo = '/member/company/index'
 		    } else {

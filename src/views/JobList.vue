@@ -44,76 +44,6 @@
             @doSearch="doSearchByCategory"
           ></JobCategoryFilter>
         </van-dropdown-item>
-        <!-- <van-dropdown-item
-          :title="wageTitle"
-          v-model="optionWage"
-          :options="optionFilterWage"
-          @change="handleWage"
-        /> -->
-        <!-- <van-dropdown-item :title="otherTitle" ref="dropMore">
-          <div class="more_box">
-            <div class="item_wrapper">
-              <div class="item_title">项目类型要求</div>
-              <div class="item_group">
-                <div
-                  :class="item.select ? 'item selected' : 'item'"
-                  v-for="(item, index) in optionEducation"
-                  :key="index"
-                  @click="
-                    optionEducation = restructureData(
-                      optionEducation,
-                      item.id,
-                      'education'
-                    )
-                  "
-                >{{ item.text }}</div>
-                <div class="clear"></div>
-              </div>
-              <div class="item_title">案例涉及工艺</div>
-              <div class="item_group">
-                <div
-                  :class="item.select ? 'item selected' : 'item'"
-                  v-for="(item, index) in optionExperience"
-                  :key="index"
-                  @click="
-                    optionExperience = restructureData(
-                      optionExperience,
-                      item.id,
-                      'experience'
-                    )
-                  "
-                >{{ item.text }}</div>
-                <div class="clear"></div>
-              </div>
-              <div class="item_title">设备亮点</div>
-              <div class="item_group">
-                <div
-                  :class="item.select ? 'item selected' : 'item'"
-                  v-for="(item, index) in optionJobTag"
-                  :key="index"
-                  @click="handleCheckJobTag(item)"
-                >{{ item.text }}</div>
-                <div class="clear"></div>
-              </div>
-              <div class="item_title">更新时间</div>
-              <div class="item_group">
-                <div
-                  :class="item.select ? 'item selected' : 'item'"
-                  v-for="(item, index) in optionSettr"
-                  :key="index"
-                  @click="
-                    optionSettr = restructureData(optionSettr, item.id, 'settr')
-                  "
-                >{{ item.text }}</div>
-                <div class="clear"></div>
-              </div>
-              <div class="wrapper_bottom">
-                <div class="btn_c" @click="handleClearMore">清空</div>
-                <div class="btn_c blue" @click="handleSelectMore">确定</div>
-              </div>
-            </div>
-          </div>
-        </van-dropdown-item> -->
       </van-dropdown-menu>
     </div>
     <div class="form_split_10"></div>
@@ -154,18 +84,20 @@
                 <div class="tag_cell" v-for="(t, key) in item.tag" :key="key">{{ t }}</div>
               </div>
               <div class="" style="font-size: 13px;padding-bottom: 8px;color: #828282;">
-                设备交期：{{ item.delivery_date }}
+                设备交期：{{ item.delivery_date }} <span class="district_text"><van-icon name="location-o" />{{ item.district_text }}</span>
               </div>
               <div class="company" style="padding-top: 0;border: 0;padding-bottom: 8px;">
                 <div class="name">{{ item.companyname }}</div>
                 <div class="auth_ico" v-if="item.company_audit == 1"></div>
-                <div class="crw_ico" v-if="item.setmeal_icon != ''">
+                <!-- <div class="crw_ico" v-if="item.setmeal_icon != ''">
                   <img :src="item.setmeal_icon" />
-                </div>
+                </div> -->
                 <div class="clear"></div>
               </div>
-              <div class="" style="font-size: 13px;padding-bottom: 12px;color: #828282;text-align: right;padding-right: 8px;">
-                {{ item.district_text }}
+              <div class="" style="font-size: 13px;padding-bottom: 12px;color: #828282;padding-right: 8px;display: flex;align-items: center;">
+                <div :class="[item.setmeal === '行业大牛'?'setmeal1':item.setmeal === '实力企业'?'setmeal2':item.setmeal === '基础企业'?'setmeal3':'setmeal']">{{item.setmeal}}</div>
+                <img v-if="item.company_audit" style="margin: 0 5px 0px 0;" width="23"  src="/static/img/jobs_list_auth_ico.84626b0.png" />
+                <img v-if="item.setmeal_icon != ''" style="margin: -3px 5px 0px 0;" width="18"  src="https://www.hangyedaniu.com/upload/resource/setmeal3.png" />
               </div>
             </div>
           </div>
@@ -738,6 +670,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.setmeal{background-image: linear-gradient(90deg,#f5dd33, #757547);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal1{background-image: linear-gradient(90deg,#ff0000, #fbb517);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal2{background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal3{background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
 .more_box {
   .item_wrapper {
     .item_group {

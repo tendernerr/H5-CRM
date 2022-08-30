@@ -38,9 +38,17 @@
           <div class="ico ic1"></div>
           <div class="txt">发布案例</div>
         </div> -->
+        <div class="item" @click="$router.push('/company/'+companyinfo.id)">
+          <div class="ico ic4"></div>
+          <div class="txt">我的店铺</div>
+        </div>
         <div class="item" @click="$router.push('/shortvideo/videoManage')" v-if="$store.state.config.shortvideo_enable === '1'">
           <div class="ico ic6"></div>
           <div class="txt">发布视频</div>
+        </div>
+        <div class="item" @click="$router.push('/myPostSale')" v-if="$store.state.config.shortvideo_enable === '1'">
+          <div class="ico ic1"></div>
+          <div class="txt">我的售后</div>
         </div>
         <div class="item" @click="handlerRefreshBatch">
           <div class="ico ic2"></div>
@@ -49,10 +57,6 @@
         <div class="item" @click="handlerJump('/member/company/joblist',1)">
           <div class="ico ic3"></div>
           <div class="txt">案例管理</div>
-        </div>
-        <div class="item" @click="$router.push('/resumelist')">
-          <div class="ico ic4"></div>
-          <div class="txt">项目搜索</div>
         </div>
       </div>
       <div class="form_split_10"></div>
@@ -80,7 +84,7 @@
         </div>
       </div>
       <div class="box_5">
-        <div class="item" @click="handlerJump('/member/company/jobapply',1)">
+        <!-- <div class="item" @click="handlerJump('/member/company/jobapply',1)">
           <div
             class="num"
             :class="manage.job_apply.red_point == 1 ? 'new' : ''"
@@ -88,8 +92,8 @@
             {{ manage.job_apply.number }}
           </div>
           <div class="txt">主动询价</div>
-        </div>
-        <div class="item" @click="handlerJump('/member/company/download',1)">
+        </div> -->
+        <!-- <div class="item" @click="handlerJump('/member/company/download',1)">
           <div
             class="num"
             :class="manage.down_resume.red_point == 1 ? 'new' : ''"
@@ -97,25 +101,31 @@
             {{ manage.down_resume.number }}
           </div>
           <div class="txt">我的付费</div>
-        </div>
+        </div> -->
         <div class="item" @click="handlerJump('/member/company/interview',1)">
           <div
             class="num"
             :class="manage.interview.red_point == 1 ? 'new' : ''"
           >
-            {{ manage.interview.number }}
+            {{ manage.interview&&manage.interview.number }}
           </div>
           <div class="txt">我的报价</div>
         </div>
+        <div class="item" @click="handlerJump('/member/company/interview',1)">
+          <div class="num" :class="manage.fav.red_point == 1 ? 'new' : ''">
+            {{ manage.return_visit&&manage.return_visit.number }}
+          </div>
+          <div class="txt">我的回访</div>
+        </div>
         <div class="item" @click="handlerJump('/member/company/fav',1)">
           <div class="num" :class="manage.fav.red_point == 1 ? 'new' : ''">
-            {{ manage.fav.number }}
+            {{ manage.fav&&manage.fav.number }}
           </div>
           <div class="txt">我的收藏</div>
         </div>
         <div class="item" @click="handlerJump('/member/company/view_resume',1)">
           <div class="num" :class="manage.view.red_point == 1 ? 'new' : ''">
-            {{ manage.view.number }}
+            {{ manage.view&&manage.view.number }}
           </div>
           <div class="txt">浏览记录</div>
         </div>
@@ -188,13 +198,13 @@
         >
           企业管理
         </div>
-        <div
+        <!-- <div
           class="handle_line l6"
           @click="handlerJump('/member/company/recommend',1)"
         >
           智能匹配
           <div class="tip_go"></div>
-        </div>
+        </div> -->
         <!-- <div class="handle_line l2" @click="handlerJump('/im/imList',1)">
           我的职聊
           <span v-show="imUnreaded" class="point"></span>
@@ -410,13 +420,13 @@ export default {
         .catch(() => {})
     },
     fetchData (is_refresh = false) {
-      http
-        .post(api.company_index, {})
-        .then(res => {
+      http.post(api.company_index, {}).then(res => {
+          console.log(res,"22222")
           const { companyinfo, manage, setmeal, message_list } = {
             ...res.data
           }
           this.companyinfo = companyinfo
+          console.log(manage,"managemanage")
           this.manage = manage
           this.setmeal = setmeal
           this.message_list = message_list

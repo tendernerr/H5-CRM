@@ -15,24 +15,25 @@
           <div class="clear"></div>
         </div>
         <div class="tx2">
-          <div style="align-items: center;padding: 5px 0;display: flex;">
-            <div v-if="base_info.year" class="" style="width: 63px;padding: 2px 2px 0px 0;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 8px 5px 0;border: 2px red solid;">
+          <div style="align-items: center;padding: 5px 0;display: flex;flex:none">
+            <!-- <div v-if="base_info.year" class="" style="width: 63px;padding: 2px 2px 0px 0;font-size: 12px;color: rgb(255, 255, 255);margin: 0px 8px 5px 0;border: 2px red solid;">
               <span style="background: red;padding:2px 3px 2px 1px">牛</span>
               <span style="color: red;padding: 1px;">第{{base_info.year}}年</span>
-            </div>
+            </div> -->
+            <div :class="[base_info.setmeal === '行业大牛'?'setmeal1':base_info.setmeal === '实力企业'?'setmeal2':base_info.setmeal === '基础企业'?'setmeal3':'setmeal']">{{base_info.setmeal}}</div>
             <div v-if="base_info.is_complained === 0" style="height:23px;width: 19px;;border: 1px solid #eac97e;color: #eac97e;font-size: 12px;margin: -5px 0 0 0;padding: 2px 3px 1px 2px;border-radius: 0 0 50% 50%;">保</div>
-            <div class="auth_ico" v-if="base_info.audit == 1"></div>
+            <img v-if="base_info.audit" style="position: relative;top: -3px;left: 5px;" width="23"  src="/static/img/jobs_list_auth_ico.84626b0.png" />
+            <span style="position: relative;top: -3px;left: 9px;">售后评分：<span style="color: #fbae00;">{{ base_info.score }}</span></span>
           </div>
-          <span>售后评分：<span style="color: #fbae00;">{{ base_info.score }}</span></span>
           <p style="padding: 8px 0 0 0;">擅长：<span v-for="(item,index) in  base_info.householdaddress" :key="index">{{item}} &nbsp;</span></p>
           <!-- <span v-if="base_info.nature_text !== ''">{{ base_info.nature_text }}</span> -->
           <!-- <span v-if="base_info.scale_text !== ''"> · {{ base_info.scale_text }} </span> -->
           <!-- <span v-if="base_info.trade_text !== ''"> · {{ base_info.trade_text }}</span> -->
-          <p style="padding: 8px 0px 0px;white-space: normal;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;word-break: break-all;">
-            主营产品：{{base_info.main_product}}
+        </div>
+        <p style=" font-size:13px;padding: 0px 0px 0px;white-space: normal;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;word-break: break-all;">
+              主营产品：{{base_info.main_product}}
             <!-- <span v-for="(item,index) in  base_info.main_product" :key="index">{{item}} &nbsp;</span> -->
           </p>
-        </div>
         <!-- <div class="tx3">
           项目查看率：{{ watch_percent }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           企业粉丝：{{ fans }}
@@ -122,7 +123,7 @@
           </swiper>
         </div>
       </div>
-      <div class="box_3">
+      <!-- <div class="box_3">
         <div class="put">工商信息</div>
         <div class="content">
           <div>
@@ -133,7 +134,7 @@
             <p style="padding: 0 0 15px; color: #0072ff;" @click="goTyc()">查看更多工商信息></p>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="form_split_10"></div>
       <Subscribe></Subscribe>
       <div class="form_split_10"></div>
@@ -663,6 +664,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.setmeal{position: relative;top: -3px;background-image: linear-gradient(90deg,#f5dd33, #757547);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal1{position: relative;top: -3px;background-image: linear-gradient(90deg,#ff0000, #fbb517);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal2{position: relative;top: -3px;background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal3{position: relative;top: -3px;background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
 .auth_ico {
         float: left;
         margin-left: 6px;

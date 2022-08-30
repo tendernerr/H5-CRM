@@ -6,14 +6,56 @@
       <TopSearch type="resume" @hideSearch="toggleSearch" @doSearch="doSearchByKeyword"></TopSearch>
     </van-popup>
     <!-- 搜索按钮 -->
-    <div @click.stop="search = !search" class="searchDiv" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
-      <van-icon v-if="!search" name="search" />
-      <van-icon v-else name="cross" />
-    </div>
-    <div @click.stop v-if="search" class="searchDiv2" :style="[top2]">
-      <input class="searchInput" style="border-radius: 5px;width: 100%;height: 100%;padding: 0 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
+    <div class="searchDivMin" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
+        <div @click.stop="search = !search" class="searchDiv">
+          <van-icon v-if="!search" name="search" />
+          <van-icon v-else name="cross" />
+        </div>
+        <div class="searchDiv2" v-if="search">
+          <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
+        </div>
     </div>
 		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky>
+      <van-tab title="备案项目" v-if="true">
+			  <div class="box_2" style="display: flex;flex-direction: column;font-size:12px;width: 100%;">
+          <div style="padding: 8px 0 0 0;display: flex;justify-content:space-around;font-size:12px;width: 100%;background: #fff;" v-if="menber.is_setmeal">
+              <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
+              <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
+              <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
+          </div>
+				 <van-dropdown-menu class="filter_menu">
+				    <van-dropdown-item :title="title1" ref="items">
+				 						 <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2" @cancel='$refs.items.toggle();'/>
+				    </van-dropdown-item>
+				    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+				    <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
+				  </van-dropdown-menu>
+			  </div>
+			  <div class="form_split_10"></div>
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
+			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
+			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
+					 <div class="listTab2Head">
+						 <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div>
+						 <div class="listTab2HeadName">
+							 <div class="listTab2HeadName1">
+								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
+							 </div>
+							 <div class="listTab2HeadName2">{{item.end_time}}  <span class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
+						 </div>
+					 </div>
+					 <div class="listTab2Label">
+					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde" v-if="inde<10">
+								{{ite}}
+							</div>
+					 </div>
+					 <div class="updateTime">
+            <span>{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span></span>
+            <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
+					 </div>
+				 </div>
+			  </van-list>
+		  </van-tab>
 		  <van-tab title="直采项目">
 			  <div class="box_2">
 			   <!-- <van-dropdown-menu class="filter_menu">
@@ -91,52 +133,6 @@
 			    </div>
 			  </div>
 		  </van-tab>
-		  <van-tab title="备案项目" v-if="true">
-			  <div class="box_2" style="display: flex;justify-content:space-around;margin: 4px 8px 8px;font-size:12px" v-if="menber.is_setmeal">
-          <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
-          <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
-          <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
-			   <!-- <van-dropdown-menu class="filter_menu">
-			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
-			        <DistrictFilter :districts="[params.district1, params.district2, params.district3]" :type="true" @doSearch="doSearchByDistrict"></DistrictFilter>
-			      </van-dropdown-item>
-			      <van-dropdown-item :title="experienceTitle" v-model="params.experience" :options="optionExperience" @change="handleExperience" @opened="openedExperience"/>
-			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
-			      />
-			    </van-dropdown-menu> -->
-				 <!-- <van-dropdown-menu class="filter_menu">
-				    <van-dropdown-item :title="title1" ref="items">
-				 						 <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2" @cancel='$refs.items.toggle();'/>
-				    </van-dropdown-item>
-				    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-				    <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-				  </van-dropdown-menu> -->
-			  </div>
-			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
-			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
-			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
-					 <div class="listTab2Head">
-						 <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div>
-						 <div class="listTab2HeadName">
-							 <div class="listTab2HeadName1">
-								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
-							 </div>
-							 <div class="listTab2HeadName2">{{item.end_time}}  <span class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
-						 </div>
-					 </div>
-					 <div class="listTab2Label">
-					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde" v-if="inde<10">
-								{{ite}}
-							</div>
-					 </div>
-					 <div class="updateTime">
-            <span>{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span></span>
-            <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
-					 </div>
-				 </div>
-			  </van-list>
-		  </van-tab>
 		</van-tabs>
 		<div class="login_layer" v-if="showLayer">
 		  <div class="ll_tip">注册企业会员，海量项目任你选</div>
@@ -172,8 +168,11 @@ export default {
   data() {
     return {
       menber:{},
-      top:{left: '8px',top:'140px'},
-      top2:{left: '64px',top:'140px'},
+      top:{right: '5px',top:'334px'},
+      x:'',       //当前没处理的位置
+      y:'',
+      newx:5,     //储存积累的位置
+      newy:334,     //储存积累的位置
       search:false,
       dataset: [],
       box_2Div:0,
@@ -253,6 +252,44 @@ export default {
     };
   },
   watch: {
+    'x':{
+      handler(n,o){
+        // 原始位置+1 或者原始位置-1
+        if(o === ''){     
+          //第一次位置
+          this.newx = 5
+        } else{
+          // 第二次
+          if(o > n){      
+              //当往右拖的时候---> 旧值大于新值 
+              // 新位置要成负数 = old - new
+              this.newx = this.newx + (o - n)
+          } else{//当往右拖的时候---> 旧值小于于新值
+              this.newx = this.newx - (n - o)
+          }
+        }
+        this.top.right = this.newx - -5 +'px'
+      }
+    },
+    "y":{
+        handler(n,o){
+        // 原始位置+1 或者原始位置-1
+        if(o === ''){     
+          //第一次位置
+          this.newy = 334
+        } else{
+          // 第二次
+          if(o > n){      
+              //当往上拖的时候---> 旧值大于新值 
+              // 新位置要成负数 = old - new
+              this.newy = this.newy - (o - n)
+          } else{//当往下拖的时候---> 旧值小于于新值
+              this.newy = this.newy + (n - o)
+          }
+        }
+        this.top.top = this.newy +'px'
+      }
+    },
     "params.keyword":{
       handler(e){
         this.loading = false ;
@@ -378,16 +415,14 @@ export default {
       console.log(e,"222")
     },
     move(e){
-      console.log(e,"111")
+      // console.log(e.touches[0],"111")
       document.body.style.overflow = 'hidden'
-      this.top.top = e.touches[0].clientY-25+'px'
-      this.top.left = e.touches[0].clientX-25+'px'
-      this.top2.top = e.touches[0].clientY-25+'px'
-      this.top2.left = e.touches[0].clientX+29+'px'
+      this.y = e.touches[0].clientY
+      this.x = e.touches[0].clientX
     },
     end(e){
       document.body.style.overflow = 'auto'
-      console.log(e,"333")
+      // console.log(e,"333")
     },
 	  // 获取选项信息
 	  classify(){
@@ -841,7 +876,7 @@ export default {
 		let params = {...this.params,}
 		params.page = this.page
 		params.pagesize = this.pagesize
-		let url = this.active != 1 ? api.resumelist : api.homeResume_keepIndex;
+		let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
       http.get(url, {...params}).then((res) => {
 		  if(res.code === 200){
 		  	// 下拉加载
@@ -889,12 +924,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.searchDiv{
-background: #cfe1fb;position: fixed;line-height: 51px;width: 50px;height: 50px;z-index: 999;border-radius: 50%;text-align: center;color: #fff;
+.searchDivMin{
+  display: flex;align-items: center;position: fixed;flex-direction: row-reverse;z-index: 9999;
 }
 
+  .searchDiv{
+      font-size: 34px; background: #797979;line-height: 1.36rem;width: 1.333333rem;height: 1.333333rem;border-radius: 50%;text-align: center;color: #fff;margin: 0 5px;
+    }
+
 .searchDiv2{
-  position: fixed;z-index: 999;width: 14.5em;height: 46px;font-size: 16px;padding: 11px 0px 1px;
+     width: 13.6em;height: 2.2em;font-size: 16px;
 }
 
 .searchInput{
@@ -918,7 +957,7 @@ background: #cfe1fb;position: fixed;line-height: 51px;width: 50px;height: 50px;z
 			}
 			.listTab2HeadName{display: flex; flex-direction: column; justify-content: space-around; padding:0 5px; flex: 1;
 				.listTab2HeadName1{display: flex; justify-content: space-between; align-items: center;
-					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; -webkit-line-clamp: 1; font-weight: 700;}
+					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; -webkit-line-clamp: 2; font-weight: 700;}
 					.listTab2HeadName1Text2{ font-size: 13px; flex: none;}
 				}
 				.listTab2HeadName2{font-size: 13px;

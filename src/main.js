@@ -67,7 +67,8 @@ import {
   SwipeItem,
   Image,
   SwipeCell,
-  Icon
+  Icon,
+  Cascader,
 } from 'vant'
 import MetaInfo from 'vue-meta-info'
 var isConsole = false
@@ -150,6 +151,7 @@ Vue.use(SwipeItem)
 Vue.use(Image)
 Vue.use(SwipeCell)
 Vue.use(Icon)
+Vue.use(Cascader)
 
 require('es6-promise').polyfill()
 Es6Promise.polyfill()

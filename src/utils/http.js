@@ -30,6 +30,7 @@ export default {
       service.get(url, {
           headers: {
             'user-token': store.state.userToken,
+            "Content-Type": "application/json",
             platform: store.state.platform,
             'subsiteid': VueCookies.get('qscms_subsiteid')
           },

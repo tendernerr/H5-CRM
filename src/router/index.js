@@ -67,7 +67,6 @@ import CompamyJobapply from '../views/company/ResumeManagement/ReceivedResume'
 import intelligenceInquiry from '../views/company/ResumeManagement/intelligenceInquiry'
 
 
-
 import CompamyDownload from '../views/company/ResumeManagement/ResumeDownload'
 import CompanyInterview from '../views/company/ResumeManagement/ResumeInterviewInvitation'
 import CompanyInterviewVideo from '../views/company/ResumeManagement/ResumeVideoInvitation'
@@ -115,6 +114,10 @@ import backupsProject from '../views/backupsProject/backupsProject'
 import buildByOneself from '../views/backupsProject/buildByOneself'
 import recommend from '../views/recommend'
 import mySchedule from '../views/mySchedule/index'
+import myPostSale from '../views/myPostSale/index'
+import addPostSale from '../views/myPostSale/addPostSale'
+import postSaleDetails from '../views/myPostSale/details'
+
 
 Vue.use(VueRouter)
 
@@ -1309,6 +1312,36 @@ const routes = [{
   component: mySchedule,
   meta: {
     title: '我的日程',
+  }
+},
+{
+  path: '/myPostSale',
+  name: 'myPostSale',
+  component: myPostSale,
+  meta: {
+    title: '我的售后',
+    keepAlive: true,
+    loginCheck: false
+  }
+},
+{
+  path: '/postSaleDetails',
+  name: 'postSaleDetails',
+  component: postSaleDetails,
+  meta: {
+    title: '售后详情',
+    keepAlive: false,
+    loginCheck: false
+  }
+},
+{
+  path: '/addPostSale',
+  name: 'addPostSale',
+  component: addPostSale,
+  meta: {
+    title: '新增售后',
+    keepAlive: false,
+    loginCheck: false
   }
 },
 {

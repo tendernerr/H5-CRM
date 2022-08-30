@@ -318,36 +318,10 @@
       <div class="form_split_10"></div>
       <div class="form_split_10"></div>
       <div class="box_7">
-        <div class="tx1">如遇无效、虚假、诈骗信息，请立即申诉！</div>
         <div class="tx2">如信息存在涉黄、涉赌、涉毒等不良行为，请立即申诉！</div>
-        <div class="report" @click="handlerReport">申诉</div>
+        <div class="report" style="background: rgb(255, 255, 255);padding: 0;color: #00adff;width: 60px;" @click="handlerReport">去申诉>></div>
       </div>
       <div class="form_split_10"></div>
-      <!-- <div class="box_9">
-        <div class="put">
-          匹配度分析
-          <div class="right_arrow" v-if="is_personal_login === true" @click="openCompetitive">我的匹配度</div>
-        </div>
-        <div class="doubt">
-          <div
-            class="content"
-            v-if="is_personal_login === false"
-            @click="showLogin = true"
-          >登录后查看我的匹配度</div>
-        </div>
-        <div class="p_con">
-          <div class="self_content" :class="'level_' + match_level">
-            <div class="sp_block s1"></div>
-            <div class="sp_block s2"></div>
-            <div class="sp_block s3"></div>
-            <div class="percent"></div>
-            <div class="cir_block" v-if="is_personal_login === true"></div>
-            <div class="percent_text t1">一般</div>
-            <div class="percent_text t2">良好</div>
-            <div class="percent_text t3">优秀</div>
-          </div>
-        </div>
-      </div> -->
       <div class="form_split_10"></div>
       <div class="box_10">
         <div class="put">公司信息</div>
@@ -355,19 +329,25 @@
           <div class="up">
             <div class="logo_box">
               <img :src="com_info.logo_src" :alt="com_info.companyname" />
+              <span style="font-size: 13px;position: relative;top: -13px;left: 3px;">{{com_info.addressText}}</span>
             </div>
             <div class="tx1">
               <div class="name">{{ com_info.companyname }}</div>
-              <div class="auth_ico" v-if="com_info.audit == 1"></div>
-              <div class="crw_ico" v-if="com_info.setmeal_icon != ''">
-                <img :src="com_info.setmeal_icon" alt />
-              </div>
+              <!-- <div class="auth_ico" v-if="com_info.audit == 1"></div> -->
               <div class="clear"></div>
             </div>
-            <div class="tx2">{{ com_info.district_text }}</div>
-            <div class="tx3">
-              {{ com_info.nature_text }} · {{ com_info.scale_text }} ·
-              {{ com_info.trade_text }}
+            <div class="tx2" style="margin: 0;font-size: 13px;padding-bottom: 12px;color: #828282;padding-right: 8px;display: flex;align-items: center;">
+                <div :class="[com_info.setmeal === '行业大牛'?'setmeal1':com_info.setmeal === '实力企业'?'setmeal2':com_info.setmeal === '基础企业'?'setmeal3':'setmeal']">{{com_info.setmeal}}</div>
+                <div v-if="com_info.is_complained" style="height: 23px;width: 20px;border: 1px solid #eac97e;color: #eac97e;font-size: 12px;padding: 1px 3px 1px 3px;border-radius: 0px 0px 50% 50%;margin: 0 5px 0 0;">保</div>
+                <img v-if="com_info.audit" style="margin: 0 5px 0px 0;" width="23"  src="/static/img/jobs_list_auth_ico.84626b0.png" />
+                <img v-if="com_info.setmeal_icon" style="margin: -3px 5px 0px 0;" width="18"  :src="com_info.setmeal_icon" />
+                <div class="crw_ico" v-if="com_info.setmeal_icon != ''">
+                  <img :src="com_info.setmeal_icon" alt />
+                </div>
+                <span>售后评分：<span style="font-size: 16px;color: #ff8100;">{{com_info.score}}</span></span>
+            </div>
+            <div class="tx3" style="-webkit-line-clamp: 2;display: -webkit-box;-webkit-box-orient: vertical;white-space: inherit;">
+              主营：{{com_info.main_product }}
             </div>
           </div>
           <div class="down">
@@ -377,38 +357,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="box_sp" v-if="similar != undefined && similar.length > 0">-这还有一些相似案例-</div> -->
-      <!-- <div class="box_11" v-if="similar != undefined && similar.length > 0">
-        <div v-for="(item, index) in similar" :key="index" @click="toDetail(item.id)">
-          <div class="list">
-            <div class="tx1">
-              <img :src="item.company_logo" />
-              <div class="name" style="margin-left:30px">{{ item.jobname }}</div>
-              <div class="worry_ico" v-if="item.emergency==1">急</div>
-              <div class="clear"></div> -->
-              <!-- <div class="wage">{{ item.wage_text }}</div> -->
-            <!-- </div>
-            <div class="tx2"> -->
-              <!-- {{ item.education_text }} · {{ item.experience_text }} · -->
-              <!-- 案例客户地点：{{ item.district_text }}
-            </div>
-            <div class="time">{{ item.refreshtime }}</div>
-            <div class="tag_wrapper" v-if="item.tag_text_arr">
-              <div class="tag_item" v-for="(tag, ind) in item.tag_text_arr" :key="ind">{{ tag }}</div>
-              <div class="clear"></div>
-            </div>
-            <div class="company">
-              <div class="name">{{ item.companyname }}</div>
-              <div class="auth_ico" v-if="item.company_audit == 1"></div>
-              <div class="crw_ico" v-if="item.setmeal_icon != ''">
-                <img :src="item.setmeal_icon" alt />
-              </div>
-              <div class="clear"></div>
-            </div>
-          </div>
-          <div class="form_split_10"></div>
-        </div>
-      </div> -->
       <Subscribe></Subscribe>
       <div class="form_split_10"></div>
       <div class="box_12">
@@ -420,15 +368,6 @@
           <div @click="doApply" style="width: 50%;background: #007eff;color: #fff;font-size: 25px;height: 100%;text-align: center;line-height: 50px;border-radius: 0px 5px 0 0;">
             邀请报价
           </div>
-          <!-- <div class="item_call" @click="doTel">电话</div>
-          <div
-            :class="has_fav == 1 ? 'item_collect item_collect_ac':'item_collect'"
-            @click="doFav"
-          >{{ has_fav == 1 ? "已收藏" : "收藏" }}</div>
-
-          <div class="item_chat"></div>
-          <div class="item_apply" @click="doApply">{{has_apply==1?'邀请报价':'邀请报价'}}</div>
-          <div class="clear"></div> -->
         </div>
       </div>
     </van-skeleton>
@@ -458,13 +397,36 @@
       :overlay="false"
       style="width:100%;height:100%"
     >
-      <Tipoff
-        ref="tipoff"
-        :type="1"
-        :target_id="base_info.id"
-        :jobname="base_info.jobname"
-        @closePopout="showTipoff = false"
-      ></Tipoff>
+      <div id="app">
+    <Head :goback_custom="true" @gobackCustomMethod="showTipoff = false"
+    >申诉案例</Head>
+    <div class="form_split_10"></div>
+    <div class="notice_bar">申诉案例：{{base_info.jobname}}<div class="right_txt" @click="showTipoff = false">查看案例</div></div>
+    <div class="form_split_10"></div>
+    <div class="feed_container">
+      <div class="feed_title">举报说明：</div>
+      <textarea
+        v-model="contentss"
+        class="feed_area"
+        rows="8"
+        placeholder="请输入申诉详细描述，以便举报"
+      ></textarea>
+      <div class="feed_title">手机号</div>
+      <input v-model="callPhone" @blur='callPhoneVerification($event,callPhone)' class="feed_titleInput" type="text" width="100%" />
+      <div class="feed_title" style="align-items: center;display: flex;justify-content: space-between;">
+          <span>验证码 :</span>
+          <div><input v-model="verification" class="feed_titleInput" style="width: 100px;" type="text"></div>
+          <div style="height: 27px;display: flex;width: 147px;" @click="homeJobVerify">
+            <img style="width: 54%; height: 100%;" :src="'https://www.hangyedaniu.com/v1_0/home/job/verify?'+homeJobVerifyImg" alt="" />
+            <span style="font-size: 12px;line-height: 3;height: 73px;text-decoration: underline;color: #00b32f;">点击刷新</span>
+          </div>
+      </div>
+      <div style="margin: 16px 16px 16px;">
+        <van-button round block type="info" @click="handleSubmit">提交</van-button>
+      </div>
+    </div>
+    <!-- <van-overlay :show="uploading"><van-loading type="spinner" size="24px">正在上传...</van-loading></van-overlay> -->
+  </div>
     </van-popup>
     <div class="alw-wx-layer" v-if="showWxLayer" @click="cancelShare"></div>
     <div class="alw-layer" v-if="showLayer" @click="cancelShare"></div>
@@ -570,6 +532,11 @@ export default {
         a: "",
         btnCn: "立即拔打"
       },
+      homeJobVerifyImg:"0",
+      callPhonev:false,
+      callPhone:'',
+      verification:'',
+      contentss:'',
       IsInviteQuotation:false,
       isRetrunBtn: null,
       showTipoff: false,
@@ -635,6 +602,8 @@ export default {
       this.fetchData();
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     }
+  },
+  computed: {
   },
   mounted() {},
   methods: {
@@ -728,6 +697,10 @@ export default {
           startPosition: 0,
           closeable: true,
         });
+    },
+    homeJobVerify(){
+        let n = Math.floor(Math.random()*10);
+        this.homeJobVerifyImg = n
     },
     getCompetitiveness() {
       if (this.is_personal_login === true) {
@@ -878,12 +851,54 @@ export default {
         }
       }
     },
+    handleSubmit(){
+      if(!this.callPhonev){
+        this.$notify("请输入正确的手机号");
+        return
+      }
+      if(!this.contentss){
+        this.$notify("请输入举报说明");
+        return
+      }
+      if(!this.verification){
+        this.$notify("请输入验证码");
+        return
+      }
+      http.post(api.tipoff,{
+        target_id:this.base_info.id,  //案例id
+        type:1,  //1  //供应方 1   采购方2
+        content:this.contentss,  //申诉内容//
+        phone:this.callPhone,  //手机号码
+        code:this.verification,  //验证码
+      }).then(res=>{
+        this.showTipoff = false
+        this.$notify({ type: "success", message: res.message });
+        this.callPhonev = false
+        this.contentss = ''
+        this.verification = ''
+        this.callPhone = ''
+      }).catch(e=>{
+        console.log(e)
+        this.$notify(e.message);
+      })
+    },
     handleImCheckBind() {
       http.get(api.imCheckBind).then(res => {
         if (res.data != 0) {
           location.reload(true);
         }
       });
+    },
+    callPhoneVerification(e,t){
+      console.log(e,t,"1111")
+      let v = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+      if(!v.test(t)){
+        this.callPhonev = false
+        this.$notify('请输入正确的手机号码')
+        return
+      } else{
+        this.callPhonev = true
+      }
     },
     submitChange(e){
       console.log(e,123)
@@ -1115,7 +1130,6 @@ export default {
       //     })
       //     .catch(() => {});
       // } else {
-        this.$refs.tipoff.initCB();
         this.showTipoff = true;
       // }
     }
@@ -1124,6 +1138,137 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.setmeal{background-image: linear-gradient(90deg,#f5dd33, #757547);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal1{background-image: linear-gradient(90deg,#ff0000, #fbb517);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal2{background-image: linear-gradient(90deg,#5c7fff, #bac9ff);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.setmeal3{background-image: linear-gradient(90deg,#000000, #b7b7b7);text-align: center;width: 5em;font-size: 12px;color: #fff;margin: 0 5px 0px 0;}
+.feed_titleInput{border: 1px solid #ccc; border-radius: 5px; padding: 2px 5px;
+
+}
+.feed_container {
+    .feed_up {
+      padding: 10px 0;
+      .img_item {
+        &.for_upload {
+          margin: 0;
+          padding-top: 67px;
+          text-align: center;
+          font-size: 14px;
+          color: #c0c0c0;
+          background: #f8f8f8 url("../assets/images/upload_add_ico.svg") center
+          20px no-repeat;
+          background-size: 32px;
+        }
+        .delete_ico {
+          &::before {
+            position: absolute;
+            left: 5px;
+            top: 9.5px;
+            width: 10px;
+            border-top: 1px solid #ffffff;
+            content: " ";
+            transform: rotate(45deg);
+          }
+          &::after {
+            position: absolute;
+            left: 9.5px;
+            top: 5px;
+            height: 10px;
+            border-right: 1px solid #ffffff;
+            content: " ";
+            transform: rotate(45deg);
+          }
+          position: absolute;
+          right: -6px;
+          top: -6px;
+          width: 20px;
+          height: 20px;
+          border-radius: 100%;
+          z-index: 2;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+        .img {
+          width: 100px;
+          height: 100px;
+          border-radius: 4px;
+          border: 0;
+        }
+        &:nth-of-type(3n) {
+          margin-right: 0;
+        }
+        float: left;
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 4px;
+        margin: 0 20px 20px 0;
+      }
+    }
+    .feed_area {
+      &::placeholder {
+        color: #c9c9c9;
+      }
+      width: 100%;
+      border: 1px solid #e2e2e2;
+      resize: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .up_text{font-size: 14px;color: #c9c9c9;line-height: 1.6;word-break: break-all;}
+    .feed_type {
+      .type_item {
+        &.selected {
+          background-color: #f4f9ff;
+          border: 1px solid #f4f9ff;
+          color: #1787fb;
+        }
+        float: left;
+        margin-right: 10px;
+        padding: 5px 12px;
+        font-size: 11px;
+        color: #666666;
+        background-color: #ffffff;
+        border: 1px solid #e2e2e2;
+        margin-bottom:10px;
+      }
+    }
+    .feed_title {
+      padding: 17px 0;
+      font-size: 16px;
+      color: #333333;
+      font-weight: bold;
+    }
+    padding: 0 16px;
+  }
+  .notice_bar {
+    width: 100%;
+    font-size: 12px;
+    color: #ff6600;
+    position: relative;
+    padding: 11px 0 11px 33px;
+    background: #fffbeb url("../assets/images/remind_ico.svg") 13px center
+    no-repeat;
+    background-size: 15px;
+    .right_txt {
+      position: absolute;
+      right: 0;
+      top: 50%;transform: translate(0,-50%);
+      font-size: 12px;
+      color: #1787fb;
+      padding: 13px 17px;
+    }
+  }
+.van-overlay{
+  text-align:center;
+  z-index:2;
+}
+.van-loading{
+  top:36%;
+}
+.van-loading__text{
+  color:#c3c3c3;
+}
 .click_copy {
   position: fixed;
   z-index: 1;

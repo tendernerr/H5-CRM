@@ -560,4 +560,16 @@ export default {
   getCustomCaseCategory:"/company/job/getCustomCaseCategory",
   // 获取用户信息 列表拍的是否会员
   getMenber:'/member/index/getMenber',
+  // 案例申述验证
+  homeJobVerify:'/home/job/verify',
+  // 备案项目详情联系方式
+  resume_keepProjectApply:'/home/resume_keep/projectApply',
+  //获取售后管理
+  getAfterSaleList:'/member/index/getAfterSaleList',
+  //联系售后
+  setAfterSale:'/member/index/setAfterSale',
+  //新增售后
+  insertAfterSale:'/member/index/insertAfterSale',
+  //获取售后详情
+  updateAfterSale:'/member/index/updateAfterSale',
 }

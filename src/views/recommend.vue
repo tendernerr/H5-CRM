@@ -1,14 +1,16 @@
 <template>
   <div id="app">
     <Meta pagealias="resumelist" :query_data="$route.query" />
-    <Head :zIndex="true">智能推荐</Head>
+    <Head :zIndex="true">商机订阅</Head>
     <!-- 搜索按钮 -->
-    <div @click.stop="search = !search" class="searchDiv" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
-      <van-icon v-if="!search" name="search" />
-      <van-icon v-else name="cross" />
-    </div>
-    <div @click.stop v-if="search" class="searchDiv2" :style="[top2]">
-      <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;" :placeholder="`搜索${active?'备案':'直采'}项目`" v-model="params.keyword" />
+    <div class="searchDivMin" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
+        <div @click.stop="search = !search" class="searchDiv">
+          <van-icon v-if="!search" name="search" />
+          <van-icon v-else name="cross" />
+        </div>
+        <div class="searchDiv2" v-if="search">
+          <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
+        </div>
     </div>
 		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky offset-top="53">
 		  <van-tab title="直采项目">
@@ -130,8 +132,11 @@ export default {
     return {
       menber:{},
       search:false,
-      top:{left: '8px',top:'140px'},
-      top2:{left: '64px',top:'140px'},
+      top:{right: '5px',top:'334px'},
+      x:'',       //当前没处理的位置
+      y:'',
+      newx:5,     //储存积累的位置
+      newy:334,     //储存积累的位置
       dataset: [],
       loading: false,
       finished: false,
@@ -154,8 +159,8 @@ export default {
         tag: "",
         settr: "",
       },
-	  page: 1,
-	  pagesize: 10,
+      page: 1,
+      pagesize: 10,
       // 未登录引导
       showLayer: false,
       active:0,			//切换
@@ -168,6 +173,44 @@ export default {
     };
   },
   watch: {
+    'x':{
+      handler(n,o){
+        // 原始位置+1 或者原始位置-1
+        if(o === ''){     
+          //第一次位置
+          this.newx = 5
+        } else{
+          // 第二次
+          if(o > n){      
+              //当往右拖的时候---> 旧值大于新值 
+              // 新位置要成负数 = old - new
+              this.newx = this.newx + (o - n)
+          } else{//当往右拖的时候---> 旧值小于于新值
+              this.newx = this.newx - (n - o)
+          }
+        }
+        this.top.right = this.newx - -5 +'px'
+      }
+    },
+    "y":{
+        handler(n,o){
+        // 原始位置+1 或者原始位置-1
+        if(o === ''){     
+          //第一次位置
+          this.newy = 334
+        } else{
+          // 第二次
+          if(o > n){      
+              //当往上拖的时候---> 旧值大于新值 
+              // 新位置要成负数 = old - new
+              this.newy = this.newy - (o - n)
+          } else{//当往下拖的时候---> 旧值小于于新值
+              this.newy = this.newy + (n - o)
+          }
+        }
+        this.top.top = this.newy +'px'
+      }
+    },
     'params.hasPhone':{
       handler(e){
         this.loading = false ;
@@ -233,16 +276,14 @@ export default {
       console.log(e,"222")
     },
     move(e){
-      console.log(e,"111")
+      // console.log(e.touches[0],"111")
       document.body.style.overflow = 'hidden'
-      this.top.top = e.touches[0].clientY-25+'px'
-      this.top.left = e.touches[0].clientX-25+'px'
-      this.top2.top = e.touches[0].clientY-25+'px'
-      this.top2.left = e.touches[0].clientX+29+'px'
+      this.y = e.touches[0].clientY
+      this.x = e.touches[0].clientX
     },
     end(e){
       document.body.style.overflow = 'auto'
-      console.log(e,"333")
+      // console.log(e,"333")
     },
 	  // 获取选项信息
 	  classify(){
@@ -301,12 +342,16 @@ export default {
 
 <style lang="scss" scoped>
 
+.searchDivMin{
+  display: flex;align-items: center;position: fixed;flex-direction: row-reverse;z-index: 9999;
+}
+
   .searchDiv{
-    background: #cfe1fb;position: fixed;line-height: 51px;width: 50px;height: 50px;z-index: 999;border-radius: 50%;text-align: center;color: #fff;left: 8px;
- }
+         font-size: 34px; background: #797979;line-height: 1.36rem;width: 1.333333rem;height: 1.333333rem;border-radius: 50%;text-align: center;color: #fff;margin: 0 5px;
+    }
 
 .searchDiv2{
-     position: fixed;z-index: 999;width: 50%;height: 46px;font-size: 16px;padding: 11px 0px 1px;left: 62px;
+     width: 13.6em;height: 2.2em;font-size: 16px;
 }
 	
   .searchInput{

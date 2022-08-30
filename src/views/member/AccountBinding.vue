@@ -8,8 +8,9 @@
       <div class="field_cell_group">
         <div class="field_cell choose-utype" style="border:0;">
           <div class="t_box">
-            <span class="swb" :class="utype==2?'active':''" @click="utype=2">我是采购方</span>
-            <span class="swb" :class="utype==1?'active':''" @click="utype=1">我是供应商</span>
+            <!-- <span class="swb" :class="utype==2?'active':''" @click="utype=2">我是采购方</span>
+            <span class="swb" :class="utype==1?'active':''" @click="utype=1">我是供应商</span> -->
+            <!-- <span class="swb" :class="utype==1?'active':''">我是供应商</span> -->
           </div>
         </div>
         <div class="field_cell">
@@ -76,7 +77,7 @@ export default {
   data () {
     return {
       bindType: 'weixin',
-      utype: 2,
+      utype: 1,
       mobile: '',
       code: '',
       regularMobile: /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$|16[0-9]{9}$|19[0-9]{9}$/,

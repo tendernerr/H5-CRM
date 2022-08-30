@@ -5,12 +5,11 @@
         {{ $store.state.config.subsite_info.district_text }}
       </router-link>
       <div class="head_back" v-if="showBackArrow" @click="goBack"></div>
+      <div class="postSale" @click="$router.push('/addPostSale')" v-if="postSale">
+        <van-icon name="add-o" />
+      </div>
       <div class="substring"><slot></slot></div>
-      <div
-        class="head_more"
-        v-if="showRight"
-        @click="showMore = !showMore"
-      ></div>
+      <div class="head_more" v-if="showRight" @click="showMore = !showMore"></div>
       <router-link class="head_user" v-if="showRight" :to="user_link">
         <div class="sub_block" v-if="$store.state.LoginOrNot">
           <div class="block_con"></div>
@@ -64,7 +63,7 @@ import http from '@/utils/http'
 import api from '@/api'
 export default {
   name: 'Head',
-  props: ['goback_custom', 'bg', 'show_right', 'show_back', 'bgColor', 'show_sub' , 'subscribeProject' ,'zIndex'],
+  props: ['goback_custom', 'bg', 'show_right', 'show_back', 'bgColor', 'show_sub' , 'subscribeProject' ,'zIndex','postSale'],
   data () {
     return {
       showSubstationName: false,
@@ -332,6 +331,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.postSale{ position: absolute; right: 11px;top: 11px; font-size: 21px; padding: 0 5px; color: #409EFF; }
 .zIndex{
   z-index: 999!important;
 }
