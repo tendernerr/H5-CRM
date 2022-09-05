@@ -113,7 +113,7 @@
     </van-popup>
      <!-- 时间选择器 -->
      <van-popup v-model="timePop" round position="bottom">
-        <van-datetime-picker @cancel="timePop = false" @confirm='onConfirmTime' :formatter="formatter" type="datetime" title="请选择日期" :columns-order="['year','month','day','hour','minute']" :min-date="minDate" :max-date="maxDate"/>
+        <van-datetime-picker @cancel="timePop = false" @confirm='onConfirmTime' :formatter="formatter" type="datetime" title="请选择日期" :columns-order="['year','month','day','hour','minute']"/>
     </van-popup>
 
     <van-popup v-model="monthPop" round position="bottom">

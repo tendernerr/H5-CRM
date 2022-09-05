@@ -547,15 +547,15 @@ export default {
   // 自建项目详情添加沟通记录
   companyReturn_visitAdd_record:'/company/return_visit/add_record',
   // 添加邀请报价
-  addContact:'home/ad/addContact',
+  addContact:'/home/ad/addContact',
   // 判断备案项目是否收藏
-  checkFav:'home/resume_keep/checkFav',
+  checkFav:'/home/resume_keep/checkFav',
   // 收藏备案项目
-  setfac:'home/resume_keep/setfac',
+  setfac:'/home/resume_keep/setfac',
   // 我的日程
-  getMySchedule:'home/index/getMySchedule',
+  getMySchedule:'/home/index/getMySchedule',
   // 用户行为
-  projectApply:'home/resume/projectApply',
+  projectApply:'/home/resume/projectApply',
   // 企业详情成功案例的
   getCustomCaseCategory:"/company/job/getCustomCaseCategory",
   // 获取用户信息 列表拍的是否会员
@@ -572,4 +572,7 @@ export default {
   insertAfterSale:'/member/index/insertAfterSale',
   //获取售后详情
   updateAfterSale:'/member/index/updateAfterSale',
+  //获取备案信息接口
+  getResumeKeepInfo:'/home/resume_keep/getResumeKeepInfo',
+  
 }

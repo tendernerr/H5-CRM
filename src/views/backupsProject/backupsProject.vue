@@ -40,9 +40,17 @@
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.number}}</div>
 						</div> -->
 						<div class="tab1List">
+							<div class="tab1List3 redText" v-if="!dataMes.isLogin">
+								下文****为隐藏内容，仅对行业大牛用户开放，注册登录后可免费查看内容详情
+							</div>
+							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
+								（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）
+							</div>
+						</div>
+						<div class="tab1List">
 							<div class="tab1List1">项目名称</div>
 							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_name}}</div>
+							<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.project_name === '****'}">{{dataMes.basemain&&dataMes.basemain.project_name}}</div>
 						</div>
 						<div class="tab1List">
 							<div class="tab1List1">项目所在地</div>
@@ -62,7 +70,7 @@
 						<div class="tab1List">
 							<div class="tab1List1">建设单位</div>
 							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.construction_unit}}</div>
+							<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.construction_unit === '****'}">{{dataMes.basemain&&dataMes.basemain.construction_unit}}</div>
 						</div>
 						<!-- <div class="tab1List">
 							<div class="tab1List1">备案机关</div>
@@ -84,6 +92,11 @@
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.start_time}}</div>
 						</div>
+						<div class="tab1List" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
+							<div class="tab1List3 redText">今日可免费查看次数为 
+								<span style="color: #53a7fd;">{{dataMes.userinfo.day_look_resumekeep}}</span> 
+								<span class="buttonSpan" @click="getResumeKeepInfo">点击查看</span> </div>
+						</div>
 						<!-- <div class="tab1List">
 							<div class="tab1List1">项目当前状态</div>
 							<div class="tab1List2">：</div>
@@ -101,24 +114,37 @@
 						</div>
 				  </div>
 			  </van-tab>
-			  <van-tab v-if="!dataMes.userinfo.isMember" title="项目进展">
-				<div class="tab2" v-if="!dataMes.isLogin">
+			  <van-tab v-if="!dataMes.userinfo.isMember && dataMes.userinfo.is_free" title="项目进展（1）">
+				<!-- <div class="tab2" v-if="!dataMes.isLogin">
 					<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
 					<p style="color: #0095ff;text-align:center;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">去登录>></p>
-				</div>
-				<div class="tab2" v-else>
-					<p style="color: #000;text-align:left;padding: 16px 0;"><span>{{dataMes.basehead&&dataMes.basehead.add_time}}</span>（备案）：***</p>
-					<p style="color: #000;text-align:left;padding: 16px 0;">
-						想要深入了解项目详情，点击<span style="color: #409eff;" @click="contactUs();"> 联系我们 </span>预计30分钟内项目经理会联系您，请注意来电提醒
+				</div> -->
+				<div class="tab2">
+					<p style="color: red;text-align:left;padding: 16px 0; font-size:12px">
+						项目进展是行业大牛网通过一定渠道获得的项目进度，帮您提前把握商机！需要高级会员权限才能查询！
 					</p>
+					<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
+					<span class="buttonSpan" style="filter: blur(4px);">****</span>
+					<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
+					<!-- <p style="color: #000;text-align:left;padding: 16px 0;">
+						想要深入了解项目详情，点击<span style="color: #409eff;" @click="contactUs();"> 联系我们 </span>预计30分钟内项目经理会联系您，请注意来电提醒
+					</p> -->
 				</div>
 			  </van-tab>
 			  <van-tab title="项目联系人">
-				  <div class="tab2" v-if="!dataMes.isLogin">
-				  	<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
-					<p style="color: #0095ff;text-align:center;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">去登录>></p>
+				  <div class="tab2" v-if="!dataMes.isLogin || dataMes.userinfo.is_free">
+				  	<p style="color: #000;padding: 16px 0;font-size: 13px;color: red;" v-if="dataMes.basemain&&dataMes.basemain.project_name !== '****'">
+						该项目信息仅对行业大牛高级会员及以上开放，您也可以通过 
+						<span class="buttonSpan" @click="go(1)">天眼查>></span>  或者
+						<span class="buttonSpan" @click="go(2)">百度>></span> 搜索一下
+					</p>
+					<p style="color: #000;padding: 3px 0;">公司名称：<span class="redText">****</span> </p>
+					<p style="color: #000;padding: 3px 0;">项目地区：<span class="redText">****</span></p>
+					<p style="color: #000;padding: 3px 0;">姓 名：<span class="redText">****</span></p>
+					<p style="color: #000;padding: 3px 0;">岗 位：<span class="redText">****</span></p>
+					<p style="color: #000;padding: 3px 0;">联系电话：<span style="color: #ff3e3e;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">登录查看</span> </p>
 				  </div>
-				  <div class="tab2" style="color: #000;" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
+				  <div class="tab2" style="color: #000;" v-if="!dataMes.userinfo.isMember && dataMes.isLogin && !dataMes.userinfo.is_free">
 						<p style="padding: 0 52px;color: #000;">姓名：***</p>
 						<p style="padding: 0 52px;color: #000;">岗位：***</p>
 						<p style="padding: 0 52px 10px;color: #000;">联系电话：135****</p>
@@ -127,7 +153,7 @@
 				  <!-- <div class="tab2" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
 					  非常抱歉，改内容仅对"行业大牛"会员查阅；开通"行业大牛"会员，第一时间获取相关采购商机，了解<span class="tab2Span" @click="$router.push('/member/order/add/common?type=setmeal')">会员特权>></span>
 				  </div> -->
-				  <div class="tab2" v-if="dataMes.userinfo.phone == '' && dataMes.userinfo.isMember">
+				  <div class="tab2" v-if="dataMes.userinfo.phone == '' && dataMes.userinfo.isMember && !dataMes.userinfo.is_free">
 					  <div class="tab2Text1">
 						  非常抱歉，系统暂无联系方式！ <span class="tab2Text1Span">建议您试试以下渠道</span>
 					  </div>
@@ -142,7 +168,7 @@
 						  <div class="text3" @click="go(2)">搜索一下>></div>
 					  </div>
 				  </div>
-				  <div class="tab2Information" v-if="dataMes.userinfo.phone != '' && dataMes.userinfo.isMember">
+				  <div class="tab2Information" v-if="dataMes.userinfo.phone != '' && dataMes.userinfo.isMember && !dataMes.userinfo.is_free">
 					  <div class="tab1List">
 					  	<div class="tab1List1">姓名</div>
 					  	<div class="tab1List2">：</div>
@@ -233,7 +259,10 @@
 				<div style="font-size:18px"><van-icon :name="isCollection?'star':'star-o'" /></div>
 				<div>收藏</div>
 			</div>
-			<div @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
+			<div v-if="!dataMes.isLogin" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">
+				登录参与
+			</div>
+			<div v-if="dataMes.isLogin" @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
 		</div>
   </div>
 </template>
@@ -286,6 +315,18 @@ export default {
 			this.isCollection = res.data.has_fav
 		})
 	  },
+	  getResumeKeepInfo(){
+		if(this.dataMes.userinfo.day_look_resumekeep <= 0){
+			this.$notify({ type: 'warning', message: '可查看次数为0' });
+			return
+		}
+		http.get(api.getResumeKeepInfo,{rid:this.id}).then(res=>{
+			this.dataMes.userinfo.day_look_resumekeep--
+			this.dataMes.basemain.project_name = res.data.project_name
+			this.dataMes.basemain.construction_unit = res.data.construction_unit
+			this.$notify({ type: 'success', message: res.message });
+		})
+	  },
 	  collection(){
 		if(!this.dataMes.isLogin){
 			this.active = 1
@@ -298,11 +339,6 @@ export default {
 		})
 	  },
 	  resume_keepProjectApply(){
-		if(!this.dataMes.isLogin){
-			this.active = 1
-			this.$notify({ type: 'warning', message: '尚未登录' });
-			return
-		}
 		//  不是会员
 		if(!this.dataMes.userinfo.is_setmeal){
 			http.post(api.resume_keepProjectApply,{id:this.id}).then(res=>{
@@ -385,7 +421,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.buttonSpan{margin: 0 0 5px 0;background: #53a7fd;color: #fff;border-radius: 5px;padding: 1px 10px;display: inline-block;}
 	.star-size{color: #f90 !important;}
+	.redText{color: red;}
 	#app{ font-size: 13px; height: 100vh;
 		>>> .van-tabs__line{background-color: #00aaff!important;}
 		>>> .van-tab--active{

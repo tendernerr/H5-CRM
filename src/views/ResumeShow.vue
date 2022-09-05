@@ -121,11 +121,7 @@
         >
           <div class="box_head"><div class="txt">个性标签</div></div>
           <div class="content">
-            <div
-              class="item"
-              v-for="(tag, index) in base_info.tag_text_arr"
-              :key="index"
-            >
+            <div class="item" v-for="(tag,index) in base_info.tag_text_arr" :key="index">
               {{ tag }}
             </div>
             <div class="clear"></div>
@@ -256,11 +252,7 @@
           >
             <div class="box_head"><div class="txt">项目经历</div></div>
             <div class="box_content">
-              <div
-                class="tx1"
-                v-for="(item, index) in project_list"
-                :key="index"
-              >
+              <div class="tx1" v-for="(item, index) in project_list" :key="index">
                 <div class="t1">{{ item.projectname }}</div>
                 <div class="t2">
                   {{ item.starttime | monthTimeFilter }}
@@ -860,7 +852,6 @@ import { ImagePreview,Dialog } from "vant";
 import SelectJob from "@/views/im/components/SelectJob.vue";
 import { mapMutations } from "vuex";
 import { mapState } from "vuex";
-import wx from 'weixin-js-sdk';
 Vue.use(ImagePreview);
 export default {
   name: "ResumeShow",
@@ -995,9 +986,7 @@ export default {
   },
   created() {
     this.query_id = this.$route.params.id;
-    this.is_company_login = !!(
-      this.$store.state.LoginOrNot === true && this.$store.state.LoginType == 1
-    );
+    this.is_company_login = !!(this.$store.state.LoginOrNot === true && this.$store.state.LoginType == 1);
     // 请求数据
     this.fetchData();
     this.all_record();
