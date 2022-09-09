@@ -32,7 +32,8 @@
 				  </van-dropdown-menu>
 			  </div>
 			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
 					 <div class="listTab2Head">
@@ -56,7 +57,7 @@
 				 </div>
 			  </van-list>
 		  </van-tab>
-		  <van-tab title="直采项目">
+		  <van-tab title="直采项目" :title-class='labelRed'>
 			  <div class="box_2">
 			   <!-- <van-dropdown-menu class="filter_menu">
 			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
@@ -75,7 +76,8 @@
 				  </van-dropdown-menu>
 			  </div>
 			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="box_3">
 			      <div v-for="(item,index) in dataset" :key="index" @click="toDetail(item.id)">
@@ -167,6 +169,7 @@ export default {
   },
   data() {
     return {
+      labelRed:'labelRed',
       menber:{},
       top:{right: '5px',top:'334px'},
       x:'',       //当前没处理的位置
@@ -200,6 +203,7 @@ export default {
 		para:{
 			
 		},
+    empty1:false,
 	  page: 1,
 	  pagesize: 10,
       show: false,
@@ -326,6 +330,7 @@ export default {
   //   },
 	 active:{
 		 handler(ne,ol){
+      this.labelRed = ''
 			this.loading = false ;
 			this.finished = false ; 
 			this.dataset = []
@@ -882,6 +887,9 @@ export default {
 		  	// 下拉加载
 		  	let list = res.data.items
 			this.loading = false ;
+      if(list.length === 0){
+        this.empty1 = true
+      }
 		  	if(list.length < this.pagesize){
 						this.loading = true ;
 						this.finished = true ; 
@@ -949,7 +957,11 @@ export default {
 		.van-tab__text{color: #00aaff!important}
 	}
 	>>> .van-tab{color: #000;}
-	
+	>>> .labelRed{
+    .van-tab__text{ position: relative;display: inline-flex;
+      &::after{content: "";background: #e61919;height: 5px;width: 5px;position: absolute;border-radius: 50%;right: 0;}
+    }
+  }
 	.listTab2{display: flex; flex-direction: column; border-bottom:6px solid #eeeeee;
 		.listTab2Head{background-color: #fff; font-size: 15px; display: flex; padding: 5px;
 			.listTab2HeadImg{width: 60px; height: 60px; flex: none; overflow: hidden; border-radius: 50%; background: url("https://www.hangyedaniu.com/upload/resource/user.png") no-repeat center center/ 100% 100%; object-fit: cover;

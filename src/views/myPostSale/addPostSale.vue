@@ -37,7 +37,10 @@
         <p class="p2">提醒客户及时给设备保养，可大大减少质保期内设备故障出现概率</p>
         <div class="inputArr red">
             <div class="inputDiv">交付日期:</div>
-            <div @click="timePop = true" class="input" :class="{'ccc':!param.delivertime}"><van-icon name="clock-o" /> {{param.delivertime?param.delivertime:'选择日期'}}</div>
+            <div @click="timePop = true" class="input" :class="{'ccc':!param.delivertime}">
+                <van-icon name="clock-o" /> 
+                {{param.delivertime?param.delivertime:'选择日期'}}
+            </div>
         </div>
         <div class="selectArr">
             <div class="selectText red">
@@ -113,7 +116,7 @@
     </van-popup>
      <!-- 时间选择器 -->
      <van-popup v-model="timePop" round position="bottom">
-        <van-datetime-picker @cancel="timePop = false" @confirm='onConfirmTime' :formatter="formatter" type="datetime" title="请选择日期" :columns-order="['year','month','day','hour','minute']"/>
+        <van-datetime-picker v-model="datetime"  @cancel="timePop = false" @confirm='onConfirmTime' :formatter="formatter" type="datetime" title="请选择日期" :columns-order="['year','month','day','hour','minute']"/>
     </van-popup>
 
     <van-popup v-model="monthPop" round position="bottom">
@@ -161,6 +164,7 @@ export default {
             type:'month',
             timePop:false,
             show:false,
+            datetime: new Date(),
             minDate: new Date(),
             maxDate: new Date(2030, 10, 1),
             seleType:'',

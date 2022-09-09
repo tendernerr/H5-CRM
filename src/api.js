@@ -574,5 +574,6 @@ export default {
   updateAfterSale:'/member/index/updateAfterSale',
   //获取备案信息接口
   getResumeKeepInfo:'/home/resume_keep/getResumeKeepInfo',
-  
+  // 我的评价列表
+  getMyEvaluate:'/member/index/getMyEvaluate',
 }

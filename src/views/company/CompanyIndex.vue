@@ -192,11 +192,11 @@
         >
           微海报
         </div> -->
-        <div
-          class="handle_line l1"
-          @click="handlerJump('/member/company/manage',1)"
-        >
+        <div class="handle_line l1" @click="handlerJump('/member/company/manage',1)">
           企业管理
+        </div>
+        <div class="handle_line l2" @click="$router.push('/member/company/AfterSalesEvaluate')">
+          我的售后评价
         </div>
         <!-- <div
           class="handle_line l6"
@@ -209,16 +209,10 @@
           我的职聊
           <span v-show="imUnreaded" class="point"></span>
         </div> -->
-        <div
-          class="handle_line l3"
-          @click="$router.push('/member/company/customer_service')"
-        >
+        <div class="handle_line l3" @click="$router.push('/member/company/customer_service')" >
           专属客服
         </div>
-        <div
-          class="handle_line l4"
-          @click="$router.push('/member/company/account')"
-        >
+        <div class="handle_line l4" @click="$router.push('/member/company/account')">
           账号管理
         </div>
       </div>

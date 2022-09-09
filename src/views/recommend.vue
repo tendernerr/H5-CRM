@@ -12,10 +12,43 @@
           <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
         </div>
     </div>
-		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky offset-top="53">
-		  <van-tab title="直采项目">
+		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky offset-top="50">
+      <van-tab title="备案项目" v-if="true">
+        <div v-if="menber.is_setmeal" class="box_2" style="display: flex;justify-content:space-around;padding: 4px 8px 8px;font-size:12px;background:#fff;">
+          <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
+          <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
+          <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
+			  </div>
 			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
+			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
+			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
+					 <div class="listTab2Head">
+						 <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div>
+						 <div class="listTab2HeadName">
+							 <div class="listTab2HeadName1">
+								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
+								 <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
+							 </div>
+							 <div class="listTab2HeadName2">{{item.start_end_time}}</div>
+						 </div>
+					 </div>
+					 <div class="listTab2Label">
+					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde">
+								{{ite}}
+							</div>
+					 </div>
+					 <div class="updateTime">
+					 		{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span>
+					 </div>
+				 </div>
+			  </van-list>
+		  </van-tab>
+		  <van-tab title="直采项目"  :title-class='labelRed'>
+			  <div class="form_split_10"></div>
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="box_3">
 			      <div v-for="(item,index) in dataset" :key="index" @click="toDetail(item.id)">
@@ -72,37 +105,6 @@
 			    </div>
 			  </div>
 		  </van-tab>
-		  <van-tab title="备案项目" v-if="true">
-        <div v-if="menber.is_setmeal" class="box_2" style="display: flex;justify-content:space-around;padding: 4px 8px 8px;font-size:12px;background:#fff;">
-          <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
-          <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
-          <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
-			  </div>
-			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset.length < 1" />
-			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
-			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
-					 <div class="listTab2Head">
-						 <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div>
-						 <div class="listTab2HeadName">
-							 <div class="listTab2HeadName1">
-								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
-								 <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
-							 </div>
-							 <div class="listTab2HeadName2">{{item.start_end_time}}</div>
-						 </div>
-					 </div>
-					 <div class="listTab2Label">
-					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde">
-								{{ite}}
-							</div>
-					 </div>
-					 <div class="updateTime">
-					 		{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span>
-					 </div>
-				 </div>
-			  </van-list>
-		  </van-tab>
 		</van-tabs>
 		<div class="login_layer" v-if="showLayer">
 		  <div class="ll_tip">注册企业会员，海量项目任你选</div>
@@ -130,6 +132,8 @@ export default {
   components: { },
   data() {
     return {
+      empty1:false,
+      labelRed:'labelRed',
       menber:{},
       search:false,
       top:{right: '5px',top:'334px'},
@@ -231,6 +235,7 @@ export default {
     },
 	 active:{
 		 handler(ne,ol){
+      this.labelRed = ''
 			this.loading = false ;
 			this.finished = false ; 
 			this.dataset = []
@@ -314,12 +319,15 @@ export default {
 		let params = {...this.params,}
 		params.page = this.page
 		params.pagesize = this.pagesize
-		let url = this.active != 1 ? api.getZProjectRecommend : api.getBProjectRecommend;
+		let url = this.active == 1 ? api.getZProjectRecommend : api.getBProjectRecommend;
       http.get(url, {...params}).then((res) => {
         console.log(res,"list数据")
 		  if(res.code === 200){
 		  	// 下拉加载
 		  	let list = res.data.data
+        if(list.length === 0){
+          this.empty1 = true
+        }
 			this.loading = false ;
 		  	if(list.length < this.pagesize){
 						this.loading = true ;
@@ -367,8 +375,13 @@ export default {
 	>>> .van-tab--active{
 		.van-tab__text{color: #00aaff!important}
 	}
+  >>> .labelRed{
+    .van-tab__text{ position: relative;display: inline-flex;
+      &::after{content: "";background: #e61919;height: 5px;width: 5px;position: absolute;border-radius: 50%;right: 0;}
+    }
+  }
 	>>> .van-tab{color: #000;}
-	.box_2 {position: sticky;top:97px; z-index: 100;
+	.box_2 {position: sticky;top:92px; z-index: 100;
   .van-hairline--top-bottom {
     &::after {
       border: 0;

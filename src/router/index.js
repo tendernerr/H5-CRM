@@ -62,6 +62,7 @@ import NewShow from '../views/NewShow'
 import CompanyManagement from '../views/company/CompanyManagement'
 import CompanyProfile from '../views/company/BasicInfo'
 import CompanyCustomerService from '../views/company/AccountManage/ExclusiveService'
+import AfterSalesEvaluate from '../views/company/AccountManage/AfterSalesEvaluate'
 import CompamyAccount from '../views/company/AccountManage/Account'
 import CompamyJobapply from '../views/company/ResumeManagement/ReceivedResume'
 import intelligenceInquiry from '../views/company/ResumeManagement/intelligenceInquiry'
@@ -117,7 +118,6 @@ import mySchedule from '../views/mySchedule/index'
 import myPostSale from '../views/myPostSale/index'
 import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
-
 
 Vue.use(VueRouter)
 
@@ -192,7 +192,7 @@ const routes = [{
   name: 'recommend',
   component: recommend,
   meta: {
-    title: '智能推荐',
+    title: '商机订阅',
     keepAlive: true,
     loginCheck: false
   }
@@ -654,7 +654,7 @@ const routes = [{
   name: 'PersonalRecommend',
   component: PersonalRecommend,
   meta: {
-    title: '智能推荐',
+    title: '商机订阅',
     keepAlive: true,
     loginCheck: true,
     utype: 2
@@ -676,7 +676,7 @@ const routes = [{
   name: 'CompanyRecommend',
   component: CompanyRecommend,
   meta: {
-    title: '智能推荐',
+    title: '商机订阅',
     keepAlive: true,
     loginCheck: true,
     utype: 1
@@ -820,6 +820,17 @@ const routes = [{
   }
 },
 {
+  path: '/member/company/AfterSalesEvaluate',
+  name: 'AfterSalesEvaluate',
+  component: AfterSalesEvaluate,
+  meta: {
+    title: '我的售后评价',
+    keepAlive: false,
+    loginCheck: true,
+    utype: 1
+  }
+},
+{
   path: '/member/company/account',
   name: 'CompamyAccount',
   component: CompamyAccount,
@@ -835,7 +846,7 @@ const routes = [{
   name: 'intelligenceInquiry',
   component: intelligenceInquiry,
   meta: {
-    title: '智能推荐',
+    title: '商机订阅',
     keepAlive: false,
     loginCheck: true,
     utype: 1
