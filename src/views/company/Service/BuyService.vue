@@ -25,7 +25,7 @@
       </div>
     </div>
     <keep-alive>
-      <BuySetmeal v-if="type == 'setmeal'"></BuySetmeal>
+      <BuySetmeal v-if="type == 'setmeal'" :position='position'></BuySetmeal>
       <BuyIncrement v-if="type == 'service'" :mySetmeal="mySetmeal" :resumePackage='resumePackage'></BuyIncrement>
     </keep-alive>
   </div>
@@ -50,6 +50,7 @@ export default {
   },
   data () {
     return {
+      position:0,
       type: '',
       top_loading: true,
       mySetmeal: {},
@@ -65,6 +66,9 @@ export default {
 	  console.log(this.$route.query,'11111111111===============11111111111111')
 	  if(this.$route.query.resumePackage !== undefined){
 		  this.resumePackage = this.$route.query.resumePackage
+	  }
+    if(this.$route.query.position !== undefined){
+		  this.position = this.$route.query.position
 	  }
     this.type = this.$route.query.type === undefined ? 'setmeal' : this.$route.query.type
     this.fetchSetmeal()

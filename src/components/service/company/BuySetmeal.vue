@@ -2,24 +2,11 @@
   <div id="app">
     <div class="inv-top-menu-bar">
       <div class="top-menu">
-        <div class="top-menu-list">
-          <div
-            class="item"
-            :class="{
-              active: active_index == index,
-              recommend: item.recommend == 1,
-              time: item.preferential_open == 1
-            }"
-            v-for="(item, index) in dataset"
-            :key="index"
-            @click="changeItem(item, index)"
-          >
+        <div class="top-menu-list" id="top-menu-list">
+          <div class="item" :class="{ active: active_index == index, recommend: item.recommend == 1, time: item.preferential_open == 1}" v-for="(item, index) in dataset" :key="index" @click="changeItem(item, index)">
             <div class="tx1">{{ item.name }}</div>
-            <div class="tx2">
-              <span class="unit">￥</span>{{ item.expense1 }}.<span
-                class="tofix"
-                >{{ item.expense2 }}</span
-              >
+            <div class="tx2" @click="getElement(1)">
+              <span class="unit">￥</span>{{ item.expense1 }}.<span class="tofix" >{{ item.expense2 }}</span>
             </div>
             <div class="tx3" v-if="item.preferential_open == 1">限时特惠价</div>
             <div class="tx4" v-if="item.preferential_open == 1">
@@ -164,6 +151,12 @@ export default {
       return parseTime(timestamp, '{m}-{d}')
     }
   },
+  props:{
+    "position":{
+            type:[String,Number],
+            default:0   //默认参数
+        },
+  },
   data () {
     return {
       showCouponPicker: false,
@@ -219,14 +212,24 @@ export default {
         }
       }
     },
+    getElement(i){
+      this.$nextTick(() => {
+        let meun = document.getElementById('top-menu-list')
+        meun.scrollTo({
+            left: 95*i,
+            behavior: 'smooth' //  smooth(平滑滚动),instant(瞬间滚动),默认auto
+          });
+        });
+    },
     toggleOpen () {
       this.openDetail = !this.openDetail
     },
     fetchData () {
-      http
-        .get(api.company_setmeallist, {})
-        .then(res => {
-          this.active_index = 0
+      http.get(api.company_setmeallist, {}).then(res => {
+          this.active_index = this.position
+          this.$nextTick(() => {
+            this.getElement(this.active_index)
+          });
           this.dataset = []
           let list = res.data.items
           for (const iterator of list) {
@@ -451,6 +454,7 @@ export default {
   }
   .top-menu-list {
     white-space: nowrap;
+    overflow-x: auto;
     .item {
       &.recommend::after {
         content: "推荐";

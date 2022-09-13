@@ -46,7 +46,7 @@
           <div class="ico ic6"></div>
           <div class="txt">发布视频</div>
         </div>
-        <div class="item" @click="$router.push('/myPostSale')" v-if="$store.state.config.shortvideo_enable === '1'">
+        <div class="item" @click="goLink('/myPostSale',is_safeAfter)" v-if="$store.state.config.shortvideo_enable === '1'">
           <div class="ico ic1"></div>
           <div class="txt">我的售后</div>
         </div>
@@ -80,7 +80,7 @@
       <div class="box_title">
         项目管理
         <div class="right_txt">
-          <span class="for_link" @click="go">项目太少？试试订阅项目</span>
+          <span class="for_link" @click="goLink('/member/company/subscribeProject')">项目太少？试试订阅项目</span>
         </div>
       </div>
       <div class="box_5">
@@ -195,7 +195,7 @@
         <div class="handle_line l1" @click="handlerJump('/member/company/manage',1)">
           企业管理
         </div>
-        <div class="handle_line l2" @click="$router.push('/member/company/AfterSalesEvaluate')">
+        <div class="handle_line l2" @click="goLink('/member/company/AfterSalesEvaluate',is_safeAfter)">
           我的售后评价
         </div>
         <!-- <div
@@ -267,6 +267,7 @@ export default {
   },
   data () {
     return {
+      is_safeAfter:0,
       pullLoading: false,
       top_loading: true,
       companyinfo: {},
@@ -386,8 +387,38 @@ export default {
       }
     },
 	
-	go(){
-		this.$router.push("/member/company/subscribeProject");
+	goLink(url,e){
+    if(e === 0){
+      this.$dialog.confirm({
+           title: '提示',
+           confirmButtonText:'购买使用',
+           cancelButtonText:'联系我们',
+           cancelButtonColor:'#007aff',
+           closeOnClickOverlay:true,
+           message: '抱歉! 您暂未开通售后侠，暂时无法使用此功能，想要获取更多特权？联系我们：<a href="tel:17675797686">17675797686</a>',
+           beforeClose:(action, done)=>{
+            if(action === 'overlay') return done();
+            if(action === 'cancel'){
+              http.post(api.safeAfterContact).then(res=>{
+                this.$notify({ type: 'success', message: res.message })
+                done();
+              })
+              return 
+            } 
+            if(action === 'confirm'){
+              this.$router.push('/member/order/add/common?type=setmeal&position=5');
+              done();
+              return
+            } 
+           },
+      }).then(e=>{
+        console.log(e,"then...")
+      }).catch(e=>{
+        console.log(e,"捕捉错误")
+      })
+      return
+    }
+		this.$router.push(url);
 	},
     // 公告滚动
     scrollAnimate () {
@@ -416,11 +447,12 @@ export default {
     fetchData (is_refresh = false) {
       http.post(api.company_index, {}).then(res => {
           console.log(res,"22222")
-          const { companyinfo, manage, setmeal, message_list } = {
+          const { companyinfo, manage, setmeal, message_list,is_safeAfter } = {
             ...res.data
           }
           this.companyinfo = companyinfo
           console.log(manage,"managemanage")
+          this.is_safeAfter = is_safeAfter
           this.manage = manage
           this.setmeal = setmeal
           this.message_list = message_list

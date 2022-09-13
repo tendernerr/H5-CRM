@@ -1450,11 +1450,6 @@ export default {
             return
           }
         }
-        // 判断项目是否过期
-        if(this.base_info.statetext == '已停止'){
-          Dialog({ message: '项目已停止' });
-          return
-        }
         if(this.company_auth === 0){  //company_auth == 0 未得到企业认证
           this.company_auth_pop = true
         } else{
@@ -1464,6 +1459,20 @@ export default {
             resume_id: this.query_id,
             buyout: is_ == 1 ? 1 : 0,
           };
+            // 判断项目是否过期
+          if(this.base_info.statetext == '已停止'){
+            Dialog({ message: '项目已停止' });
+            Dialog.confirm({
+			      title: '提示',
+            messageAlign:'left',
+            confirmButtonText:'继续参与',
+            confirmButtonColor:'#0043ff',
+            message: '项目已到企业初步确定截止时间，您仍可继续参与此项目，如果该企业已找到供应商，平台核实后会全款退还给您（咨询：<a href="tel:17675797686">17675797686</a>）',
+            }).then(() => {
+              this.appearPayment(1)
+            }).catch(() => {});
+            return
+          }
           // 直接点券支付
           this.appearPayment(1)
         }

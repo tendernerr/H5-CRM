@@ -576,4 +576,6 @@ export default {
   getResumeKeepInfo:'/home/resume_keep/getResumeKeepInfo',
   // 我的评价列表
   getMyEvaluate:'/member/index/getMyEvaluate',
+  // 联系我们
+  safeAfterContact:'/member/index/safeAfterContact',
 }
