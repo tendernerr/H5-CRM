@@ -1467,7 +1467,7 @@ export default {
             messageAlign:'left',
             confirmButtonText:'继续参与',
             confirmButtonColor:'#0043ff',
-            message: '项目已到企业初步确定截止时间，您仍可继续参与此项目，如果该企业已找到供应商，平台核实后会全款退还给您（咨询：<a href="tel:17675797686">17675797686</a>）',
+            message: '项目报价日期截止不代表客户真的已经确定好供应商，若您仍想继续参与此项目，请点击继续参与！<span style="color:red;">平台承诺：如果该企业已确定好供应商，您可以发起投诉，经平台核实无误后会全款退还给您</span><br/>(咨询热线：<a href="tel:17675797686">17675797686</a>)',
             }).then(() => {
               this.appearPayment(1)
             }).catch(() => {});
