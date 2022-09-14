@@ -6,19 +6,22 @@
     <div class="box">
 		 <van-list @load="onLoad" :finished="finished" v-model="loading" finished-text="没有更多了~">
 			 <div class="list" v-if="list.length > 0">
-				 <div class="listBox" v-for="(item,index) in list" :key="index" @click="go(`/resume/${item.resume_id}`)">
+				 <div class="listBox" v-for="(item,index) in list" :key="index">
 					 <div class="box1">
 						 <div class="box1Img"><img :src="item.photo_img_src" /></div>
 						 <div class="text">
 							 <div class="text1">{{item.fullname}}</div>
-							 <div class="text2">{{item.birthday}}截止 <span>{{item.education_text}}</span></div>
+							 <!-- <div class="text2">
+								{{item.birthday}}截止 
+								<span>{{item.education_text}}</span>
+							</div> -->
 						 </div>
-						 <div class="button">
+						 <!-- <div class="button">
 							 <div class='text1'>预算:{{item.minwage}}</div>
 							 <div :class="['text2',item.isView?'text2-1':'']">{{item.isView?'已查看':'未查看'}}</div>
-						 </div>
+						 </div> -->
 					 </div>
-					 <div class="box2">
+					 <!-- <div class="box2">
 						 <div class="text1">
 							 <span style="border: 1px solid rgb(204, 204, 204); padding: 2px 5px; border-radius: 5px; margin: 5px 5px 0px 0;" v-for="(item,index) in item.householdaddress_name" :key="index">{{item}}</span>
 						 </div>
@@ -32,12 +35,16 @@
 							 <div v-if="false" class="buttonText1">联系报价</div>
 							 <div v-if="false" class="buttonText1">不合适</div>
 						 </div>
+					 </div> -->
+					 <div class="project_type">{{item.project_type==1?'直采项目':'备案项目' }}</div>
+					 <div>
+						<div class="project_del" @click="projectDel(item,index)">删除</div>
 					 </div>
 				 </div>
 			 </div>
-			 <div class="empty" v-else>
+			 <!-- <div class="empty" v-else>
 				 <img src="../../../assets/images/im/empty.png" />
-			 </div>
+			 </div> -->
 		 </van-list>
 	 </div>
   </div>
@@ -73,6 +80,7 @@ export default {
   },
   created () {
     this.fetchData()
+	// this.projectDel();
   },
   methods: {
 	  go(url){
@@ -103,6 +111,14 @@ export default {
 		  this.page++
 		  this.getResume()
 		  console.log(e,"触地")
+	  },
+	  projectDel(e,i){
+		console.log(e.id);
+		http.post(api.viewResumeDelete,{id:e.id}).then(res=>{
+			console.log(res);
+			this.list.slice(i,1)
+			this.getResume()
+		})
 	  }
   }
 }
@@ -148,5 +164,27 @@ export default {
 				div{margin-top: 16px; color: #969799; font-size: 13px;}
 			}
 		}
+	}
+	.project_type{
+		font-weight: 600;
+		color: #000;
+		font-size: 14px;
+		padding-left: 10px;
+		border-bottom: 1px solid rgba(0,0,0,.3);
+		padding-bottom: 2px;
+		padding: 5px;
+	}
+	.project_del{
+		border: 1px solid rgba(0,0,0,.3);
+		width: 70px;
+		line-height: 28px;
+		border-radius: 5px;
+		font-size: 14px;
+		display: flex;
+        justify-content: center;
+		float: right;
+		margin-top: 5px;
+		margin-right: 5px;
+		margin-bottom: 5px;
 	}
 </style>
