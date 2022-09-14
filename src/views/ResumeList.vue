@@ -37,7 +37,7 @@
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
 					 <div class="listTab2Head">
-						 <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div>
+						 <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
 						 <div class="listTab2HeadName">
 							 <div class="listTab2HeadName1">
 								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
@@ -969,18 +969,18 @@ export default {
 			}
 			.listTab2HeadName{display: flex; flex-direction: column; justify-content: space-around; padding:0 5px; flex: 1;
 				.listTab2HeadName1{display: flex; justify-content: space-between; align-items: center;
-					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; -webkit-line-clamp: 2; font-weight: 700;}
+					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; font-size: 12px; font-weight: 700;}
 					.listTab2HeadName1Text2{ font-size: 13px; flex: none;}
 				}
-				.listTab2HeadName2{font-size: 13px;
+				.listTab2HeadName2{font-size: 13px;margin-top: 10px;
 					.listTab2HeadName2Span2{margin-left: 10px;}
 				}
 			}
 		}
-		.listTab2Label{display: flex; flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 5px 20px;
+		.listTab2Label{display: flex; flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 5px 10px;
 			.listTab2LabelList{background-color: #f4f9ff; padding: 3px 8px; margin-right: 8px; border-radius: 5px; margin-bottom: 5px;}
 		}
-		.updateTime{padding: 0px 20px 15px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;
+		.updateTime{padding:10px 10px 10px 10px;  font-size: 12px; display: flex; align-items: center; justify-content: space-between;
 			.updateTimeSpan{margin-left: 10px;}
 		}
 		
