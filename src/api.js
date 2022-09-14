@@ -578,4 +578,8 @@ export default {
   getMyEvaluate:'/member/index/getMyEvaluate',
   // 联系我们
   safeAfterContact:'/member/index/safeAfterContact',
+  //浏览记录删除
+  viewResumeDelete:'/company/view_resume/delete',
+  //删除收藏项目
+  favResumeCancel:'company/fav_resume/cancel',
 }
