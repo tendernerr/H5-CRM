@@ -101,9 +101,6 @@ const store = new Vuex.Store({
       userid: '',
       user_token: ''
     },
-	userInfo:{
-		
-	},
   userInfo:{
 		
 	},
@@ -604,8 +601,7 @@ const store = new Vuex.Store({
           },
           url: api.classify,
           params: {type: value}
-        })
-          .then((res) => {
+        }).then((res) => {
             if (parseInt(res.data.code) === 200) {
               let dataArray = JSON.parse(JSON.stringify(res.data.data))
               let commitArray = []

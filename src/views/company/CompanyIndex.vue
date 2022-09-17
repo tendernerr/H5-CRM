@@ -158,10 +158,7 @@
           <div class="ico ic2"></div>
           <div class="txt">增值服务</div>
         </div>
-        <div
-          class="item"
-          @click="handlerJump('/member/order/add/common?type=setmeal',1)"
-        >
+        <div class="item" @click="handlerJump('/member/order/add/common?type=setmeal',1)">
           <div class="ico ic3"></div>
           <div class="txt">我的套餐</div>
         </div>
@@ -372,6 +369,7 @@ export default {
       }
     },
     handlerJump (path, checkAuth) {
+      if(path === '/member/order/add/common?type=setmeal') return this.$router.push(path) ;
       if (this.empty_info === true) {
         handlerHttpError({code: 50003, message: '请先完善企业资料'})
       } else {

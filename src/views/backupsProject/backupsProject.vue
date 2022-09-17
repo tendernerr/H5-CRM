@@ -44,7 +44,8 @@
 								下文****为隐藏内容，仅对行业大牛用户开放，注册登录后可免费查看内容详情
 							</div>
 							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
-								（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）
+								<p>（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）</p>
+								<div class="clickLook" @click="getResumeKeepInfo"> 点击查看 </div>
 							</div>
 						</div>
 						<div class="tab1List">
@@ -92,11 +93,6 @@
 							<div class="tab1List2">：</div>
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.start_time}}</div>
 						</div>
-						<div class="tab1List" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
-							<div class="tab1List3 redText">今日可免费查看次数为 
-								<span style="color: #53a7fd;">{{dataMes.userinfo.day_look_resumekeep}}</span> 
-								<span class="buttonSpan" @click="getResumeKeepInfo">点击查看</span> </div>
-						</div>
 						<!-- <div class="tab1List">
 							<div class="tab1List1">项目当前状态</div>
 							<div class="tab1List2">：</div>
@@ -135,14 +131,16 @@
 				  <div class="tab2" v-if="!dataMes.isLogin || dataMes.userinfo.is_free">
 				  	<p style="color: #000;padding: 16px 0;font-size: 13px;color: red;" v-if="dataMes.basemain&&dataMes.basemain.project_name !== '****'">
 						该项目信息仅对行业大牛高级会员及以上开放，您也可以通过 
-						<span class="buttonSpan" @click="go(1)">天眼查>></span>  或者
 						<span class="buttonSpan" @click="go(2)">百度>></span> 搜索一下
 					</p>
 					<p style="color: #000;padding: 3px 0;">公司名称：<span class="redText">****</span> </p>
 					<p style="color: #000;padding: 3px 0;">项目地区：<span class="redText">****</span></p>
 					<p style="color: #000;padding: 3px 0;">姓 名：<span class="redText">****</span></p>
 					<p style="color: #000;padding: 3px 0;">岗 位：<span class="redText">****</span></p>
-					<p style="color: #000;padding: 3px 0;">联系电话：<span style="color: #ff3e3e;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">登录查看</span> </p>
+					<p style="color: #000;padding: 3px 0;">联系电话：
+						<span style="color: #ff3e3e;" @click="gjUser = true">点击查看</span> 
+					</p>
+					<p style="color: #00a1ff;padding: 3px 0;" @click="gjUser = true">更多项目联系人>></p>
 				  </div>
 				  <div class="tab2" style="color: #000;" v-if="!dataMes.userinfo.isMember && dataMes.isLogin && !dataMes.userinfo.is_free">
 						<p style="padding: 0 52px;color: #000;">姓名：***</p>
@@ -205,7 +203,8 @@
 		</div>
 		<!-- 沟通记录弹框 -->
 		<van-popup v-model="show" position="bottom" :style="{ height: '65%'}">
-			<div class="popupDiv" v-if="dataMes.all_record&&dataMes.all_record.length>0">
+			<!-- <div class="popupDiv" v-if="dataMes.all_record&&dataMes.all_record.length>0"> -->
+			<div class="popupDiv">
 				<div class="popupDivHaed">
 					<div class=""></div>
 					<div class="popupDivHaedText">添写沟通记录</div>
@@ -236,9 +235,9 @@
 					 </div>
 				</div>
 			</div>
-			<div v-else style="font-size: 15px;color: #000;padding: 61px 40px;text-indent: .8em;line-height: 30px;">
+			<!-- <div v-else style="font-size: 15px;color: #000;padding: 61px 40px;text-indent: .8em;line-height: 30px;">
 				为了您的操作更便捷，首次沟通记录需在您在电脑端添加!
-			</div>
+			</div> -->
 		</van-popup>
 		<!-- 时间选择器 -->
 		<van-popup v-model="dateBox" position="bottom" :style="{ height: '65%'}">
@@ -264,6 +263,39 @@
 			</div>
 			<div v-if="dataMes.isLogin" @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
 		</div>
+		<van-popup v-model="freeView" :style="{ width: '80%'}">
+			<div class="freeView-div">
+				<h3 class="freeView-h3">今日免费查看权限使用完啦！</h3>
+				<p class="freeView-text">成为会员，同时获得以下功能</p>
+				<div class="freeView-img" >
+					<div class="freeView-img-list"  v-for="(item,index) in freeViewImg" :key="index" >
+						<div class="list-img"><img :src="item.imgUrl" width="100%" height="100%" /></div>
+						<div>{{item.text1}}</div>
+						<div>{{item.text2}}</div>
+					</div>
+				</div>
+				<p class="freeView-p1">进入<span class="freeView-span">会员专场</span>，查看更多权益</p>
+				<p class="freeView-p2">90%选择开通会员用户,成交10万单!</p>
+				<div class="freeView-button" @click="$router.push('/member/order/add/common?type=setmeal')">进入会员专场</div>
+			</div>
+		</van-popup>
+		<van-popup v-model="gjUser" :style="{ width: '80%'}">
+			<div class="freeView-div">
+				<h3 class="freeView-h3">您暂无法查看权限</h3>
+				<p class="freeView-text">大数据精准计算挖掘 为您找到该项目更多联系人</p>
+				<div class="freeView-img" >
+					<div class="freeView-img-list"  v-for="(item,index) in freeViewImg" :key="index" >
+						<div class="list-img"><img :src="item.imgUrl" width="100%" height="100%" /></div>
+						<div>{{item.text1}}</div>
+						<div>{{item.text2}}</div>
+					</div>
+				</div>
+				<div style="text-align: right;padding: 0 0 14px;color: #0094fd;"> 更多优惠套餐>> </div>
+				<div class="freeView-wxzf" >
+					微信支付
+				</div>
+			</div>
+		</van-popup>
   </div>
 </template>
 
@@ -289,6 +321,13 @@ export default {
 		 dateBox:false,			
 		 minDate: new Date(),
 		 call:false,
+		 freeView:false,		// 免费查看用光时弹窗
+		 freeViewImg:[
+			{imgUrl:'https://qiniucdn.hangyedaniu.com/img/shangji.png',text1:'免费查看',text2:'商机信息'},
+			{imgUrl:'https://qiniucdn.hangyedaniu.com/img/ava_importman.png',text1:'直接查看',text2:'联系人休息'},
+			{imgUrl:'https://qiniucdn.hangyedaniu.com/img/genzong.png',text1:'实时跟踪',text2:'项目进展'}
+			],
+		  gjUser:false,
 	 }
   },
   created () {
@@ -317,9 +356,18 @@ export default {
 	  },
 	  getResumeKeepInfo(){
 		if(this.dataMes.userinfo.day_look_resumekeep <= 0){
-			this.$notify({ type: 'warning', message: '可查看次数为0' });
+				this.freeView = true
 			return
 		}
+		this.$dialog.alert({
+				title: '标题',
+				confirmButtonText:'会员专区',
+				closeOnClickOverlay:true,
+				message: '<p style="text-align:left;">您目前只能查看项目基本信息，成为行业大牛会员，掌握项目全部商机！</p>\n进入<span style="color:red;">会员专区</span>，查看更多权益\n<p style="color:#4ea5ff;padding: 5px 0 0;">90%企业选择开通会员，共成交10万单！</p>',
+				})
+				.then(() => {
+					this.$router.push('/member/order/add/common?type=setmeal')
+				});
 		http.get(api.getResumeKeepInfo,{rid:this.id}).then(res=>{
 			this.dataMes.userinfo.day_look_resumekeep--
 			this.dataMes.basemain.project_name = res.data.project_name
@@ -341,9 +389,10 @@ export default {
 	  resume_keepProjectApply(){
 		//  不是会员
 		if(!this.dataMes.userinfo.is_setmeal){
-			http.post(api.resume_keepProjectApply,{id:this.id}).then(res=>{
-				this.$notify({ type: 'success', message: res.message });
-			})
+			this.gjUser = true
+			// http.post(api.resume_keepProjectApply,{id:this.id}).then(res=>{
+				// this.$notify({ type: 'success', message: res.message });
+			// })
 		}
 		// 是会员
 		if(this.dataMes.userinfo.is_setmeal){
@@ -421,6 +470,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.freeView{
+		&-div{padding: 26px;text-align: center;}
+		&-h3{color: #000;padding: 0 0 10px;}
+		&-text{padding: 0 0 25px;}
+		&-img{display: flex;justify-content: space-between;flex-wrap: wrap;
+			&-list{display: flex;flex-direction: column;align-items: center;padding: 0 0 15px;}
+			.list-img{width: 45px;height: 45px;}
+		}
+		&-p1{color: red; padding: 0 0 10px;}
+		&-span{ color: red; }
+		&-p2{color: #149dff;}
+		&-button{width: 9em;margin: 20px auto 0;background: #07baff;color: #fff;height: 2.2em;line-height: 2.2em;border-radius: 11px;}
+		&-wxzf{margin: 15px auto 0;width: 9em;background: url(https://qiniucdn.hangyedaniu.com/img/weixinpay2.png) 12px center / 26px 23px no-repeat #28C445;line-height: 2.4em;border-radius: 20px;text-align: center;padding: 0px 0px 0px 29px;color: rgb(255, 255, 255);cursor: pointer;}
+	}
 	.buttonSpan{margin: 0 0 5px 0;background: #53a7fd;color: #fff;border-radius: 5px;padding: 1px 10px;display: inline-block;}
 	.star-size{color: #f90 !important;}
 	.redText{color: red;}
@@ -494,7 +557,7 @@ export default {
 					.tab1List1{width: 7em; text-align-last: justify; flex: none;}
 					.tab1List2{margin:0 .5em 0 .2em; }
 					.tab1List3{overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all; display: block;
-						
+						.clickLook{margin: 6px 0 0;color: #fff;background: #4ea5ff;width: 6em;height: 2em;text-align: center;line-height: 2em;border-radius: 7px;}
 					}
 				}
 			}

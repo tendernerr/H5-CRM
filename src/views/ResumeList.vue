@@ -35,7 +35,7 @@
 			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
-			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
+			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="goDetails(item.id)">
 					 <div class="listTab2Head">
 						 <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
 						 <div class="listTab2HeadName">
@@ -340,7 +340,7 @@ export default {
 	 }
   },
   computed:{
-    ...mapState(['userInfo'])
+    ...mapState(['userInfo','LoginOrNot'])
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === "resumeShow" || to.name === "backupsProject") {
@@ -354,6 +354,7 @@ export default {
     }
   },
   created() {
+    console.log(this.LoginOrNot,"LoginOrNotLoginOrNotLoginOrNotLoginOrNot")
     if(this.$route.query.active || this.$route.query.active==='0'){
       this.active = this.$route.query.active
     }
@@ -648,6 +649,19 @@ export default {
         };
       });
     },
+    goDetails(id){
+      if(!this.LoginOrNot){
+        this.$dialog({ message: '注册登录行业大牛用户账号，免费查看项目信息！！\n\n已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机</span>！',
+        closeOnClickOverlay:true,
+        confirmButtonText:'去登录',
+        messageAlign:"left",
+        }).then(_=>{
+          this.$router.push('/member/login?redirect='+window.location.pathname)
+        })
+        return
+      }
+      this.$router.push('/backupsProject/backupsProject?id='+id)
+    },
     // 筛选项目类型
     handleEducation(value) {
       if (value) {
@@ -886,10 +900,10 @@ export default {
 		  if(res.code === 200){
 		  	// 下拉加载
 		  	let list = res.data.items
+        console.log(list,"11111")
+        console.log(list.length,"2322222")
 			this.loading = false ;
-      if(list.length === 0){
-        this.empty1 = true
-      }
+      this.empty1 = list.length === 0 ? true : false ;
 		  	if(list.length < this.pagesize){
 						this.loading = true ;
 						this.finished = true ; 

@@ -5,7 +5,7 @@
         <div class="top-menu-list" id="top-menu-list">
           <div class="item" :class="{ active: active_index == index, recommend: item.recommend == 1, time: item.preferential_open == 1}" v-for="(item, index) in dataset" :key="index" @click="changeItem(item, index)">
             <div class="tx1">{{ item.name }}</div>
-            <div class="tx2" @click="getElement(1)">
+            <div class="tx2" @click="getElement(index)">
               <span class="unit">￥</span>{{ item.expense1 }}.<span class="tofix" >{{ item.expense2 }}</span>
             </div>
             <div class="tx3" v-if="item.preferential_open == 1">限时特惠价</div>

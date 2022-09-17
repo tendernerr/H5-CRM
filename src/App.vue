@@ -55,7 +55,7 @@ export default {
     }
   },
   created () {
-	  console.log("12132")
+	  console.log("每次加载切换12132")
 	  
 	  
 	  
