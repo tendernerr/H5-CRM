@@ -27,15 +27,11 @@ export default {
   methods: {
     jsApiCall () {
       let that = this
-      window.WeixinJSBridge.invoke(
-        'getBrandWCPayRequest',
-        that.jsApiParameters,
-        function (res) {
+      window.WeixinJSBridge.invoke('getBrandWCPayRequest',that.jsApiParameters,function (res) {
           // alert(res.err_code + res.err_desc + res.err_msg)
           that.$router.replace(that.successUrl)
           // window.WeixinJSBridge.log(res.err_msg)
-        }
-      )
+        })
     },
     callpay () {
       let that = this

@@ -460,6 +460,7 @@ const store = new Vuex.Store({
           data: {}
         })
           .then((res) => {
+            console.log(res,"请求网站配置")
             context.commit('setConfig', res.data.data)
 						// res.data.data.wechat_appid='wx54e6dea88696f060'
 						// res.data.data.payment_wechat_appid='wx54e6dea88696f060'

@@ -155,11 +155,6 @@
 					  <div class="tab2Text1">
 						  非常抱歉，系统暂无联系方式！ <span class="tab2Text1Span">建议您试试以下渠道</span>
 					  </div>
-					  <div class="tab2Text2">
-						  <div class="text1">天眼查</div>
-						  <div class="text2">：</div>
-						  <div class="text3" @click="go(1)">搜索一下>></div>
-					  </div>
 					  <div class="tab2Text4 tab2Text2">
 						  <div class="text1">百度</div>
 						  <div class="text2">：</div>
@@ -277,23 +272,29 @@
 				<p class="freeView-p1">进入<span class="freeView-span">会员专场</span>，查看更多权益</p>
 				<p class="freeView-p2">90%选择开通会员用户,成交10万单!</p>
 				<div class="freeView-button" @click="$router.push('/member/order/add/common?type=setmeal')">进入会员专场</div>
+				<div style="position: absolute;top: -3px;right: 4px;font-size: 17px;" @click="freeView = false">&otimes;</div>
 			</div>
 		</van-popup>
 		<van-popup v-model="gjUser" :style="{ width: '80%'}">
-			<div class="freeView-div">
+			<div class="freeView-div-pay">
 				<h3 class="freeView-h3">您暂无法查看权限</h3>
 				<p class="freeView-text">大数据精准计算挖掘 为您找到该项目更多联系人</p>
 				<div class="freeView-img" >
-					<div class="freeView-img-list"  v-for="(item,index) in freeViewImg" :key="index" >
-						<div class="list-img"><img :src="item.imgUrl" width="100%" height="100%" /></div>
-						<div>{{item.text1}}</div>
-						<div>{{item.text2}}</div>
+					<div class="freeView-img-list-pay" :class="{'freeView-img-list-pay-hvo':item.id === service_id}" @click="clickListPay(item)" v-for="(item,index) in resumeKeepSetmeal" :key="index" >
+						<div class="freeView-img-list-pay-first">
+							<div v-if="item.isFirstDiscount" class="first-div">首单特享</div>
+						</div>
+						<div class="pay-month"><span>{{item.name}}</span>个月</div>
+						<p class="pay-consult">查阅{{item.seeCount}}次</p>
+						<p class="pay-amount">{{item.seeCount}}/条</p>
+						<div class="pay-use">{{item.expense}}</div>
 					</div>
 				</div>
-				<div style="text-align: right;padding: 0 0 14px;color: #0094fd;"> 更多优惠套餐>> </div>
-				<div class="freeView-wxzf" >
+				<div style="text-align: right;padding: 0 0 14px;color: #0094fd;" @click="goPay('/member/order/add/common?type=setmeal')"> 更多优惠套餐>> </div>
+				<div class="freeView-wxzf" @click="companyPay('wxpay')">
 					微信支付
 				</div>
+				<div style="position: absolute;top: -3px;right: 4px;font-size: 17px;" @click="gjUser = false">&otimes;</div>
 			</div>
 		</van-popup>
   </div>
@@ -303,6 +304,7 @@
 import http from '@/utils/http'
 import api from '@/api'
 import wxshare from "@/assets/js/share.js";
+import { isWeiXin } from '@/utils/index'
 import {mapState} from 'vuex'
 export default {
   data () {
@@ -328,18 +330,18 @@ export default {
 			{imgUrl:'https://qiniucdn.hangyedaniu.com/img/genzong.png',text1:'实时跟踪',text2:'项目进展'}
 			],
 		  gjUser:false,
+		  resumeKeepSetmeal:[],
+		  service_id:'',   // 支付id
 	 }
   },
   created () {
 	  this.id = this.$route.query.id
 	  this.checkFav()
 	  this.homeResumeKeepShow()
+	  this.getResumeKeepSetmeal()
   },
-  mounted () {
-  },
-  watch: {
-	  
-  },
+  mounted () {},
+  watch: {},
   methods: {
 	  go(n){
 		  if( n == 1){
@@ -348,6 +350,71 @@ export default {
 		  if( n == 2){
 			  location.href = 'https://m.baidu.com/s?wd='+this.dataMes.basemain.construction_unit
 		  }
+	  },
+	  getResumeKeepSetmeal(){
+		http.get(api.getResumeKeepSetmeal).then(res=>{
+			this.resumeKeepSetmeal = res.data
+			for (const key in res.data) {
+				if(res.data[key].isFirstDiscount && !res.data[key].isBuy) return this.service_id = res.data[key].id;
+				if(!res.data[key].isFirstDiscount) return this.service_id = res.data[key].id;
+			}
+		})
+	  },
+	  clickListPay(e){
+		if(e.isFirstDiscount && e.isBuy){
+			this.$notify({ type: 'warning', message: '您已购买过"首单特享"的套餐,现已无法购买此套餐!' });
+			return
+		}
+		this.service_id = e.id;
+	  },
+	  companyPay(payment){
+		if (payment == 'wxpay' && !this.$store.state.config.payment_wechat_appid) {
+        this.$dialog.alert({
+          message: '暂不支持微信付款，请选择其他付款方式'
+        }).then(() => {})
+        return false
+      }
+		let openid = localStorage.getItem('weixinOpenid')
+		let param = {
+			coupon_id:0,			//  0
+			openid,					//  用户openid
+			payment,				//    支付类型     微信支付  "wxpay"   支付宝支付  'alipay' 
+			return_url:'http://www.hangyedaniu.com/m/member/order/list',//
+			service_id:this.service_id,//  套餐id  
+			service_type:'setmeal',//  "setmeal"
+		}
+		this.$toast('请稍等,正在跳转支付页面...')
+		http.post(api.company_pay,param).then(res=>{
+			if (res.data.pay_status == 1) {
+            this.$notify({ type: 'success', message: '支付成功' })
+              setTimeout(() => {
+                location.reload()
+              }, 1500)
+            return false
+          } else{
+			if (payment == 'wxpay') {
+				if (isWeiXin()) {
+					/*
+						** this.$store.state.config.mobile_domain == 当前的本地域名地址
+						** pay/jsapi :这个页面
+					*/
+					let data = res.data
+					let locationUrl = this.$store.state.config.mobile_domain + 
+					 'pay/jsapi?appId=' + data.parameter.jsApiParameters.appId + 
+					 '&timeStamp=' + data.parameter.jsApiParameters.timeStamp + 
+					 '&nonceStr=' + data.parameter.jsApiParameters.nonceStr + 
+					 '&package=' + data.parameter.jsApiParameters.package + 
+					 '&signType=' + data.parameter.jsApiParameters.signType + 
+					 '&paySign=' + data.parameter.jsApiParameters.paySign + 
+					 '&successUrl=' + '/member/order/list';
+					window.location.href = locationUrl
+				} else {
+					window.location.href = data.parameter
+				}
+			}
+		  }
+			// this.homeResumeKeepShow()
+		})
 	  },
 	  checkFav(){
 		http.get(api.checkFav,{id:this.id}).then(res=>{
@@ -364,8 +431,7 @@ export default {
 				confirmButtonText:'会员专区',
 				closeOnClickOverlay:true,
 				message: '<p style="text-align:left;">您目前只能查看项目基本信息，成为行业大牛会员，掌握项目全部商机！</p>\n进入<span style="color:red;">会员专区</span>，查看更多权益\n<p style="color:#4ea5ff;padding: 5px 0 0;">90%企业选择开通会员，共成交10万单！</p>',
-				})
-				.then(() => {
+				}).then(() => {
 					this.$router.push('/member/order/add/common?type=setmeal')
 				});
 		http.get(api.getResumeKeepInfo,{rid:this.id}).then(res=>{
@@ -399,6 +465,9 @@ export default {
 			this.active = 2
 			this.show = true
 		}
+	  },
+	  goPay(url){
+		this.$router.push(url)
 	  },
 	  // 添加沟通记录
 	  homeResumeKeepAddRecord(){
@@ -471,7 +540,7 @@ export default {
 
 <style lang="scss" scoped>
 	.freeView{
-		&-div{padding: 26px;text-align: center;}
+		&-div{padding: 26px;text-align: center;position: relative;}
 		&-h3{color: #000;padding: 0 0 10px;}
 		&-text{padding: 0 0 25px;}
 		&-img{display: flex;justify-content: space-between;flex-wrap: wrap;
@@ -483,6 +552,21 @@ export default {
 		&-p2{color: #149dff;}
 		&-button{width: 9em;margin: 20px auto 0;background: #07baff;color: #fff;height: 2.2em;line-height: 2.2em;border-radius: 11px;}
 		&-wxzf{margin: 15px auto 0;width: 9em;background: url(https://qiniucdn.hangyedaniu.com/img/weixinpay2.png) 12px center / 26px 23px no-repeat #28C445;line-height: 2.4em;border-radius: 20px;text-align: center;padding: 0px 0px 0px 29px;color: rgb(255, 255, 255);cursor: pointer;}
+		&-div-pay{padding: 10px;text-align: center;position: relative;}
+		&-img-list-pay{border-radius: 5px;padding: 0 14px;margin: 0 0 20px;background: linear-gradient(to top,#d6d6d6 1.5em, #f1f1f1 0);border: 1px solid #fff;
+			&-first{margin: 0 0 6px;height: 1.5em;width: 4.2em;}
+			.first-div{background: #ccc;color: #fff;width: 5em;border-radius: 0 10px 0 10px;position: relative;left: -14px;line-height: 1.5em;}
+			.pay-month{font-style: italic;font-weight: 600;padding: 0 0 2px;
+				span{color: red;font-size: 18px;}
+			}
+			.pay-consult{padding: 0 0 3px;}
+			.pay-amount{color: #949494;padding: 0 0 4px;}
+			.pay-use{height: 1.5em;line-height: 1.4em;color: #6b6b6b;}
+			&-hvo{border-color: #409eff;background: linear-gradient(to top,#409eff 1.5em, #fff 0);
+				.pay-use{color: #fff;}
+				.first-div{background: red;}
+			}
+		}
 	}
 	.buttonSpan{margin: 0 0 5px 0;background: #53a7fd;color: #fff;border-radius: 5px;padding: 1px 10px;display: inline-block;}
 	.star-size{color: #f90 !important;}

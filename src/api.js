@@ -582,4 +582,6 @@ export default {
   viewResumeDelete:'/company/view_resume/delete',
   //删除收藏项目
   favResumeCancel:'company/fav_resume/cancel',
+  // 获取到套餐列表
+  getResumeKeepSetmeal:'/home/resume_keep/getResumeKeepSetmeal',
 }

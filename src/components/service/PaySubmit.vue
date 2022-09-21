@@ -39,9 +39,7 @@ export default {
       }
       let that = this
       data.openid = localStorage.getItem('weixinOpenid')
-      http
-        .post(url, data)
-        .then(res => {
+      http.post(url, data).then(res => {
           if (res.data.pay_status == 1) {
             this.$notify({ type: 'success', message: '支付成功' })
             if (typeof callback === 'function') {
@@ -60,8 +58,7 @@ export default {
           } else {
             this.handlerPay(res.data, callback)
           }
-        })
-        .catch(() => {
+        }).catch(() => {
           setTimeout(() => {
             if (that.$route.path === that.successUrl) {
               location.reload()
@@ -74,7 +71,15 @@ export default {
     handlerPay (data, callback) {
       if (this.payment == 'wxpay') {
         if (isWeiXin()) {
-          let locationUrl = this.$store.state.config.mobile_domain + 'pay/jsapi?appId=' + data.parameter.jsApiParameters.appId + '&timeStamp=' + data.parameter.jsApiParameters.timeStamp + '&nonceStr=' + data.parameter.jsApiParameters.nonceStr + '&package=' + data.parameter.jsApiParameters.package + '&signType=' + data.parameter.jsApiParameters.signType + '&paySign=' + data.parameter.jsApiParameters.paySign + '&successUrl=' + this.successUrl
+          let locationUrl = 
+          this.$store.state.config.mobile_domain + 'pay/jsapi?appId=' + 
+          data.parameter.jsApiParameters.appId + '&timeStamp=' + 
+          data.parameter.jsApiParameters.timeStamp + '&nonceStr=' + 
+          data.parameter.jsApiParameters.nonceStr + '&package=' + 
+          data.parameter.jsApiParameters.package + '&signType=' + 
+          data.parameter.jsApiParameters.signType + '&paySign=' + 
+          data.parameter.jsApiParameters.paySign + '&successUrl=' + 
+          this.successUrl
           window.location.href = locationUrl
         } else {
           window.location.href = data.parameter

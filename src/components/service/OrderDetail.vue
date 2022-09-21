@@ -191,10 +191,7 @@
       </div>
     </van-skeleton>
     <van-popup v-model="showPayment" closeable position="bottom">
-      <PopupPayment
-        :amount="info.amount"
-        @handlerSubmit="handlerSubmit"
-      ></PopupPayment>
+      <PopupPayment :amount="info.amount" @handlerSubmit="handlerSubmit"></PopupPayment>
     </van-popup>
     <PaySubmit ref="paySubmit" :payment="payment" success-url="/member/order/list"></PaySubmit>
   </div>
@@ -292,10 +289,7 @@ export default {
     },
     handlerSubmit (payment) {
       this.payment = payment
-      let url =
-        this.$store.state.LoginType == 1
-          ? api.company_repay
-          : api.personal_repay
+      let url = this.$store.state.LoginType == 1 ? api.company_repay : api.personal_repay;
       this.$refs.paySubmit.handlerSubmit(url, { id: this.order_id, payment: this.payment })
     },
     handlerCancel () {
