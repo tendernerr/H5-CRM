@@ -6,8 +6,9 @@
 		<van-list></van-list>
 		<div class="box">
 			<van-list @load="onLoad" :finished="finished" v-model="loading" finished-text="没有更多了~">
-				<div class="list" v-if="list.length > 0">
+				<div class="list" v-if="list.length > 0" >
 					<div class="listBox" v-for="(item,index) in list" :key="index">
+						<div   @click="browsingClick(item)">
 						<div class="box1">
 							<!-- <div class="box1Img"><img :src="item.photo_img_src" /></div> -->
 							<div class="text">
@@ -42,11 +43,12 @@
 						<div class="project_del" @click="projectDel(item,index)">删除</div>
 					 </div> -->
 						<div style="display: flex;align-items: center;justify-content: space-between;padding: 10px;">
-							<div class="project_type">{{item.project_type==1?'直采项目':'备案项目' }}</div>
+							<div class="project_type"  @click.stop="browsingClick(item)">{{item.project_type==1?'直采项目':'备案项目' }}</div>
 							<div>
 								<div class="project_del" @click="projectDel(item,index)">删除</div>
 							</div>
 						</div>
+					</div>
 					</div>
 				</div>
 				<!-- <div class="empty" v-else>
@@ -90,6 +92,15 @@ export default {
 		// this.projectDel();
 	},
 	methods: {
+		browsingClick(item){
+			if(item.project_type==1){
+				this.$router.push({path:"/resume/"+item.project_id})
+			} 
+			if(item.project_type==2){
+				this.$router.push({name:"backupsProject",query:{id:item.project_id}})
+				
+			}	
+		},
 		go(url) {
 			this.$router.push(url)
 		},
@@ -101,7 +112,7 @@ export default {
 				.catch(() => { })
 		},
 		getResume() {
-			console.log(this.pagesize, "this.pagesize")
+			// console.log(this.pagesize, "this.pagesize")
 			http.get(api.company_view_resume_list, { id: this.id, page: this.page, pagesize: this.pagesize }).then(res => {
 				let list = res.data.items
 				this.list = this.page == 1 ? list : [...this.list, ...list];
@@ -123,7 +134,7 @@ export default {
 			console.log(e.id);
 			http.post(api.viewResumeDelete, { id: e.id }).then(res => {
 				console.log(res);
-				this.list.slice(i, 1)
+				this.list.splice(i, 1)
 				this.getResume()
 			})
 		}
