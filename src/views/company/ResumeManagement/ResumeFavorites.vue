@@ -20,6 +20,8 @@
 							 <div :class="['text2',item.isView?'text2-1':'']">{{item.isView?'已查看':'未查看'}}</div>
 						 </div> -->
 							</div>
+					</div>
+
 							<!-- <div class="box2">
 						 <div class="text1">
 						 	<span style="border: 1px solid rgb(204, 204, 204); padding: 2px 5px; border-radius: 5px; margin: 5px 5px 0px 0;" v-for="(item,index) in item.householdaddress_name" :key="index">{{item}}</span>
@@ -39,16 +41,14 @@
 					 <div>
 						<div class="project_collection" @click="projectCollection(item,index)">取消收藏</div>
 					 </div> -->
-							<div
-								style="display: flex;align-items: center;justify-content: space-between;padding: 10px;">
+							<div style="display: flex;align-items: center;justify-content: space-between;padding: 10px;">
+								<div>
 								<div class="project_type" @click.top="collectionClick(item)">
 									{{item.project_type==1?'直采项目':'备案项目' }}</div>
-								<div>
-									<div class="project_collection" @click="projectCollection(item,index)">取消收藏</div>
-								</div>
+							</div>
+							<div>	<div class="project_collection" @click="projectCollection(item,index)">取消收藏</div></div>
 							</div>
 						</div>
-					</div>
 				</div>
 				<div class="empty" v-else>
 					<img src="../../../assets/images/im/empty.png" />
