@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from '../views/Index'
+import Search from '../views/Search'
 import JobList from '../views/JobList'
 import JobListNearby from '../views/JobListNearby'
 import JobShow from '../views/JobShow'
@@ -120,6 +121,7 @@ import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
 
 
+
 Vue.use(VueRouter)
 
 /**
@@ -144,6 +146,16 @@ const routes = [{
   component: Index,
   meta: {
     title: '首页',
+    keepAlive: true,
+    loginCheck: false
+  }
+},
+{
+  path: '/search',
+  name: 'search',
+  component: Search,
+  meta: {
+    title: '搜索',
     keepAlive: true,
     loginCheck: false
   }
