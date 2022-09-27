@@ -1,65 +1,94 @@
 <template>
   <div id="app">
     <Meta pagealias="resumelist" :query_data="$route.query" />
+
     <Head>项目列表</Head>
     <van-popup v-model="show" position="top" :overlay="true" :style="{ height: '90%', width: '100%' }">
       <TopSearch type="resume" @hideSearch="toggleSearch" @doSearch="doSearchByKeyword"></TopSearch>
     </van-popup>
     <!-- 搜索按钮 -->
     <div class="searchDivMin" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
-        <div @click.stop="search = !search" class="searchDiv">
-          <van-icon v-if="!search" name="search" />
-          <van-icon v-else name="cross" />
-        </div>
-        <div class="searchDiv2" v-if="search">
-          <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;" :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
-        </div>
+      <!-- <div @click.stop="search = !search" class="searchDiv">
+        <van-icon v-if="!search" name="search" />
+        <van-icon v-else name="cross" />
+      </div> -->
+      <div class="searchDiv2" v-if="search">
+        <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;"
+          :placeholder="`搜索${active?'前期':'委托'}项目（按钮可拖动）`" v-model="params.keyword" />
+      </div>
     </div>
-		<van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky>
-      <van-tab title="备案项目" v-if="true">
-			  <div class="box_2" style="display: flex;flex-direction: column;font-size:12px;width: 100%;">
-          <div style="padding: 8px 0 0 0;display: flex;justify-content:space-around;font-size:12px;width: 100%;background: #fff;" v-if="menber.is_setmeal">
-              <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">全部</div>
-              <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">有号码</div>
-              <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
+    <van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky>
+      <van-tab title="前期项目" v-if="true">
+        <div class="box_2" style="display: flex;flex-direction: column;font-size:12px;width: 100%;">
+          <div
+            style="padding: 8px 0 0 0;display: flex;justify-content:space-around;font-size:12px;width: 100%;background: #fff;"
+            v-if="menber.is_setmeal">
+            <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}"
+              style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">
+              全部</div>
+            <div @click="params.hasPhone=1" :class="{'box_2Div':params.hasPhone === 1}"
+              style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">
+              有号码</div>
+            <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}"
+              style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">
+              无号码</div>
           </div>
-				 <van-dropdown-menu class="filter_menu">
-				    <van-dropdown-item :title="title1" ref="items">
-				 						 <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2" @cancel='$refs.items.toggle();'/>
-				    </van-dropdown-item>
-				    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-				    <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-				  </van-dropdown-menu>
-			  </div>
-			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+          <div>
+            <div style="display:flex;align-items: center;">
+              <div style="width:70%">
+                <van-dropdown-menu class="filter_menu">
+                <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                <van-dropdown-item :title="title1" ref="items">
+                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
+                    @cancel='$refs.items.toggle();' />
+                </van-dropdown-item>
+                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+              </van-dropdown-menu>
+              </div>
+              <!-- <div style="width:30%"><div><img src="../assets/images/u25.svg" /></div></div> -->
+            </div>
+            <div>
+              <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+                <van-swipe-item>1</van-swipe-item>
+                <van-swipe-item>2</van-swipe-item>
+                <van-swipe-item>3</van-swipe-item>
+                <van-swipe-item>4</van-swipe-item>
+              </van-swipe>
+            </div>
+          </div>
+
+        </div>
+        <div class="form_split_10"></div>
+        <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
-			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
-			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="goDetails(item.id)">
-					 <div class="listTab2Head">
-						 <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
-						 <div class="listTab2HeadName">
-							 <div class="listTab2HeadName1">
-								 <div class="listTab2HeadName1Text1">{{item.title}}</div>
-							 </div>
-							 <div class="listTab2HeadName2">{{item.end_time}}  <span class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
-						 </div>
-					 </div>
-					 <div class="listTab2Label">
-					 		<div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde" v-if="inde<10">
-								{{ite}}
-							</div>
-					 </div>
-					 <div class="updateTime">
-            <span>{{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span></span>
-            <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
-					 </div>
-				 </div>
-			  </van-list>
-		  </van-tab>
-		  <van-tab title="直采项目" :title-class='labelRed'>
-			  <div class="box_2">
-			   <!-- <van-dropdown-menu class="filter_menu">
+        <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
+          @load="onLoad" :immediate-check="true">
+          <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="goDetails(item.id)">
+            <div class="listTab2Head">
+              <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
+              <div class="listTab2HeadName">
+                <div class="listTab2HeadName1">
+                  <div class="listTab2HeadName1Text1">{{item.title}}</div>
+                </div>
+                <div class="listTab2HeadName2">{{item.end_time}} <span
+                    class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
+              </div>
+            </div>
+            <div class="listTab2Label">
+              <div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde" v-if="inde<10">
+                {{ite}}
+              </div>
+            </div>
+            <div class="updateTime">
+              <span>{{item.refreshtime}}更新<span class="updateTimeSpan"> 项目在：{{item.address}}</span></span>
+              <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
+            </div>
+          </div>
+        </van-list>
+      </van-tab>
+      <van-tab title="委托项目" :title-class='labelRed'>
+        <div class="box_2">
+          <!-- <van-dropdown-menu class="filter_menu">
 			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
 			        <DistrictFilter :districts="[params.district1, params.district2, params.district3]" :type="true" @doSearch="doSearchByDistrict"></DistrictFilter>
 			      </van-dropdown-item>
@@ -67,90 +96,93 @@
 			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
 			      />
 			    </van-dropdown-menu> -->
-				 <van-dropdown-menu class="filter_menu">
-				    <van-dropdown-item :title="title1" ref="item">
-						 <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2" @cancel='$refs.item.toggle();'/>
-				    </van-dropdown-item>
-				    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-				    <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-				  </van-dropdown-menu>
-			  </div>
-			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
+          <van-dropdown-menu class="filter_menu">
+            <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+            <van-dropdown-item :title="title1" ref="item">
+              <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
+                @cancel='$refs.item.toggle();' />
+            </van-dropdown-item>
+            <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+          </van-dropdown-menu>
+        </div>
+        <div class="form_split_10"></div>
+        <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
-			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
-			    <div class="box_3">
-			      <div v-for="(item,index) in dataset" :key="index" @click="toDetail(item.id)">
-			        <div class="list">
-			          <div class="top" v-if="item.stick == 1">置顶</div>
-			          <div class="up">
-			            <div class="avatar_box">
-			              <img :src="item.photo_img_src" :alt="item.fullname" />
-			            </div>
-			            <div class="tx1">
-			              <div class="name">{{ item.fullname }}</div>
-			              <div class="wagw">预算：{{ item.minwage }}</div>
-			            </div>
-			            <div class="tx2">
-			              {{ item.birthday || "半年后" }}截止 ·
-			              {{ item.education_text }}
-			            </div>
-			          </div>
-			          <div class="tx3">
-			            {{ item.householdaddress_name }}
-			          </div>
-			  
-			          <div class="tx4" style="display: flex;justify-content: space-between;align-items: center;">
-			            <div style="display: flex">
-			              <div class="time">{{ item.refreshtime }}更新</div>
-			              <div class="time" style="margin-left: 20px">
-			                项目在：{{ item.address[0] }}
-			              </div>
-			            </div>
-			            <div style="wdith: 60px;height: 30px;background-color: #1787fb;border-radius: 5px;align-items: center;color: #e5f1ff;display: flex;padding: 10px;">
-			              已参与{{ item.involved_count }}/{{ item.involved }}
-			            </div>
-			          </div>
-			          <div class="tag" v-if="item.service_tag != ''">
-			            {{ item.service_tag }}
-			          </div>
-			        </div>
-			        <div class="form_split_10"></div>
-			      </div>
-			    </div>
-			  </van-list>
-			  <div class="login_layer" v-if="showLayer">
-			    <div class="ll_tip">注册企业会员，海量项目任你选</div>
-			    <div class="ll_tip_more">登录后可查看更多项目</div>
-			    <div class="ll_qr_box">
-			      <img :src="$store.state.config.wechat_qrcode" alt class="ll_qr" />
-			    </div>
-			    <div class="ll_tip_more">微信扫一扫，供应商更轻松</div>
-			    <div class="ll_tip_bth">
-			      <router-link to="/member/login" class="a_btn">登录</router-link>
-			      <router-link to="/member/reg/company" class="a_btn blue">注册</router-link>
-			    </div>
-			    <div class="ll_tip_tel" v-if="$store.state.config.contact_tel">
-			      联系客服：{{ $store.state.config.contact_tel }}
-			    </div>
-			  </div>
-		  </van-tab>
-		</van-tabs>
-		<div class="login_layer" v-if="showLayer">
-		  <div class="ll_tip">注册企业会员，海量项目任你选</div>
-		  <div class="ll_tip_more">登录后可查看更多项目</div>
-		  <div class="ll_qr_box">
-		    <img :src="$store.state.config.wechat_qrcode" alt class="ll_qr" />
-		  </div>
-		  <div class="ll_tip_more">微信扫一扫，供应商更轻松</div>
-		  <div class="ll_tip_bth">
-		    <router-link to="/member/login" class="a_btn">登录</router-link>
-		    <router-link to="/member/reg/company" class="a_btn blue">注册</router-link>
-		  </div>
-		  <div class="ll_tip_tel" v-if="$store.state.config.contact_tel">
-		    联系客服：{{ $store.state.config.contact_tel }}
-		  </div>
-		</div>
+        <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
+          @load="onLoad" :immediate-check="true">
+          <div class="box_3">
+            <div v-for="(item,index) in dataset" :key="index" @click="toDetail(item.id)">
+              <div class="list">
+                <div class="top" v-if="item.stick == 1">置顶</div>
+                <div class="up">
+                  <div class="avatar_box">
+                    <img :src="item.photo_img_src" :alt="item.fullname" />
+                  </div>
+                  <div class="tx1">
+                    <div class="name">{{ item.fullname }}</div>
+                    <div class="wagw">预算：{{ item.minwage }}</div>
+                  </div>
+                  <div class="tx2">
+                    {{ item.birthday || "半年后" }}截止 ·
+                    {{ item.education_text }}
+                  </div>
+                </div>
+                <div class="tx3">
+                  {{ item.householdaddress_name }}
+                </div>
+
+                <div class="tx4" style="display: flex;justify-content: space-between;align-items: center;">
+                  <div style="display: flex">
+                    <div class="time">{{ item.refreshtime }}更新</div>
+                    <div class="time" style="margin-left: 20px">
+                      项目在：{{ item.address[0] }}
+                    </div>
+                  </div>
+                  <div
+                    style="wdith: 60px;height: 30px;background-color: #1787fb;border-radius: 5px;align-items: center;color: #e5f1ff;display: flex;padding: 10px;">
+                    已参与{{ item.involved_count }}/{{ item.involved }}
+                  </div>
+                </div>
+                <div class="tag" v-if="item.service_tag != ''">
+                  {{ item.service_tag }}
+                </div>
+              </div>
+              <div class="form_split_10"></div>
+            </div>
+          </div>
+        </van-list>
+        <div class="login_layer" v-if="showLayer">
+          <div class="ll_tip">注册企业会员，海量项目任你选</div>
+          <div class="ll_tip_more">登录后可查看更多项目</div>
+          <div class="ll_qr_box">
+            <img :src="$store.state.config.wechat_qrcode" alt class="ll_qr" />
+          </div>
+          <div class="ll_tip_more">微信扫一扫，供应商更轻松</div>
+          <div class="ll_tip_bth">
+            <router-link to="/member/login" class="a_btn">登录</router-link>
+            <router-link to="/member/reg/company" class="a_btn blue">注册</router-link>
+          </div>
+          <div class="ll_tip_tel" v-if="$store.state.config.contact_tel">
+            联系客服：{{ $store.state.config.contact_tel }}
+          </div>
+        </div>
+      </van-tab>
+    </van-tabs>
+    <div class="login_layer" v-if="showLayer">
+      <div class="ll_tip">注册企业会员，海量项目任你选</div>
+      <div class="ll_tip_more">登录后可查看更多项目</div>
+      <div class="ll_qr_box">
+        <img :src="$store.state.config.wechat_qrcode" alt class="ll_qr" />
+      </div>
+      <div class="ll_tip_more">微信扫一扫，供应商更轻松</div>
+      <div class="ll_tip_bth">
+        <router-link to="/member/login" class="a_btn">登录</router-link>
+        <router-link to="/member/reg/company" class="a_btn blue">注册</router-link>
+      </div>
+      <div class="ll_tip_tel" v-if="$store.state.config.contact_tel">
+        联系客服：{{ $store.state.config.contact_tel }}
+      </div>
+    </div>
     <BottomNav></BottomNav>
   </div>
 </template>
@@ -161,7 +193,7 @@ import { obj2Param } from "@/utils/index";
 import http from "@/utils/http";
 import api from "@/api";
 import DistrictFilter from "@/components/DistrictFilter";
-import {mapState} from "vuex"
+import { mapState } from "vuex"
 export default {
   name: "ResumeList",
   components: {
@@ -169,22 +201,22 @@ export default {
   },
   data() {
     return {
-      labelRed:'labelRed',
-      menber:{},
-      top:{right: '5px',top:'334px'},
-      x:'',       //当前没处理的位置
-      y:'',
-      newx:5,     //储存积累的位置
-      newy:334,     //储存积累的位置
-      search:false,
+      labelRed: 'labelRed',
+      menber: {},
+      top: { right: '5px', top: '334px' },
+      x: '',       //当前没处理的位置
+      y: '',
+      newx: 5,     //储存积累的位置
+      newy: 334,     //储存积累的位置
+      search: false,
       dataset: [],
-      box_2Div:0,
+      box_2Div: 0,
       loading: false,
       finished: false,
       show_empty: false,
       params: {
-        date:'',
-        hasPhone:0,
+        date: '',
+        hasPhone: 0,
         keyword: "",
         district1: 0,
         district2: 0,
@@ -200,16 +232,16 @@ export default {
         tag: "",
         settr: "",
       },
-		para:{
-			
-		},
-    empty1:false,
-	  page: 1,
-	  pagesize: 10,
+      para: {
+
+      },
+      empty1: false,
+      page: 1,
+      pagesize: 10,
       show: false,
       districtTitle: "地区",
       experienceTitle: "涉及工艺",
-      educationTitle: "项目类型",
+      // educationTitle: "项目类型",
       otherTitle: "其他",
       optionWage: [
         { text: "全部", id: 0, min: "", max: "", select: true },
@@ -246,101 +278,101 @@ export default {
       selectResumeTag: [],
       // 未登录引导
       showLayer: false,
-		active:0,			//切换
-		title1:'地区',
-		title2:'涉及工艺',
-		title3:'项目类型',
-		citycategorys:{},		//地区
-		householdaddress:[],		//项目类型
-		education:[],				//涉及工艺
+      active: 0,			//切换
+      title1: '地区',
+      title2: '涉及工艺',
+      // title3:'项目类型',
+      citycategorys: {},		//地区
+      householdaddress: [],		//项目类型
+      education: [],				//涉及工艺
     };
   },
   watch: {
-    'x':{
-      handler(n,o){
+    'x': {
+      handler(n, o) {
         // 原始位置+1 或者原始位置-1
-        if(o === ''){     
+        if (o === '') {
           //第一次位置
           this.newx = 5
-        } else{
+        } else {
           // 第二次
-          if(o > n){      
-              //当往右拖的时候---> 旧值大于新值 
-              // 新位置要成负数 = old - new
-              this.newx = this.newx + (o - n)
-          } else{//当往右拖的时候---> 旧值小于于新值
-              this.newx = this.newx - (n - o)
+          if (o > n) {
+            //当往右拖的时候---> 旧值大于新值 
+            // 新位置要成负数 = old - new
+            this.newx = this.newx + (o - n)
+          } else {//当往右拖的时候---> 旧值小于于新值
+            this.newx = this.newx - (n - o)
           }
         }
-        this.top.right = this.newx - -5 +'px'
+        this.top.right = this.newx - -5 + 'px'
       }
     },
-    "y":{
-        handler(n,o){
+    "y": {
+      handler(n, o) {
         // 原始位置+1 或者原始位置-1
-        if(o === ''){     
+        if (o === '') {
           //第一次位置
           this.newy = 334
-        } else{
+        } else {
           // 第二次
-          if(o > n){      
-              //当往上拖的时候---> 旧值大于新值 
-              // 新位置要成负数 = old - new
-              this.newy = this.newy - (o - n)
-          } else{//当往下拖的时候---> 旧值小于于新值
-              this.newy = this.newy + (n - o)
+          if (o > n) {
+            //当往上拖的时候---> 旧值大于新值 
+            // 新位置要成负数 = old - new
+            this.newy = this.newy - (o - n)
+          } else {//当往下拖的时候---> 旧值小于于新值
+            this.newy = this.newy + (n - o)
           }
         }
-        this.top.top = this.newy +'px'
+        this.top.top = this.newy + 'px'
       }
     },
-    "params.keyword":{
-      handler(e){
-        this.loading = false ;
-        this.finished = false ; 
+    "params.keyword": {
+      handler(e) {
+        this.loading = false;
+        this.finished = false;
         this.dataset = []
         this.page = 1
         this.fetchData()
       }
     },
-    'params.hasPhone':{
-      handler(e){
-        this.loading = false ;
-        this.finished = false ; 
+    'params.hasPhone': {
+      handler(e) {
+        this.loading = false;
+        this.finished = false;
         this.dataset = []
         this.page = 1
         this.fetchData()
       }
     },
-  //   $route(to, from) {
-		//  console.log(to, from,"监听路由")
-  //     // 对路由变化作出响应...
-  //     if (from.name !== "resumeShow" && to.name === "resumeList") {
-  //       // 将地址栏中的url参数初始化到参数对象中
-  //       this.initQuery(to.query);
-  //       this.fetchData(true);
-  //       this.restoreFilter();
-  //     }
-		// if(from.name !== "backupsProject" && to.name === "resumeList"){
-		// 	// 将地址栏中的url参数初始化到参数对象中
-		// 	this.initQuery(to.query);
-		// 	this.fetchData(true);
-		// 	this.restoreFilter();
-		// }
-  //   },
-	 active:{
-		 handler(ne,ol){
-      this.labelRed = ''
-			this.loading = false ;
-			this.finished = false ; 
-			this.dataset = []
-			this.page = 1
-			this.fetchData()
-		 }
-	 }
+    //   $route(to, from) {
+    //  console.log(to, from,"监听路由")
+    //     // 对路由变化作出响应...
+    //     if (from.name !== "resumeShow" && to.name === "resumeList") {
+    //       // 将地址栏中的url参数初始化到参数对象中
+    //       this.initQuery(to.query);
+    //       this.fetchData(true);
+    //       this.restoreFilter();
+    //     }
+    // if(from.name !== "backupsProject" && to.name === "resumeList"){
+    // 	// 将地址栏中的url参数初始化到参数对象中
+    // 	this.initQuery(to.query);
+    // 	this.fetchData(true);
+    // 	this.restoreFilter();
+    // }
+    //   },
+    active: {
+      handler(ne, ol) {
+        this.labelRed = ''
+        this.loading = false;
+        this.finished = false;
+        this.dataset = []
+        this.page = 1
+        this.fetchData()
+      }
+    }
   },
-  computed:{
-    ...mapState(['userInfo','LoginOrNot'])
+  computed: {
+    ...mapState(['userInfo', 'LoginOrNot'])
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === "resumeShow" || to.name === "backupsProject") {
@@ -354,20 +386,20 @@ export default {
     }
   },
   created() {
-    console.log(this.LoginOrNot,"LoginOrNotLoginOrNotLoginOrNotLoginOrNot")
-    if(this.$route.query.active || this.$route.query.active==='0'){
+    console.log(this.LoginOrNot, "LoginOrNotLoginOrNotLoginOrNotLoginOrNot")
+    if (this.$route.query.active || this.$route.query.active === '0') {
       this.active = this.$route.query.active
     }
-    if(this.$route.query.times){
+    if (this.$route.query.times) {
       this.params.date = this.$route.query.times
     }
     this.getMenber()
-	 // 请求列表数据
+    // 请求列表数据
     // this.initQuery(this.$route.query);
     this.fetchData(true);		//获取列表信息
-	 this.classify()				//获取下啦数据
-   wxshare({}, "resumelist", location.href);
-	 return
+    this.classify()				//获取下啦数据
+    wxshare({}, "resumelist", location.href);
+    return
     this.$store.dispatch("getClassify", "citycategory");
     this.$store.dispatch("getClassify", "experience").then(() => {
       // 涉及工艺
@@ -411,111 +443,111 @@ export default {
     this.restoreFilter();
   },
   methods: {
-    getMenber(){
-      http.get(api.getMenber,{}).then(res=>{
-        console.log(res,"1111111")
+    getMenber() {
+      http.get(api.getMenber, {}).then(res => {
+        console.log(res, "1111111")
         this.menber = res.data
       })
     },
-    down(e){
-      console.log(e,"222")
+    down(e) {
+      console.log(e, "222")
     },
-    move(e){
+    move(e) {
       // console.log(e.touches[0],"111")
       document.body.style.overflow = 'hidden'
       this.y = e.touches[0].clientY
       this.x = e.touches[0].clientX
     },
-    end(e){
+    end(e) {
       document.body.style.overflow = 'auto'
       // console.log(e,"333")
     },
-	  // 获取选项信息
-	  classify(){
-		  http.get(api.classify,{type:'citycategorys,householdaddress,education'}).then(res=>{
-			  console.log(res,"sssss")
-			  let householdaddress = []
-			  let education = []
-			  householdaddress.unshift({
-				  text: '不限', value: 0
-			  })
-			  education.unshift({
-				  text: '不限', value: 0
-			  })
-			  for (let i = 0; i < res.data.householdaddress.length; i++) {
-					householdaddress.push({text: res.data.householdaddress[i].name, value: res.data.householdaddress[i].id})
-			  }
-			  for (let i = 0; i < res.data.education.length; i++) {
-			  		education.push({text: res.data.education[i].name, value: res.data.education[i].id})
-			  }
-			  this.citycategorys = res.data.citycategorys
-			  this.householdaddress = householdaddress
-			  this.education = education
-		  })
-	  },
-	  // 地区选择器的确认按钮
-	  confirm(e){
-	  		  console.log(e,"eeeee")
-			  this.loading = false ;
-			  this.finished = false ; 
-			  this.dataset = []
-			  this.page = 1
-	  		  if(e[0].code == ''){
-				  this.params.district1 = ''
-				  this.params.district2 = ''
-				  this.params.district3 = ''
-				  this.title1 = '地区'
-				  this.fetchData()
-				  if(this.active == 0){ this.$refs.item.toggle(); }
-				  if(this.active == 1){ this.$refs.items.toggle();}
-				  return
-	  		  }
-			  this.title1 = e[0].name
-			  this.params.district1 = e[0].code
-			  this.params.district2 = e[1].code
-			  this.fetchData()
-	  		  if(this.active == 0){ this.$refs.item.toggle(); }
-	  		  if(this.active == 1){ this.$refs.items.toggle();}
-			},
-	  changeItem(e){
-		  this.params.experience  = e
-		  this.dataset = []
-		  this.loading = false ;
-		  this.finished = false ; 
-		  this.page = 1
-		  if(e == 0){
-			  this.title2 = '涉及工艺'
-			  this.fetchData()
-			  return
-		  }
-		  for (var i = 0; i < this.householdaddress.length; i++) {
-			  if(this.householdaddress[i].value == e){
-				  this.title2 = this.householdaddress[i].text
-				  this.fetchData()
-				  break;
-			  }
-		  }
-	  },
-	  changeItems(e){
-		  console.log(e)
-		  this.params.education  = e
-		  this.dataset = []
-		  this.loading = false ;
-		  this.finished = false ; 
-		  this.page = 1
-		  if(e == 0){
-			  this.title3 = '项目类型'
-			  this.fetchData()
-			  return
-		  }
-		  for (var i = 0; i < this.education.length; i++) {
-			  if(this.education[i].value == e){
-				  this.title3 = this.education[i].text
-				  this.fetchData()
-				  break;
-			  }
-		  }
-	  },
+    // 获取选项信息
+    classify() {
+      http.get(api.classify, { type: 'citycategorys,householdaddress,education' }).then(res => {
+        console.log(res, "sssss")
+        let householdaddress = []
+        let education = []
+        householdaddress.unshift({
+          text: '不限', value: 0
+        })
+        education.unshift({
+          text: '不限', value: 0
+        })
+        for (let i = 0; i < res.data.householdaddress.length; i++) {
+          householdaddress.push({ text: res.data.householdaddress[i].name, value: res.data.householdaddress[i].id })
+        }
+        for (let i = 0; i < res.data.education.length; i++) {
+          education.push({ text: res.data.education[i].name, value: res.data.education[i].id })
+        }
+        this.citycategorys = res.data.citycategorys
+        this.householdaddress = householdaddress
+        this.education = education
+      })
+    },
+    // 地区选择器的确认按钮
+    confirm(e) {
+      console.log(e, "eeeee")
+      this.loading = false;
+      this.finished = false;
+      this.dataset = []
+      this.page = 1
+      if (e[0].code == '') {
+        this.params.district1 = ''
+        this.params.district2 = ''
+        this.params.district3 = ''
+        this.title1 = '地区'
+        this.fetchData()
+        if (this.active == 0) { this.$refs.item.toggle(); }
+        if (this.active == 1) { this.$refs.items.toggle(); }
+        return
+      }
+      this.title1 = e[0].name
+      this.params.district1 = e[0].code
+      this.params.district2 = e[1].code
+      this.fetchData()
+      if (this.active == 0) { this.$refs.item.toggle(); }
+      if (this.active == 1) { this.$refs.items.toggle(); }
+    },
+    changeItem(e) {
+      this.params.experience = e
+      this.dataset = []
+      this.loading = false;
+      this.finished = false;
+      this.page = 1
+      if (e == 0) {
+        this.title2 = '涉及工艺'
+        this.fetchData()
+        return
+      }
+      for (var i = 0; i < this.householdaddress.length; i++) {
+        if (this.householdaddress[i].value == e) {
+          this.title2 = this.householdaddress[i].text
+          this.fetchData()
+          break;
+        }
+      }
+    },
+    changeItems(e) {
+      console.log(e)
+      this.params.education = e
+      this.dataset = []
+      this.loading = false;
+      this.finished = false;
+      this.page = 1
+      if (e == 0) {
+        this.title3 = '项目类型'
+        this.fetchData()
+        return
+      }
+      for (var i = 0; i < this.education.length; i++) {
+        if (this.education[i].value == e) {
+          this.title3 = this.education[i].text
+          this.fetchData()
+          break;
+        }
+      }
+    },
     // 清空
     handleClearMore() {
       this.params.sex = "";
@@ -649,33 +681,34 @@ export default {
         };
       });
     },
-    goDetails(id){
-      if(!this.LoginOrNot){
-        this.$dialog({ message: '注册登录行业大牛用户账号，免费查看项目信息！！\n\n已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机</span>！',
-        closeOnClickOverlay:true,
-        confirmButtonText:'去登录',
-        messageAlign:"left",
-        }).then(_=>{
-          this.$router.push('/member/login?redirect='+window.location.pathname)
+    goDetails(id) {
+      if (!this.LoginOrNot) {
+        this.$dialog({
+          message: '注册登录行业大牛用户账号，免费查看项目信息！！\n\n已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机</span>！',
+          closeOnClickOverlay: true,
+          confirmButtonText: '去登录',
+          messageAlign: "left",
+        }).then(_ => {
+          this.$router.push('/member/login?redirect=' + window.location.pathname)
         })
         return
       }
-      this.$router.push('/backupsProject/backupsProject?id='+id)
+      this.$router.push('/backupsProject/backupsProject?id=' + id)
     },
     // 筛选项目类型
-    handleEducation(value) {
-      if (value) {
-        let thisEducation = this.optionEducation.filter(
-          (item) => parseInt(item.value) === value
-        );
-        this.educationTitle = thisEducation[0].text;
-        this.params.education = value;
-      } else {
-        this.educationTitle = "项目类型";
-        this.params.education = "";
-      }
-      this.doSearch({ education: value });
-    },
+    // handleEducation(value) {
+    //   if (value) {
+    //     let thisEducation = this.optionEducation.filter(
+    //       (item) => parseInt(item.value) === value
+    //     );
+    //     this.educationTitle = thisEducation[0].text;
+    //     this.params.education = value;
+    //   } else {
+    //     this.educationTitle = "项目类型";
+    //     this.params.education = "";
+    //   }
+    //   this.doSearch({ education: value });
+    // },
     // 筛选涉及工艺
     handleExperience(value) {
       if (value) {
@@ -891,30 +924,30 @@ export default {
     },
     // 请求列表数据，init为true时直接更改dataset值，false时代表上拉加载回的数据追加进dataset
     fetchData(init) {
-      console.log(init,this.params,"222222")
-		let params = {...this.params,}
-		params.page = this.page
-		params.pagesize = this.pagesize
-		let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
-      http.get(url, {...params}).then((res) => {
-		  if(res.code === 200){
-		  	// 下拉加载
-		  	let list = res.data.items
-        console.log(list,"11111")
-        console.log(list.length,"2322222")
-			this.loading = false ;
-      this.empty1 = list.length === 0 ? true : false ;
-		  	if(list.length < this.pagesize){
-						this.loading = true ;
-						this.finished = true ; 
-					}
-		  	this.dataset = this.page == 1 ? list : [...this.dataset,...list];
-		  }
-        }).catch(() => {});
+      console.log(init, this.params, "222222")
+      let params = { ...this.params, }
+      params.page = this.page
+      params.pagesize = this.pagesize
+      let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
+      http.get(url, { ...params }).then((res) => {
+        if (res.code === 200) {
+          // 下拉加载
+          let list = res.data.items
+          console.log(list, "11111")
+          console.log(list.length, "2322222")
+          this.loading = false;
+          this.empty1 = list.length === 0 ? true : false;
+          if (list.length < this.pagesize) {
+            this.loading = true;
+            this.finished = true;
+          }
+          this.dataset = this.page == 1 ? list : [...this.dataset, ...list];
+        }
+      }).catch(() => { });
     },
     onLoad() {
-		this.page++
-		this.fetchData()
+      this.page++
+      this.fetchData()
     },
     toDetail(id) {
       this.$router.push("/resume/" + id);
@@ -946,61 +979,176 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.searchDivMin{
-  display: flex;align-items: center;position: fixed;flex-direction: row-reverse;z-index: 9999;
+.searchDivMin {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  flex-direction: row-reverse;
+  z-index: 9999;
 }
 
-  .searchDiv{
-      font-size: 34px; background: #797979;line-height: 1.36rem;width: 1.333333rem;height: 1.333333rem;border-radius: 50%;text-align: center;color: #fff;margin: 0 5px;
-    }
-
-.searchDiv2{
-     width: 13.6em;height: 2.2em;font-size: 16px;
+.my-swipe .van-swipe-item {
+  color: #fff;
+  font-size: 20px;
+  line-height: 50px;
+  text-align: center;
+  background-color: #39a9ed;
 }
 
-.searchInput{
+.searchDiv {
+  font-size: 34px;
+  background: #797979;
+  line-height: 1.36rem;
+  width: 1.333333rem;
+  height: 1.333333rem;
+  border-radius: 50%;
+  text-align: center;
+  color: #fff;
+  margin: 0 5px;
+}
+
+.searchDiv2 {
+  width: 13.6em;
+  height: 2.2em;
+  font-size: 16px;
+}
+
+.searchInput {
   border: 1px #e2ebf8 solid;
 }
-	.searchInput:focus{
-              outline: none;
-              border: 1px #cfe1fb solid;
+
+.searchInput:focus {
+  outline: none;
+  border: 1px #cfe1fb solid;
+}
+
+>>>.van-tabs__line {
+  background-color: #00aaff !important;
+}
+
+>>>.van-tab--active {
+  .van-tab__text {
+    color: #00aaff !important
   }
-	>>> .van-tabs__line{background-color: #00aaff!important;}
-	
-	>>> .van-tab--active{
-		.van-tab__text{color: #00aaff!important}
-	}
-	>>> .van-tab{color: #000;}
-	>>> .labelRed{
-    .van-tab__text{ position: relative;display: inline-flex;
-      &::after{content: "";background: #e61919;height: 5px;width: 5px;position: absolute;border-radius: 50%;right: 0;}
+}
+
+>>>.van-tab {
+  color: #000;
+}
+
+>>>.labelRed {
+  .van-tab__text {
+    position: relative;
+    display: inline-flex;
+
+    &::after {
+      content: "";
+      background: #e61919;
+      height: 5px;
+      width: 5px;
+      position: absolute;
+      border-radius: 50%;
+      right: 0;
     }
   }
-	.listTab2{display: flex; flex-direction: column; border-bottom:6px solid #eeeeee;
-		.listTab2Head{background-color: #fff; font-size: 15px; display: flex; padding: 5px;
-			.listTab2HeadImg{width: 60px; height: 60px; flex: none; overflow: hidden; border-radius: 50%; background: url("https://www.hangyedaniu.com/upload/resource/user.png") no-repeat center center/ 100% 100%; object-fit: cover;
-				img{width: 100%;height: 100%;}
-			}
-			.listTab2HeadName{display: flex; flex-direction: column; justify-content: space-around; padding:0 5px; flex: 1;
-				.listTab2HeadName1{display: flex; justify-content: space-between; align-items: center;
-					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all; font-size: 12px; font-weight: 700;}
-					.listTab2HeadName1Text2{ font-size: 13px; flex: none;}
-				}
-				.listTab2HeadName2{font-size: 13px;margin-top: 10px;
-					.listTab2HeadName2Span2{margin-left: 10px;}
-				}
-			}
-		}
-		.listTab2Label{display: flex; flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 5px 10px;
-			.listTab2LabelList{background-color: #f4f9ff; padding: 3px 8px; margin-right: 8px; border-radius: 5px; margin-bottom: 5px;}
-		}
-		.updateTime{padding:10px 10px 10px 10px;  font-size: 12px; display: flex; align-items: center; justify-content: space-between;
-			.updateTimeSpan{margin-left: 10px;}
-		}
-		
-	}
-	
-	
+}
+
+.listTab2 {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 6px solid #eeeeee;
+
+  .listTab2Head {
+    background-color: #fff;
+    font-size: 15px;
+    display: flex;
+    padding: 5px;
+
+    .listTab2HeadImg {
+      width: 60px;
+      height: 60px;
+      flex: none;
+      overflow: hidden;
+      border-radius: 50%;
+      background: url("https://www.hangyedaniu.com/upload/resource/user.png") no-repeat center center/ 100% 100%;
+      object-fit: cover;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .listTab2HeadName {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 0 5px;
+      flex: 1;
+
+      .listTab2HeadName1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .listTab2HeadName1Text1 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .listTab2HeadName1Text2 {
+          font-size: 13px;
+          flex: none;
+        }
+      }
+
+      .listTab2HeadName2 {
+        font-size: 13px;
+        margin-top: 10px;
+
+        .listTab2HeadName2Span2 {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .listTab2Label {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #1787fb;
+    padding: 5px 10px;
+
+    .listTab2LabelList {
+      background-color: #f4f9ff;
+      padding: 3px 8px;
+      margin-right: 8px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .updateTime {
+    padding: 10px 10px 10px 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .updateTimeSpan {
+      margin-left: 10px;
+    }
+  }
+
+}
+
+
 .more_box {
   .item_wrapper {
     .item_group {
@@ -1009,6 +1157,7 @@ export default {
           background-color: #e5f1ff;
           color: #5da9fc;
         }
+
         display: block;
         float: left;
         width: 81px;
@@ -1017,24 +1166,29 @@ export default {
         background-color: #f4f4f4;
         font-size: 13px;
         padding: 6.5px 0;
+
         &:nth-of-type(4n) {
           margin-right: 0;
         }
       }
     }
+
     .item_title {
       padding: 15px 0;
       font-size: 15px;
       color: #333333;
     }
+
     padding: 0 15px;
     position: relative;
+
     .wrapper_bottom {
       .btn_c {
         &.blue {
           background-color: #1787fb;
           color: #ffffff;
         }
+
         flex: 1;
         background-color: #f4f4f4;
         color: #333333;
@@ -1042,6 +1196,7 @@ export default {
         text-align: center;
         padding: 10.5px 0;
       }
+
       position: fixed;
       left: 0;
       top: 79%;
@@ -1050,25 +1205,30 @@ export default {
       z-index: 3;
     }
   }
+
   position: relative;
   padding-bottom: 41px;
 }
+
 .login_layer {
   width: 100%;
   padding: 40px 0;
   text-align: center;
   background: url("../assets/images/login_layer_resume_bg.jpg") 0 no-repeat;
   background-size: 100%;
+
   .ll_tip_tel {
     font-size: 14px;
     color: #666;
     padding-top: 10px;
   }
+
   .ll_tip_bth {
     .a_btn {
       &.blue {
         background: #128bed;
       }
+
       display: inline-block;
       padding: 6px 25px;
       background: #e33244;
@@ -1078,28 +1238,33 @@ export default {
       font-size: 14px;
     }
   }
+
   .ll_qr_box {
     .ll_qr {
       width: 100px;
       height: 100px;
       border: 0;
     }
+
     width: 100px;
     height: 100px;
     margin: 10px auto 5px;
   }
+
   .ll_tip {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
     color: #333;
   }
+
   .ll_tip_more {
     font-size: 14px;
     color: #666;
     margin-bottom: 10px;
   }
 }
+
 .box_3 {
   .list {
     .tag {
@@ -1110,10 +1275,10 @@ export default {
       position: absolute;
       right: 17px;
       bottom: 15px;
-      background: #ffa57d url("../assets/images/fab_ico.svg") 5px center
-        no-repeat;
+      background: #ffa57d url("../assets/images/fab_ico.svg") 5px center no-repeat;
       background-size: 10px;
     }
+
     .top {
       position: absolute;
       right: -25px;
@@ -1128,6 +1293,7 @@ export default {
       padding-top: 36px;
       font-size: 10px;
     }
+
     .tx4 {
       font-size: 13px;
       color: #999999;
@@ -1137,6 +1303,7 @@ export default {
       text-overflow: ellipsis;
       padding-bottom: 17px;
     }
+
     .tx3 {
       span {
         color: #666666;
@@ -1149,6 +1316,7 @@ export default {
       text-overflow: ellipsis;
       padding-bottom: 11.5px;
     }
+
     .up {
       .tx2 {
         .time {
@@ -1158,50 +1326,60 @@ export default {
           font-size: 13px;
           color: #999999;
         }
+
         position: relative;
         font-size: 15px;
         color: #666666;
         padding: 5px 0 17.5px;
       }
+
       .tx1 {
         position: relative;
         padding-top: 22.5px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .wagw {
           flex: none;
           font-size: 14px;
           color: #101010;
         }
-         .name {
-          overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all;
+
+        .name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          word-break: break-all;
           font-size: 18px;
           font-weight: bold;
           color: #333333;
         }
+
         .level_ico {
           float: left;
           margin-left: 10px;
           width: 36px;
           height: 25px;
-          background: url("../assets/images/resume_list_level_ico.png") 0 center
-            no-repeat;
+          background: url("../assets/images/resume_list_level_ico.png") 0 center no-repeat;
           background-size: 36px 15px;
         }
       }
+
       .avatar_box {
         .gender {
           &.female {
-            background: #ff8d65 url("../assets/images/female_ico.svg") center
-              no-repeat;
+            background: #ff8d65 url("../assets/images/female_ico.svg") center no-repeat;
             background-size: 9px;
           }
+
           &.male {
-            background: #4fa5fa url("../assets/images/male_ico.svg") center
-              no-repeat;
+            background: #4fa5fa url("../assets/images/male_ico.svg") center no-repeat;
             background-size: 9px;
           }
+
           position: absolute;
           right: 0;
           bottom: 2px;
@@ -1209,42 +1387,55 @@ export default {
           height: 13px;
           border-radius: 100%;
         }
+
         img {
           width: 49px;
           height: 49px;
           border: 0;
           border-radius: 100%;
         }
+
         position: absolute;
         left: 0;
         top: 22px;
         width: 49px;
         height: 49px;
       }
+
       position: relative;
       padding-left: 61px;
     }
+
     position: relative;
     width: 100%;
     background-color: #ffffff;
     padding: 0 17px;
     overflow: hidden;
   }
+
   width: 100%;
 }
-.box_2 {position: sticky;top:44px; z-index: 100;
+
+.box_2 {
+  position: sticky;
+  top: 44px;
+  z-index: 100;
+
   .van-hairline--top-bottom {
     &::after {
       border: 0;
     }
   }
-  .box_2Div{
+
+  .box_2Div {
     background: #4ea8e8 !important;
   }
 }
+
 .box_5 {
   width: 100%;
   border-bottom: 1px solid #f5f5f5;
+
   .box_content {
     padding-bottom: 15px;
     line-height: 1.8;
@@ -1253,6 +1444,7 @@ export default {
     word-break: break-all;
   }
 }
+
 .box_1 {
   .content {
     .search_ico {
@@ -1266,10 +1458,12 @@ export default {
       left: 50%;
       transform: translate(-50%, 0);
       line-height: normal;
+
       &.has {
         color: #333;
       }
     }
+
     position: relative;
     width: 340px;
     height: 37px;
@@ -1278,6 +1472,7 @@ export default {
     text-align: center;
     border-radius: 36px;
   }
+
   width: 100%;
   background-color: #ffffff;
   padding-top: 11px;

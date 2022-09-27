@@ -144,7 +144,7 @@
 			 <div class="experience">
 				 <div :class="{'div-coGack':item.isSelect}" v-for="(item,index) in experience" :key="index" @click="addExperience(item)">{{item.name}}</div>
 			 </div>
-			 <div class="bottom-ba" @click="storage">保存</div>
+			 <div class="bottom-ba" @click="storage" >保存</div>
 		 </div>
 	 </van-popup>
   </div>
@@ -390,7 +390,8 @@ export default {
     //   this.isCompanyTag = !this.isCompanyTag;
     // },
     storage(){
-		 this.workmanship = false
+		 this.workmanship = false;
+     this.classify()		
 	 },
     subscribetoClick(){
       // this.$router.push('/recommend')
