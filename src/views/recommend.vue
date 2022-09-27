@@ -20,8 +20,19 @@
           <div @click="params.hasPhone=2" :class="{'box_2Div':params.hasPhone === 2}" style="width: 30%;text-align: center;background: #c1c1c1;color: #fff;border-radius: 5px;line-height: 22px;height: 22px;">无号码</div>
 			  </div>
 			  <div class="form_split_10"></div>
-			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
-        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
+        <!-- 已订阅 没数据的情况 -->
+			  <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="dataset < 1 && empty1 " />
+        <!-- 未订阅的情况 -->
+        <div  v-if="dataset <=0 && !empty1" class="Unsubscribed" style="margin-top: 50px;">
+            <div>您还没有订阅任何商机</div>
+            <div>订阅后系统将为您推荐您感兴趣的工艺</div>
+        </div>
+        <div style="display:flex;justify-content: center;">
+          <div class="subscribeto"   @click="subscribetoClick">
+          +立即订阅商机
+        </div>
+        </div>
+        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" /> -->
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
 					 <div class="listTab2Head">
@@ -123,16 +134,32 @@
 		  </div>
 		</div>
     <BottomNav></BottomNav>
+    <!-- <companyTag ref="aabb" class="aabb" :title="`啊啊啊啊`" v-if="isCompanyTag" @handlerCloseTag="closeSub"></companyTag> -->
+    <van-popup v-model="workmanship" position="right" :lazy-render="false" :overlay="false" style="width:100%;height:100%">
+		 <div class="popbox">
+			 <div class="headbox">
+				 <div class="text"><span @click.stop="workmanship = false">&lt;</span>擅长工艺</div>
+			 </div>
+			 <div class="headText">您最多可选择3个标签</div>
+			 <div class="experience">
+				 <div :class="{'div-coGack':item.isSelect}" v-for="(item,index) in experience" :key="index" @click="addExperience(item)">{{item.name}}</div>
+			 </div>
+			 <div class="bottom-ba" @click="storage">保存</div>
+		 </div>
+	 </van-popup>
   </div>
 </template>
 
 <script>
+  import companyTag from "@/components/CompanyTag"
 import http from "@/utils/http";
 import api from "@/api";
+import {mapState} from "vuex";
 export default {
-  components: { },
+  components: { companyTag},
   data() {
     return {
+      isCompanyTag:false,
       empty1:false,
       labelRed:'labelRed',
       menber:{},
@@ -164,6 +191,13 @@ export default {
         tag: "",
         settr: "",
       },
+      workmanship:false,
+      experience:[],					//擅长工艺标签数组
+      submitExperience:[],			//提交擅长工艺
+	  	workmanshipName:'',			//擅长工艺文字
+      householdaddress:"",			//擅长工艺
+      main_product:[{name:'',id:1},{name:'',id:2}],  			//、主营产品
+      postText:'',
       page: 1,
       pagesize: 10,
       // 未登录引导
@@ -268,11 +302,102 @@ export default {
    this.getMenber()       //判断备案项目号码显示
     this.fetchData(true);		//获取列表信息
 	 this.classify()				//获取下啦数据
+  //  this.getClassify()
+  this.goodatCraft();
   },
   mounted() {
 
   },
+  computed: {
+			...mapState(['userInfo', 'userIminfo', 'openId'])
+		},
   methods: {
+    addExperience(i){
+      console.log(i);
+		 if(i.isSelect){
+			 i.isSelect = !i.isSelect
+			 let inde = this.submitExperience.indexOf(i.id)
+			 this.submitExperience.splice(inde,1)
+       console.log(1111,	 this.submitExperience.splice(inde,1));
+			 let arr = []
+			 arr = this.workmanshipName.split(',');
+			 let inde2 = arr.indexOf(i.name)
+			 arr.splice(inde2,1)
+			 arr = arr.join(',')
+			 this.workmanshipName = arr
+			 return
+		 }
+		 if(this.submitExperience.length >= 3){
+			 this.$notify({ type: 'warning', message: '不能大于3个选项' })
+			 return
+		 }
+		 if(!i.isSelect){
+			 i.isSelect = !i.isSelect
+		 	this.submitExperience.push(i.id)
+			if(this.workmanshipName == ''){
+				this.workmanshipName = i.name
+			} else{
+				this.workmanshipName = `${this.workmanshipName},${i.name}`
+			}
+		 } 
+	 },
+  //  getClassifys(){
+  //       http.get(api.classify,{type:'supplierTag'}).then(res=>{
+  //         console.log(res,"222222222222222222222222")
+	// 		  this.jobPositionList = res.data
+	// 	  })
+  //   },
+   goodatCraft(){
+    http.get(api.goodatCraft,{ uid :this.userInfo.uid}).then(res=>{
+			  console.log(res,"是是是")
+        // this.getClassifys()
+			  this.experience = res.data.list
+			  for (let i = 0; i < this.experience.length; i++) {
+					if(this.experience[i].isSelect){
+						this.submitExperience.push(this.experience[i].id)
+						if(this.workmanshipName == ''){
+							this.workmanshipName = this.experience[i].name
+						} else{
+							this.workmanshipName = this.workmanshipName+','+this.experience[i].name
+					}
+			  }
+    }
+		  })
+   },
+    // getClassify(){
+		//   console.log(1212121)
+		//   http.get(api.classify,{type:'resumeTag,experience'}).then(res=>{
+		// 	  console.log(res,"热是是是是是是")
+    //     this.getClassifys()
+		// 	  this.experience = res.data.experience
+		// 	  for (let i = 0; i < this.experience.length; i++) {
+		// 			if(this.experience[i].isSelect){
+		// 				this.submitExperience.push(this.experience[i].id)
+		// 				if(this.workmanshipName == ''){
+		// 					this.workmanshipName = this.experience[i].name
+		// 				} else{
+		// 					this.workmanshipName = this.workmanshipName+','+this.experience[i].name
+		// 				}
+		// 			}
+		// 	  }
+		// 	  console.log(this.workmanshipName,"workmanshipNameworkmanshipNameworkmanshipName")
+		// 	  console.log(this.submitExperience,"this.SubmitExperiencethis.SubmitExperiencethis.SubmitExperience")
+		//   })
+	  // },
+    // closeSub(e,list){
+    //   console.log(e);
+    //   console.log(list);
+    //   this.isCompanyTag = !this.isCompanyTag;
+    // },
+    storage(){
+		 this.workmanship = false
+	 },
+    subscribetoClick(){
+      // this.$router.push('/recommend')
+      this.workmanship = true;
+      // this.getClassify()
+      this.goodatCraft();
+    },
     getMenber(){
       http.get(api.getMenber,{}).then(res=>{
         this.menber = res.data
@@ -294,7 +419,7 @@ export default {
 	  // 获取选项信息
 	  classify(){
 		  http.get(api.classify,{type:'citycategorys,householdaddress,education'}).then(res=>{
-			  console.log(res,"sssss")
+			  // console.log(res,"sssss")
 			  let householdaddress = []
 			  let education = []
 			  householdaddress.unshift({
@@ -349,6 +474,16 @@ export default {
 };
 </script>
 
+<style>
+ .aabb{
+  position: absolute;
+  top: 0;
+  background: #FFF;
+  z-index: 2012;
+  height: 100%;
+  width: 100%;
+}
+</style>
 <style lang="scss" scoped>
 
 .searchDivMin{
@@ -362,7 +497,19 @@ export default {
 .searchDiv2{
      width: 13.6em;height: 2.2em;font-size: 16px;
 }
-	
+.popbox{font-size: 12px;
+		.headbox{display: flex;  justify-content: center; align-items:center;
+			.text{width: 100%;  line-height: 50px; text-align: center; position: relative; font-size: 18px;height: 50px;
+				span{color: #666666; position: absolute; left: 10px; font-size: 23px;}
+			}
+		}
+		.headText{color: #c9c9c9; padding: 12px 15px;}
+		.experience{display: flex; flex-wrap: wrap; padding: 10px 12px;
+			div{ padding: 5px 12px; background-color: #f3f3f3; color: #999; border-radius: 20px; margin: 0 10px 10px 0;}
+			.div-coGack{color: #1787fb;background-color: #f4f9ff;}
+		}
+		.bottom-ba{background-color: #1989fa;color: #fff; border-radius: 25px; width: 340px; height: 45px; line-height: 45px; text-align: center; color: #fff; font-size: 15px; margin: auto;}
+	}
   .searchInput{
   border: 1px #e2ebf8 solid;
 }
@@ -688,5 +835,28 @@ export default {
   width: 100%;
   background-color: #ffffff;
   padding-top: 11px;
+}
+.subscribeto{
+  width: 140px;
+    height: 36px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    background-color: rgba(22, 155, 213, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.Unsubscribed{
+  padding: 0 20px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+  margin-top: 50px;
 }
 </style>
