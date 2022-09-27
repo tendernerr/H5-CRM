@@ -584,4 +584,6 @@ export default {
   favResumeCancel:'company/fav_resume/cancel',
   // 获取到套餐列表
   getResumeKeepSetmeal:'/home/resume_keep/getResumeKeepSetmeal',
+  // 获取天眼查信息
+  getResumeKeep:'/home/resume_keep/getResumeKeep',
 }
