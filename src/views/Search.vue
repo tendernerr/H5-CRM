@@ -86,7 +86,7 @@
 	</div> -->
     <Ad v-if="ad_dataset_banner_b.items.length > 0" :dataset="ad_dataset_banner_b"></Ad>
     <indexArticle v-if="moduleRule.article.is_display == 1" :plan_id="moduleRule.article.plan_id" :dataset="article_list"></indexArticle>
-    <BottomNav linkName='index'></BottomNav>
+    <BottomNav linkName='search'></BottomNav>
     <!-- 弹窗 -->
     <IndexPopup v-if="showPopup" :list="ad_dataset_popup"></IndexPopup>
   </div>

@@ -221,7 +221,7 @@
       </div> -->
       <div class="form_split_18"></div>
     </van-pull-refresh>
-    <BottomNav></BottomNav>
+    <BottomNav linkName='my'></BottomNav>
     <van-popup
       v-model="showSwitchType"
       position="right"

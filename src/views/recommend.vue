@@ -133,7 +133,7 @@
 		    联系客服：{{ $store.state.config.contact_tel }}
 		  </div>
 		</div>
-    <BottomNav></BottomNav>
+    <BottomNav linkName='recommend'></BottomNav>
     <!-- <companyTag ref="aabb" class="aabb" :title="`啊啊啊啊`" v-if="isCompanyTag" @handlerCloseTag="closeSub"></companyTag> -->
     <van-popup v-model="workmanship" position="right" :lazy-render="false" :overlay="false" style="width:100%;height:100%">
 		 <div class="popbox">
