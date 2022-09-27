@@ -151,7 +151,7 @@
 		  readonly
 		  clickable
       required
-		  :value="postText"
+		  :value="postText" 
 		  label="在职岗位"
 		  placeholder="请选择"
 		  @click="jobPosition = true"

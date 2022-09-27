@@ -119,6 +119,7 @@ import myPostSale from '../views/myPostSale/index'
 import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
 
+
 Vue.use(VueRouter)
 
 /**
@@ -1089,6 +1090,26 @@ const routes = [{
   component: AccountBinding,
   meta: {
     title: '第三方绑定账号',
+    keepAlive: false,
+    loginCheck: false
+  }
+},
+{
+  path: '/member/certification',
+  name: 'certification',
+  component: () => import('@/views/member/certification'),
+  meta: {
+    title: '实名认证',
+    keepAlive: false,
+    loginCheck: false
+  }
+},
+{
+  path: '/member/addArticle',
+  name: 'addArticle',
+  component: () => import('@/views/member/addArticle'),
+  meta: {
+    title: '业务定位',
     keepAlive: false,
     loginCheck: false
   }

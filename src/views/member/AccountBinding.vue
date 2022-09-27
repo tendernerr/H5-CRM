@@ -2,7 +2,10 @@
   <div id="app">
     <Head>合作账号登录</Head>
     <div class="log_wrapper">
-      <div class="tx1">{{bindType=='weixin'?'微信':'QQ'}}账号绑定</div>
+      <div style="display: flex;
+    justify-content: center;
+    margin-top: 50px;">免费<span style="color: #FF4000;">注册</span>查询<span style="color: #FF4000;">最新</span>项目信息</div>
+      <!-- <div class="tx1">{{bindType=='weixin'?'微信':'QQ'}}账号绑定</div> -->
       <div class="tx2">您已登录：<span>{{nickname}}</span></div>
       <div class="tx3">请关联您的{{$store.state.config.sitename}}账号，以便您下次直接登录</div>
       <div class="field_cell_group">
@@ -32,10 +35,8 @@
           />
           <button class="log_get_btn" @click="sendSms" :style="'color:'+$store.state.sendSmsBtnTextColor">{{ $store.state.sendSmsBtnText }}</button>
         </div>
-        <div class="btn_group" style="margin-top:10px;">
-          <van-button class="btn_mb" type="info" size="large" round @click="handleSubmit"
-            >绑定网站账号</van-button
-          >
+        <div class="btn_group" style="margin-top: 30px;">
+          <van-button class="btn_mb" type="info" size="large" round @click="handleSubmit" >立即免费查看商机</van-button>
           <div class="g_agree">
             <p>* 如果您没有注册过账号将自动帮您注册新账号</p>
             <p>继续绑定即表示您已同意 <span @click="showAgreement('agreement')">《用户协议》</span>和 <span @click="showAgreement('privacy')">《隐私政策》</span></p>
@@ -115,57 +116,62 @@ export default {
         .catch(() => {})
     },
     redirectTo () {
-      if (this.utype === 1) {
-        this.$router.push('/member/company/index')
-      } else {
-        this.$router.push('/member/personal/index')
-      }
+      
+      // 到时候要删掉
+      this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
+       //  下面的要恢复
+      // if (this.utype === 1) {
+      //   this.$router.push('/member/company/index')
+      // } else {
+      //   this.$router.push('/member/personal/index')
+      // }
     },
     handleSubmit () {
-      if (!this.mobile) {
-        this.$notify('请输入手机号')
-        return false
-      }
-      if (!this.regularMobile.test(this.mobile)) {
-        this.$notify('手机号格式不正确')
-        return false
-      }
-      if (!this.code) {
-        this.$notify('请输入验证码')
-        return false
-      }
-      let postData = {
-        mobile: this.mobile,
-        code: this.code,
-        utype: this.utype,
-        openid: this.openid,
-        unionid: this.unionid,
-        nickname: this.nickname,
-        avatar: this.avatar
-      }
-      let apiUrl = this.bindType == 'weixin' ? api.bind_weixin : api.bind_qq
-      http
-        .post(apiUrl, postData)
-        .then(response => {
-          if (parseInt(response.code) === 200) {
-            this.$store.commit('clearCountDownFun')
-            this.$store.commit('setLoginState', {
-              whether: true,
-              utype: response.data.utype,
-              token: response.data.token,
-              mobile: response.data.mobile,
-              userIminfo: response.data.user_iminfo
-            })
-            if (response.data.next_code != 200) {
-              handlerHttpError({ code: response.data.next_code, message: '' })
-            } else {
-              this.redirectTo()
-            }
-          } else {
-            this.$notify(response.message)
-          }
-        })
-        .catch(() => {})
+      this.redirectTo();  // 到时候要删掉
+      // if (!this.mobile) {
+      //   this.$notify('请输入手机号')
+      //   return false
+      // }
+      // if (!this.regularMobile.test(this.mobile)) {
+      //   this.$notify('手机号格式不正确')
+      //   return false
+      // }
+      // if (!this.code) {
+      //   this.$notify('请输入验证码')
+      //   return false
+      // }
+      // let postData = {
+      //   mobile: this.mobile,
+      //   code: this.code,
+      //   utype: this.utype,
+      //   openid: this.openid,
+      //   unionid: this.unionid,
+      //   nickname: this.nickname,
+      //   avatar: this.avatar
+      // }
+      // let apiUrl = this.bindType == 'weixin' ? api.bind_weixin : api.bind_qq
+      // http
+      //   .post(apiUrl, postData)
+      //   .then(response => {
+      //     if (parseInt(response.code) === 200) {
+      //       this.$store.commit('clearCountDownFun')
+      //       this.$store.commit('setLoginState', {
+      //         whether: true,
+      //         utype: response.data.utype,
+      //         token: response.data.token,
+      //         mobile: response.data.mobile,
+      //         userIminfo: response.data.user_iminfo
+      //       })
+      //       if (response.data.next_code != 200) {
+      //            handlerHttpError({ code: response.data.next_code, message: '' })
+      //       } else {
+      //         this.redirectTo()
+      //       }
+      //     } else {
+      //       this.$notify(response.message)
+      //     }
+      //   })
+      //   .catch(() => {})
     },
     // 发送验证码
     sendSms () {
@@ -188,7 +194,7 @@ export default {
             mobile: this.mobile,
             type: this.utype,
             captcha: res
-          })
+          })   
           .then(response => {
             if (response.code === 200) {
               _this.$notify({type: 'success', message: _this.$store.state.sendSmsMessage})
@@ -251,6 +257,7 @@ export default {
 .tx2 {
   font-size: 16px;
   color: #999999;
+  margin-top: 30px;
   span {
     color: #333333;
   }
@@ -261,7 +268,9 @@ export default {
   padding-top: 10px ;
 }
 .btn_mb {
+  border-radius: 0px;
   margin-bottom: 16px;
+  height: 40px;
 }
 
 .g_agree {

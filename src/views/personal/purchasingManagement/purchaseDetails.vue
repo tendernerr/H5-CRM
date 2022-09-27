@@ -156,7 +156,7 @@
                   phone_protect_open &&
                   phone_protect_type == 1
                 ">请使用
-								<span class="phone" v-text="cur_com_mobile">}</span>
+								<span class="phone"  :v-text="cur_com_mobile" >}</span>
 								的手机号拔号</span>
 						</div>
 

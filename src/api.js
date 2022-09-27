@@ -367,7 +367,7 @@ export default {
   oauth_weixin_login: '/member/login/weixin',
   // oauth获取weixin用户信息后绑定已登录账号
   oauth_weixin_bind: '/member/account/bindWeixin',
-  // 微信绑定已有账号或注册新账号
+  // 微信绑定已有账号或注册新账号 （第一步）
   bind_weixin: '/member/bind/weixin',
   // QQ绑定已有账号或注册新账号
   bind_qq: '/member/bind/qq',
@@ -584,4 +584,16 @@ export default {
   favResumeCancel:'company/fav_resume/cancel',
   // 获取到套餐列表
   getResumeKeepSetmeal:'/home/resume_keep/getResumeKeepSetmeal',
+
+
+  //获取职位
+  getposition:'home/classify/index',
+  //获取所在地区
+  getCountry:'home/classify/index',
+  //立即注册 （第三步）
+  registerNowthree:'company/profile/completeCompanyTwo',
+  // 立即注册 （第二步）
+  registerNowtwo:'company/profile/completeCompanyOne',
+  //擅长工艺
+  goodatCraft:'/home/resume/getCategoryList',
 }
