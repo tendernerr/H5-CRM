@@ -572,7 +572,7 @@ export default {
   insertAfterSale:'/member/index/insertAfterSale',
   //获取售后详情
   updateAfterSale:'/member/index/updateAfterSale',
-  //获取备案信息接口
+  //获取备案信息接口  --- 月季套餐获取信息
   getResumeKeepInfo:'/home/resume_keep/getResumeKeepInfo',
   // 我的评价列表
   getMyEvaluate:'/member/index/getMyEvaluate',

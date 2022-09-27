@@ -2,7 +2,6 @@
   <div id="app">
 		<Head :prepare='true'>项目详情</Head>
 		<div class="headBox">
-			<!-- <img width="100%" height="200" src="http://www.hangyedaniu.com/upload/resource/fg.png" /> -->
 			<div class="headBox1" v-if="true">
 				<div class="headBox1User">
 					<div class="headBox1UserImg"><img v-if="dataMes.basehead" :src="dataMes.basehead.pimg" /></div>
@@ -32,25 +31,20 @@
 			<van-tabs v-model="active">
 			  <van-tab title="项目介绍">
 				  <div class="tab1">
-						<!-- <div class="tab1List">
-							<div class="tab1List1">备案项目编号</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.number}}</div>
-						</div> -->
 						<div class="tab1List">
-							<!-- 是否登录0 -->
+							<!-- 是否登录 9/27 ok -->
 							<div class="tab1List3 redText" v-if="!dataMes.isLogin">
 								下文****为隐藏内容，仅对行业大牛用户开放，注册登录后可免费查看内容详情
 							</div>
-							<!-- 登录后并且是免费会员 ---  -->
+							<!-- 登录后并且是免费会员 is_free : true==免费会员 false:不是免费会员  9/27 ok-->
 							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
-								<p>（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）</p>
+								<p>（ 下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条 ）</p>
 								<div class="clickLook" @click="getResumeKeepInfo"> 点击查看 </div>
 							</div>
-							<!-- 登录后查询是否购买了 ---  -->
-							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free && dataMes.userinfo.isMonthSetmeal ">
-								<p>（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）</p>
-								<div class="clickLook" @click="get"> 点击查看 </div>
+							<!-- 登录后查询是否购买了月季套餐 如何可以查看这个详情，就隐藏这个按钮 -->
+							<div class="tab1List3 redText" v-if="dataMes.userinfo.isMonthSetmeal && !dataMes.userinfo.isMonthSetmealSee">
+								<p>（ 消耗查看点获取项目详细资料 ）</p>
+								<div class="clickLook" @click="getResumeKeepInfos"> 点击查看 </div>
 							</div>
 						</div>
 						<div class="textList" v-if="dataMes.basemain&&dataMes.basemain.project_type === 0">
@@ -87,24 +81,10 @@
 						</div>
 						<!-- 其他项目内容 -->
 						<div v-if="dataMes.basemain&&dataMes.basemain.project_type === 1" class="" v-html="dataMes.basemain.other_content"></div>
-						<div class="tab1List" style="padding: 20px 0 5px;color: #8a8a8a;flex-wrap:wrap">
-							<div class="tab1List1" style="width: 60px;">商机分析</div>
-							<div class="tab1List2">：</div>
-							该项目可能会需要运用到以下工艺的产品！
-							<div class="tab1List3" style="display:flex;flex-wrap: wrap;">
-								<span v-for="(ite,inde) in dataMes.basehead&&dataMes.basehead.category" :key="inde" style="flex:none;padding: 3px 10px 4px;color: #409EFF;background: #e9f8ff;font-size: 12px;border-radius: 6px; margin:2px 5px 3px 0">
-									{{ite}}
-								</span>
-							</div>
-						</div>
 				  </div>
 			  </van-tab>
 			  <!-- //  项目进展  如果 isMember:true === 成为了会员  is_free == 免费会员  -->
 			  <van-tab v-if="!dataMes.userinfo.isMember && dataMes.userinfo.is_free" title="项目进展（1）">
-				<!-- <div class="tab2" v-if="!dataMes.isLogin">
-					<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
-					<p style="color: #0095ff;text-align:center;" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">去登录>></p>
-				</div> -->
 				<div class="tab2">
 					<p style="color: red;text-align:left;padding: 16px 0; font-size:12px">
 						项目进展是行业大牛网通过一定渠道获得的项目进度，帮您提前把握商机！需要高级会员权限才能查询！
@@ -112,12 +92,10 @@
 					<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
 					<span class="buttonSpan" style="filter: blur(4px);">****</span>
 					<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
-					<!-- <p style="color: #000;text-align:left;padding: 16px 0;">
-						想要深入了解项目详情，点击<span style="color: #409eff;" @click="contactUs();"> 联系我们 </span>预计30分钟内项目经理会联系您，请注意来电提醒
-					</p> -->
 				</div>
 			  </van-tab>
 			  <van-tab title="项目联系人">
+				<!-- 如果登录或者是免费会员 is_free:true==免费会员    -->
 				  <div class="tab2" v-if="!dataMes.isLogin || dataMes.userinfo.is_free">
 				  	<p style="color: #000;padding: 16px 0;font-size: 13px;color: red;" v-if="dataMes.basemain&&dataMes.basemain.project_name !== '****'">
 						该项目信息仅对行业大牛高级会员及以上开放，您也可以通过 
@@ -132,17 +110,46 @@
 					</p>
 					<p style="color: #00a1ff;padding: 3px 0;" @click="gjUser = true">更多项目联系人>></p>
 				  </div>
-				  <div class="tab2" style="color: #000;" v-if="!dataMes.userinfo.isMember && dataMes.isLogin && !dataMes.userinfo.is_free">
+				  <!-- 登录 && 不是高级会员 && 是免费会员 && 也不是月季套餐会员 isMember:true == 高级级以上  is_free:true == 免费会员 isMonthSetmeal:true == 月季套餐会员身份 -->
+				  <div class="tab2" style="color: #000;" v-if="dataMes.isLogin && !dataMes.userinfo.isMember && dataMes.userinfo.is_free && !dataMes.userinfo.isMonthSetmeal">
 						<p style="padding: 0 52px;color: #000;">姓名：***</p>
 						<p style="padding: 0 52px;color: #000;">岗位：***</p>
 						<p style="padding: 0 52px 10px;color: #000;">联系电话：135****</p>
 						想要深入了解项目详情，点击<span style="color: #409eff; padding:0 4px;" @click="contactUs();">联系我们</span>预计30分钟内项目经理会联系您，请注意来电提醒
 				  </div>
-				  <!-- <div class="tab2" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
-					  非常抱歉，改内容仅对"行业大牛"会员查阅；开通"行业大牛"会员，第一时间获取相关采购商机，了解<span class="tab2Span" @click="$router.push('/member/order/add/common?type=setmeal')">会员特权>></span>
-				  </div> -->
-				  <!-- 电话不是空字符串或者null--并且--是会员--是不是免费会员--年报电话是否有 -->
-				  <div class="tab2" v-if="dataMes.userinfo.phone == '' || dataMes.userinfo.phone == null && dataMes.userinfo.isMember && !dataMes.userinfo.is_free && !otherPhone.length">
+				  <!--  如果是月季套餐   会员在这里显示卡住以下的高级会员套餐 -->
+				  <div v-else-if="dataMes.userinfo.isMonthSetmeal">
+					<div class="tab2">
+						<div v-if="!dataMes.userinfo.isMonthSetmealSee"> 
+							<span @click="getResumeKeepInfos" class="consume">获取信息</span>
+							消耗查看点目
+						</div>
+						<div class="tab2Information" style="border-top:0">
+							<div class="tab1List" v-if="dataMes.userinfo.nikename">
+								<div class="tab1List1">姓名</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.userinfo.nikename}}</div>
+							</div>
+							<div class="tab1List" v-if="dataMes.userinfo.post">
+								<div class="tab1List1">岗位</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.userinfo.post}}</div>
+							</div>
+							<div class="tab1List" v-if="dataMes.userinfo.phone">
+								<div class="tab1List1">联系电话</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3 co" @click="call = true;callSty=dataMes.userinfo.phone">{{dataMes.userinfo.phone}}</div>
+							</div>
+							<div class="tab1List" v-for="(item,index) in otherPhone">
+								<div class="tab1List1">年报电话</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3 co" @click="call = true;callSty=item.phone">{{item.phone}}</div>
+							</div>
+						</div>
+					</div>
+				  </div>
+				  <!-- 上条判断否则 判断结果--是月季套餐和高级会员都显示这里 判断号码是否空号 年报电话是否存在 -->
+				  <div class="tab2" v-else-if="dataMes.userinfo.phone == '' || dataMes.userinfo.phone == null && !otherPhone.length">
 					  <div class="tab2Text1">
 						  非常抱歉，系统暂无联系方式！ <span class="tab2Text1Span">建议您试试以下渠道</span>
 					  </div>
@@ -175,7 +182,7 @@
 					  </div>
 				  </div>
 			  </van-tab>
-			  <van-tab title="沟通记录" v-if="dataMes.userinfo.isMember">
+			  <van-tab title="沟通记录" v-if="dataMes.userinfo.isMonthSetmealSee">
 				  <div class="tab3">
 					  <div class="communicate" @click="show = true">添加沟通记录+</div>
 					  <div class="tab3for" v-for="(item,index) in dataMes.all_record&&dataMes.all_record" :key="index">
@@ -211,9 +218,7 @@
 					<div class='popupCenterDivTextarea'>
 						<div class="popupCenterDivTextareaText"><span style='color: red;'>*</span>本次沟通内容 ：</div>
 						<div class="textarea">
-							<textarea v-model="textareaText">
-								
-							</textarea>
+							<textarea v-model="textareaText"></textarea>
 						</div>
 					</div>
 					<div class='popupCenterDiv'  @click="dateBox = true">
@@ -240,19 +245,25 @@
 			<!-- <div v-else="dataMes.userinfo.phone" class="callMe">暂无号码</div> -->
 			<div class="callCancel" @click="call = false">取消</div>
 		</van-popup>
-		<div style="display: flex;border-top: 1px solid #ccc;position: fixed;bottom: 0;left: 0;right: 0;background: #fff;">
-			<div style="width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;">
+		<div class="collectionDiv">
+			<div class="collectionDiv2">
 				<div @click="call = true" style="font-size:18px"><van-icon name="phone-o" /></div>
 				<div>电话</div>
 			</div>
-			<div @click="collection" :class="{'star-size':isCollection}" style="width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;padding: 0 13px 0 0;">
+			<div @click="collection" :class="{'star-size':isCollection}" class="collection">
 				<div style="font-size:18px"><van-icon :name="isCollection?'star':'star-o'" /></div>
 				<div>收藏</div>
 			</div>
-			<div v-if="!dataMes.isLogin" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">
+			<!-- 判断是否登录 -->
+			<div class="addLogin" v-if="!dataMes.isLogin" @click="$router.push(`/member/login/company?redirect=/backupsProject/backupsProject?id=${id}`)">
 				登录参与
 			</div>
-			<div v-if="dataMes.isLogin" @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
+			<!-- 登录后点击查看 是免费会员 -->
+			<div v-else-if="dataMes.userinfo.is_free" @click="gjUser = true" class="addCommunicate">立刻联系</div>
+			<!-- 判断能否查看联系电话---isMonthSetmealSee:true---高级会员和点击查看项目 -->
+			<div v-else-if="!dataMes.userinfo.isMonthSetmealSee" @click="getContact" class="addCommunicate">获取联系方式</div>
+			<!-- 可以查看号码添加联系方式 -->
+			<div v-else @click="resume_keepProjectApply" class="addCommunicate">添加沟通记录</div>
 		</div>
 
 		<van-popup v-model="freeView" :style="{ width: '80%'}">
@@ -423,6 +434,15 @@ export default {
 			this.isCollection = res.data.has_fav
 		})
 	  },
+	  getContact(){
+		this.$dialog.confirm({
+			title: '提示',
+			message: '消耗查看点目',
+			}).then(() => {
+				// 调用接口
+				this.getResumeKeepInfos()
+			}).catch(() => {});
+	  },
 	  getResumeKeepInfo(){
 		console.log(this.dataMes.userinfo.day_look_resumekeep,"0000")
 		if(this.dataMes.userinfo.day_look_resumekeep <= 0){
@@ -458,18 +478,8 @@ export default {
 		})
 	  },
 	  resume_keepProjectApply(){
-		//  不是会员
-		if(!this.dataMes.userinfo.is_setmeal){
-			this.gjUser = true
-			// http.post(api.resume_keepProjectApply,{id:this.id}).then(res=>{
-				// this.$notify({ type: 'success', message: res.message });
-			// })
-		}
-		// 是会员
-		if(this.dataMes.userinfo.is_setmeal){
-			this.active = 2
-			this.show = true
-		}
+		this.active = 2
+		this.show = true
 	  },
 	  goPay(url){
 		this.$router.push(url)
@@ -508,23 +518,35 @@ export default {
 		  })
 	  },
 	  contactUs(){
-		http.post(api.projectApply,{id:this.query_id}).then(res=>{
+		http.post(api.projectApply,{id:this.id}).then(res=>{
 			console.log(res,"11111")
 			this.$notify({ type: 'success', message: '已收到您的申请，预计30分钟内平台项目经理会联系您，请您注意来电提醒'});
 		})
+	  },
+	  getResumeKeepInfos(){
+		http.get(api.getResumeKeepInfo,{uid:this.userInfo.uid,rid:this.id}).then(res=>{
+			this.homeResumeKeepShow()
+			this.$notify({ type: 'success', message: res.message });
+		})
+	  },
+	  getResumeKeep(){
+		// 天眼查
+		if(!this.dataMes.userinfo.is_free){
+			//如果不是免费会员 -- 获取天眼查数据
+			http.get(api.getResumeKeep,{id:this.id,uid:this.userInfo.uid}).then(res=>{
+				console.log(res,"天眼查")
+				this.otherPhone = res.data.data.otherPhone
+			})
+		}
 	  },
 	  // 获取项目详情
 	  homeResumeKeepShow(){
 		  http.get(api.homeResume_keepShow,{id:this.id}).then(res=>{
 			console.log(res.data,"0000")
 			  this.dataMes = res.data
-			  if(!this.dataMes.userinfo.is_free){
-				 //如果不是免费会员 -- 获取天眼查数据
-				 console.log(this.userInfo,"111111")
-				 http.get(api.getResumeKeep,{id:this.id,uid:this.userInfo.uid}).then(res=>{
-					console.log(res,"0000")
-					this.otherPhone = res.data.data.otherPhone
-				 })
+			//   可查看联系方式并且登录了
+			  if( this.dataMes.isLogin && this.dataMes.userinfo.isMonthSetmealSee ){
+				this.getResumeKeep()
 			  }
 			  let text = ''
 			  for (let i = 0; i < this.dataMes.basehead.category.length; i++) {
@@ -695,5 +717,12 @@ export default {
 		.popupDiv{
 			
 		}
+		.collectionDiv{display: flex;border-top: 1px solid #ccc;position: fixed;bottom: 0;left: 0;right: 0;background: #fff;
+			&2{width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;}
+		}
+		.collection{width: 20%;height: 50px;display: flex;justify-content: center;align-items: center;flex-direction: column;padding: 0 13px 0 0;}
+		.addLogin{text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;}
+		.addCommunicate{text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;}
+		.consume{display: inline-block;margin: 6px 0 0;color: #fff;background: #4ea5ff;width: 6em;height: 2em;text-align: center;line-height: 2em;border-radius: 7px;}
 	}
 </style>
