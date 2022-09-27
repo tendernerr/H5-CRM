@@ -596,4 +596,8 @@ export default {
   registerNowtwo:'company/profile/completeCompanyOne',
   //擅长工艺
   goodatCraft:'/home/resume/getCategoryList',
+
+  // 获取天眼查信息
+  getResumeKeep:'/home/resume_keep/getResumeKeep',
+
 }

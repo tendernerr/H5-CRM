@@ -9,11 +9,9 @@
 					<div class="headBox1UserName">
 						<div class="headBox1UserNameTop">
 							<div class="headBox1UserNameTop1">{{dataMes.basehead&&dataMes.basehead.title}}</div>
-							<!-- <div class="headBox1UserNameTop2">项目总投资：{{dataMes.basehead&&dataMes.basehead.project_investment}}</div> -->
 						</div>
 						<div class="headBox1UserNameBottom">
 							<div class="headBox1UserNameBottom1">{{dataMes.basehead&&dataMes.basehead.end_time}} <span class="lable">{{dataMes.basehead&&dataMes.basehead.type}}</span></div>
-							<!-- <div class="headBox1UserNameBottom2">被浏览{{dataMes.basehead&&dataMes.basehead.click}}次</div> -->
 						</div>
 					</div>
 				</div>
@@ -40,64 +38,55 @@
 							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.number}}</div>
 						</div> -->
 						<div class="tab1List">
+							<!-- 是否登录0 -->
 							<div class="tab1List3 redText" v-if="!dataMes.isLogin">
 								下文****为隐藏内容，仅对行业大牛用户开放，注册登录后可免费查看内容详情
 							</div>
+							<!-- 登录后并且是免费会员 ---  -->
 							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
 								<p>（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）</p>
 								<div class="clickLook" @click="getResumeKeepInfo"> 点击查看 </div>
 							</div>
+							<!-- 登录后查询是否购买了 ---  -->
+							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free && dataMes.userinfo.isMonthSetmeal ">
+								<p>（下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条）</p>
+								<div class="clickLook" @click="get"> 点击查看 </div>
+							</div>
 						</div>
-						<div class="tab1List">
-							<div class="tab1List1">项目名称</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.project_name === '****'}">{{dataMes.basemain&&dataMes.basemain.project_name}}</div>
+						<div class="textList" v-if="dataMes.basemain&&dataMes.basemain.project_type === 0">
+							<div class="tab1List">
+								<div class="tab1List1">项目名称</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.project_name === '****'}">{{dataMes.basemain&&dataMes.basemain.project_name}}</div>
+							</div>
+							<div class="tab1List">
+								<div class="tab1List1">项目所在地</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_address}}</div>
+							</div>
+							<div class="tab1List">
+								<div class="tab1List1">项目总投资</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_investment}}</div>
+							</div>
+							<div class="tab1List">
+								<div class="tab1List1">项目规模及内容</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_scale}}</div>
+							</div>
+							<div class="tab1List">
+								<div class="tab1List1">建设单位</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.construction_unit === '****'}">{{dataMes.basemain&&dataMes.basemain.construction_unit}}</div>
+							</div>
+							<div class="tab1List">
+								<div class="tab1List1">项目起止年限</div>
+								<div class="tab1List2">：</div>
+								<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.start_time}}</div>
+							</div>
 						</div>
-						<div class="tab1List">
-							<div class="tab1List1">项目所在地</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_address}}</div>
-						</div>
-						<div class="tab1List">
-							<div class="tab1List1">项目总投资</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_investment}}</div>
-						</div>
-						<div class="tab1List">
-							<div class="tab1List1">项目规模及内容</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.project_scale}}</div>
-						</div>
-						<div class="tab1List">
-							<div class="tab1List1">建设单位</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3" :class="{'redText':dataMes.basemain&&dataMes.basemain.construction_unit === '****'}">{{dataMes.basemain&&dataMes.basemain.construction_unit}}</div>
-						</div>
-						<!-- <div class="tab1List">
-							<div class="tab1List1">备案机关</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.authoritykeep}}</div>
-						</div> -->
-						<!-- <div class="tab1List">
-							<div class="tab1List1">备案申报日期</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.declaration_date}}</div>
-						</div> -->
-						<!-- <div class="tab1List">
-							<div class="tab1List1">复合通过日期</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.through_date}}</div>
-						</div> -->
-						<div class="tab1List">
-							<div class="tab1List1">项目起止年限</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.start_time}}</div>
-						</div>
-						<!-- <div class="tab1List">
-							<div class="tab1List1">项目当前状态</div>
-							<div class="tab1List2">：</div>
-							<div class="tab1List3">{{dataMes.basemain&&dataMes.basemain.audit}}</div>
-						</div> -->
+						<!-- 其他项目内容 -->
+						<div v-if="dataMes.basemain&&dataMes.basemain.project_type === 1" class="" v-html="dataMes.basemain.other_content"></div>
 						<div class="tab1List" style="padding: 20px 0 5px;color: #8a8a8a;flex-wrap:wrap">
 							<div class="tab1List1" style="width: 60px;">商机分析</div>
 							<div class="tab1List2">：</div>
@@ -110,6 +99,7 @@
 						</div>
 				  </div>
 			  </van-tab>
+			  <!-- //  项目进展  如果 isMember:true === 成为了会员  is_free == 免费会员  -->
 			  <van-tab v-if="!dataMes.userinfo.isMember && dataMes.userinfo.is_free" title="项目进展（1）">
 				<!-- <div class="tab2" v-if="!dataMes.isLogin">
 					<p style="color: #000;text-align:center;padding: 16px 0;">您尚未登录，点击登录后可获取联系方式</p>
@@ -151,7 +141,8 @@
 				  <!-- <div class="tab2" v-if="!dataMes.userinfo.isMember && dataMes.isLogin">
 					  非常抱歉，改内容仅对"行业大牛"会员查阅；开通"行业大牛"会员，第一时间获取相关采购商机，了解<span class="tab2Span" @click="$router.push('/member/order/add/common?type=setmeal')">会员特权>></span>
 				  </div> -->
-				  <div class="tab2" v-if="dataMes.userinfo.phone == '' && dataMes.userinfo.isMember && !dataMes.userinfo.is_free">
+				  <!-- 电话不是空字符串或者null--并且--是会员--是不是免费会员--年报电话是否有 -->
+				  <div class="tab2" v-if="dataMes.userinfo.phone == '' || dataMes.userinfo.phone == null && dataMes.userinfo.isMember && !dataMes.userinfo.is_free && !otherPhone.length">
 					  <div class="tab2Text1">
 						  非常抱歉，系统暂无联系方式！ <span class="tab2Text1Span">建议您试试以下渠道</span>
 					  </div>
@@ -161,21 +152,26 @@
 						  <div class="text3" @click="go(2)">搜索一下>></div>
 					  </div>
 				  </div>
-				  <div class="tab2Information" v-if="dataMes.userinfo.phone != '' && dataMes.userinfo.isMember && !dataMes.userinfo.is_free">
-					  <div class="tab1List">
+				  <div class="tab2Information" v-else>
+					  <div class="tab1List" v-if="dataMes.userinfo.nikename">
 					  	<div class="tab1List1">姓名</div>
 					  	<div class="tab1List2">：</div>
 					  	<div class="tab1List3">{{dataMes.userinfo.nikename}}</div>
 					  </div>
-					  <div class="tab1List">
+					  <div class="tab1List" v-if="dataMes.userinfo.post">
 					  	<div class="tab1List1">岗位</div>
 					  	<div class="tab1List2">：</div>
 					  	<div class="tab1List3">{{dataMes.userinfo.post}}</div>
 					  </div>
-					  <div class="tab1List">
+					  <div class="tab1List" v-if="dataMes.userinfo.phone">
 					  	<div class="tab1List1">联系电话</div>
 					  	<div class="tab1List2">：</div>
-					  	<div class="tab1List3 co" @click="call = true">{{dataMes.userinfo.phone}}</div>
+					  	<div class="tab1List3 co" @click="call = true;callSty=dataMes.userinfo.phone">{{dataMes.userinfo.phone}}</div>
+					  </div>
+					  <div class="tab1List" v-for="(item,index) in otherPhone">
+					  	<div class="tab1List1">年报电话</div>
+					  	<div class="tab1List2">：</div>
+					  	<div class="tab1List3 co" @click="call = true;callSty=item.phone">{{item.phone}}</div>
 					  </div>
 				  </div>
 			  </van-tab>
@@ -240,8 +236,8 @@
 		</van-popup>
 		<!-- 拨打电话 -->
 		<van-popup v-model="call" position="bottom" style="background-color: rgba(0, 0, 0, 0);">
-			<div v-if="dataMes.userinfo.phone" class="callMe"><a :href="'tel:'+dataMes.userinfo.phone">{{dataMes.userinfo.phone}}</a></div>
-			<div v-else="dataMes.userinfo.phone" class="callMe">暂无号码</div>
+			<div v-if="callSty" class="callMe"><a :href="'tel:'+callSty">{{callSty}}</a></div>
+			<!-- <div v-else="dataMes.userinfo.phone" class="callMe">暂无号码</div> -->
 			<div class="callCancel" @click="call = false">取消</div>
 		</van-popup>
 		<div style="display: flex;border-top: 1px solid #ccc;position: fixed;bottom: 0;left: 0;right: 0;background: #fff;">
@@ -258,6 +254,7 @@
 			</div>
 			<div v-if="dataMes.isLogin" @click="resume_keepProjectApply" style="text-align: center;flex: 1;height: 50px;line-height: 50px;background: #51a7ff;color: #fff;border-radius: 7px 0 0 0;">{{dataMes.userinfo.is_setmeal?'添加沟通记录':'立刻联系'}}</div>
 		</div>
+
 		<van-popup v-model="freeView" :style="{ width: '80%'}">
 			<div class="freeView-div">
 				<h3 class="freeView-h3">今日免费查看权限使用完啦！</h3>
@@ -332,6 +329,8 @@ export default {
 		  gjUser:false,
 		  resumeKeepSetmeal:[],
 		  service_id:'',   // 支付id
+		  otherPhone:[],
+		  callSty:'',
 	 }
   },
   created () {
@@ -339,6 +338,9 @@ export default {
 	  this.checkFav()
 	  this.homeResumeKeepShow()
 	  this.getResumeKeepSetmeal()
+  },
+  computed:{
+	...mapState(['userInfo'])
   },
   mounted () {},
   watch: {},
@@ -422,6 +424,7 @@ export default {
 		})
 	  },
 	  getResumeKeepInfo(){
+		console.log(this.dataMes.userinfo.day_look_resumekeep,"0000")
 		if(this.dataMes.userinfo.day_look_resumekeep <= 0){
 				this.freeView = true
 			return
@@ -435,9 +438,11 @@ export default {
 					this.$router.push('/member/order/add/common?type=setmeal')
 				});
 		http.get(api.getResumeKeepInfo,{rid:this.id}).then(res=>{
+			console.log(res,"1111")
 			this.dataMes.userinfo.day_look_resumekeep--
 			this.dataMes.basemain.project_name = res.data.project_name
 			this.dataMes.basemain.construction_unit = res.data.construction_unit
+			this.dataMes.basemain.other_content = res.data.other_content
 			this.$notify({ type: 'success', message: res.message });
 		})
 	  },
@@ -511,7 +516,16 @@ export default {
 	  // 获取项目详情
 	  homeResumeKeepShow(){
 		  http.get(api.homeResume_keepShow,{id:this.id}).then(res=>{
+			console.log(res.data,"0000")
 			  this.dataMes = res.data
+			  if(!this.dataMes.userinfo.is_free){
+				 //如果不是免费会员 -- 获取天眼查数据
+				 console.log(this.userInfo,"111111")
+				 http.get(api.getResumeKeep,{id:this.id,uid:this.userInfo.uid}).then(res=>{
+					console.log(res,"0000")
+					this.otherPhone = res.data.data.otherPhone
+				 })
+			  }
 			  let text = ''
 			  for (let i = 0; i < this.dataMes.basehead.category.length; i++) {
 				if(i!==0){
@@ -657,6 +671,7 @@ export default {
 				}
 			}
 			.tab2Information{padding: 20px; border-top:5px solid #f4f4f4;
+			    .textList{ display: flex ; flex-direction: column; }
 				.tab1List{padding-bottom: 8px;font-size: 13px; color: #000; display: flex;
 					.tab1List1{width: 7em; text-align-last: justify; flex: none;}
 					.tab1List2{margin:0 .5em 0 .2em; }
