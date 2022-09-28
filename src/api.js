@@ -530,7 +530,7 @@ export default {
   homeResume_keepAdd_record:'/home/resume_keep/add_record',
   //移动端获取推荐直采项目接口
   getZProjectRecommend:'/home/resume/getZProjectRecommend',
-  //移动端获取推荐备案项目接口
+  //移动端获取推荐备案项目接口 
   getBProjectRecommend:'/home/resume_keep/getBProjectRecommend',
   // 我的回访列表
   Return_visitIndex:'/company/return_visit/index',
