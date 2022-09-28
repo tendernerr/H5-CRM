@@ -303,7 +303,7 @@ export default {
     this.fetchData(true);		//获取列表信息
 	 this.classify()				//获取下啦数据
   //  this.getClassify()
-  this.goodatCraft();
+  this.getCategoryList();
   },
   mounted() {
 
@@ -347,9 +347,9 @@ export default {
 	// 		  this.jobPositionList = res.data
 	// 	  })
   //   },
-   goodatCraft(){
-    http.get(api.goodatCraft,{ uid :this.userInfo.uid}).then(res=>{
-			  console.log(res,"是是是")
+  getCategoryList(){
+    http.get(api.getCategoryList,{ uid :this.userInfo.uid}).then(res=>{
+			  // console.log(res,"是是是")
         // this.getClassifys()
 			  this.experience = res.data.list
 			  for (let i = 0; i < this.experience.length; i++) {
@@ -397,7 +397,7 @@ export default {
       // this.$router.push('/recommend')
       this.workmanship = true;
       // this.getClassify()
-      this.goodatCraft();
+      this.getCategoryList();
     },
     getMenber(){
       http.get(api.getMenber,{}).then(res=>{

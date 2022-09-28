@@ -1,7 +1,7 @@
 export default {
   // 获取全局配置参数信息
   global_config: '/home/config/index',
-  // 获取枚举类数据
+  // 获取枚举类数据   1111
   classify: '/home/classify/index',
   // 获取用户微信openid
   get_weixin_openid: '/home/wechat/getOpenid',
@@ -501,7 +501,7 @@ export default {
   // 保存订阅分类
   saveUserResume:'/home/resume/saveUserResume',
   // 获取我的采购列表
-  myPurchase:'/member/account/myPurchase',
+  myPurchase:'/member/account/myPurchase', 
   // 获取用户登录的信息
   getMember:'/member/account/getMember',
   // 绑定采购信息
@@ -594,8 +594,8 @@ export default {
   registerNowthree:'company/profile/completeCompanyTwo',
   // 立即注册 （第二步）
   registerNowtwo:'company/profile/completeCompanyOne',
-  //擅长工艺
-  goodatCraft:'/home/resume/getCategoryList',
+  //擅长工艺 getCategoryList
+  // goodatCraft:'/home/resume/getCategoryList', 
 
   // 获取天眼查信息
   getResumeKeep:'/home/resume_keep/getResumeKeep',
