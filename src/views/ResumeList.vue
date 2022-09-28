@@ -13,12 +13,12 @@
         <van-icon v-else name="cross" />
       </div> -->
       <div class="searchDiv2" v-if="search">
-        <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;"
+        <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;font-size:16px;"
           :placeholder="`搜索${active?'前期':'委托'}项目（按钮可拖动）`" v-model="params.keyword" />
       </div>
     </div>
     <van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky>
-      <van-tab title="前期项目" v-if="true">
+      <van-tab title="前期项目" v-if="true" style="font-size:16px;">
         <div class="box_2" style="display: flex;flex-direction: column;font-size:12px;width: 100%;">
           <div
             style="padding: 8px 0 0 0;display: flex;justify-content:space-around;font-size:12px;width: 100%;background: #fff;"
@@ -37,15 +37,15 @@
             <div style="display:flex;align-items: center;">
               <div style="width:67%">
                 <van-dropdown-menu class="filter_menu">
-                <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-                <van-dropdown-item :title="title1" ref="items">
-                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
-                    @cancel='$refs.items.toggle();' />
-                </van-dropdown-item>
-                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
-              </van-dropdown-menu>
+                  <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                  <van-dropdown-item :title="title1" ref="items">
+                    <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
+                      :columns-num="2" @cancel='$refs.items.toggle();' />
+                  </van-dropdown-item>
+                  <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+                </van-dropdown-menu>
               </div>
-              <div  class="subscribeIMg"  @click="subscribeClick">
+              <div class="subscribeIMg" @click="subscribeClick">
                 <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
                 <div class="subscribe">商机订阅</div>
               </div>
@@ -89,7 +89,7 @@
           </div>
         </van-list>
       </van-tab>
-      <van-tab title="委托项目" :title-class='labelRed'>
+      <van-tab title="委托项目" :title-class='labelRed' style="font-size:16px;">
         <div class="box_2">
           <!-- <van-dropdown-menu class="filter_menu">
 			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
@@ -99,14 +99,38 @@
 			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
 			      />
 			    </van-dropdown-menu> -->
-          <van-dropdown-menu class="filter_menu">
+          <!-- <van-dropdown-menu class="filter_menu">
             <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
             <van-dropdown-item :title="title1" ref="item">
               <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
                 @cancel='$refs.item.toggle();' />
             </van-dropdown-item>
-            <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
-          </van-dropdown-menu>
+            <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
+          </van-dropdown-menu> -->
+          <div style="display:flex;align-items: center;">
+            <div style="width:67%">
+              <van-dropdown-menu class="filter_menu">
+                <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                <van-dropdown-item :title="title1" ref="items">
+                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
+                    @cancel='$refs.items.toggle();' />
+                </van-dropdown-item>
+                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+              </van-dropdown-menu>
+            </div>
+            <div class="subscribeIMg" @click="subscribeClick">
+              <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
+              <div class="subscribe">商机订阅</div>
+            </div>
+          </div>
+          <div>
+            <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+              <van-swipe-item>1</van-swipe-item>
+              <van-swipe-item>2</van-swipe-item>
+              <van-swipe-item>3</van-swipe-item>
+              <van-swipe-item>4</van-swipe-item>
+            </van-swipe>
+          </div>
         </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
@@ -187,18 +211,6 @@
       </div>
     </div>
     <BottomNav></BottomNav>
-    <van-popup v-model="workmanship" position="right" :lazy-render="false" :overlay="false" style="width:100%;height:100%">
-		 <div class="popbox">
-			 <div class="headbox">
-				 <div class="text"><span @click.stop="workmanship = false">&lt;</span>擅长工艺</div>
-			 </div>
-			 <div class="headText">您最多可选择3个标签</div>
-			 <div class="experience">
-				 <div :class="{'div-coGack':item.isSelect}" v-for="(item,index) in experience" :key="index" @click="addExperience(item)">{{item.name}}</div>
-			 </div>
-			 <div class="bottom-ba" @click="storage" >保存</div>
-		 </div>
-	 </van-popup>
   </div>
 </template>
 
@@ -300,11 +312,7 @@ export default {
       citycategorys: {},		//地区
       householdaddress: [],		//项目类型
       education: [],				//涉及工艺
-      workmanship:false,
-      experience:[],					//擅长工艺标签数组
-      submitExperience:[],			//提交擅长工艺
-	  	workmanshipName:'',			//擅长工艺文字
-      goodatraft:"",			//擅长工艺
+      workmanship: false,
     };
   },
   watch: {
@@ -381,13 +389,14 @@ export default {
     // }
     //   },
     active: {
+      immediate: true,
       handler(ne, ol) {
         this.labelRed = ''
         this.loading = false;
         this.finished = false;
         this.dataset = []
         this.page = 1
-        this.fetchData()
+          this.fetchData()
       }
     }
   },
@@ -406,6 +415,20 @@ export default {
     }
   },
   created() {
+      // active 0 为备案项目 1为直采项目
+        // 如果为直采项目 我应该做的操作
+        // if (ne == 1) {
+          // console.log("我是制裁项目", this.$route.query.key);
+          // 如果key值不为空的话
+    if (this.$route.query.key !== null && this.$route.query.key!=undefined) {
+            // 就赋值
+            // console.log(879,this.$route.query.key);
+        this.params.keyword = this.$route.query.key
+    }
+    if( this.$route.query.type !== null && this.$route.query.type!=undefined){
+      this.params.active = this.$route.query.type
+    }
+    console.log(this.$route, "44444444444444444444444")
     console.log(this.LoginOrNot, "LoginOrNotLoginOrNotLoginOrNotLoginOrNot")
     if (this.$route.query.active || this.$route.query.active === '0') {
       this.active = this.$route.query.active
@@ -463,84 +486,8 @@ export default {
     this.restoreFilter();
   },
   methods: {
-    storage(){
-		 this.workmanship = false;
-  //    http.post(api.saveUserResume,{goodatraft:this.listBold,uid:this.userInfo.uid}).then(res=>{
-  //     console.log(res,"eeee");
-	// 				this.tips = '订阅成功'
-	// 				if(this.isWeixin){
-	// 					this.popu = true
-	// 					this.time = setTimeout(()=>{
-	// 						this.popu = false
-	// 						window.history.go(-1);
-	// 					},800)
-	// 				} 
-	// 			})
-	 },
-   addExperience(i){
-    console.log(this.submitExperience,"11113333333333333333333");
-		 if(i.isSelect){
-			 i.isSelect = !i.isSelect
-			 let inde = this.submitExperience.indexOf(i.id)
-			 this.submitExperience.splice(inde,1)
-			 let arr = []
-			 arr = this.workmanshipName.split(',');
-			 let inde2 = arr.indexOf(i.name)
-			 arr.splice(inde2,1)
-			 arr = arr.join(',')
-			 this.workmanshipName = arr
-			 return
-		 }
-		 if(this.submitExperience.length >= 3){
-			 this.$notify({ type: 'warning', message: '不能大于3个选项' })
-			 return
-		 }
-		 if(!i.isSelect){
-			 i.isSelect = !i.isSelect
-		 	this.submitExperience.push(i.id)
-			if(this.workmanshipName == ''){
-				this.workmanshipName = i.name
-			} else{
-				this.workmanshipName = `${this.workmanshipName},${i.name}`
-			}
-		 } 
-	 },
-  //  getCategoryList(){
-	// 	http.get(api.getCategoryList,{ uid :this.userInfo.uid}).then(res=>{
-	// 		  this.experience = res.data.list
-	// 		  for (let i = 0; i < this.experience.length; i++) {
-	// 				if(this.experience[i].isSelect){
-	// 					this.submitExperience.push(this.experience[i].id)
-	// 					if(this.workmanshipName == ''){
-	// 						this.workmanshipName = this.experience[i].name
-	// 					} else{
-	// 						this.workmanshipName = this.workmanshipName+','+this.experience[i].name
-	// 				}
-	// 		  }
-  //   }
-	// 	  })
-	//   },
-  getCategoryList(){
-		  console.log(1212121)
-		  http.get(api.getCategoryList,{uid :this.userInfo.uid}).then(res=>{
-  			  this.experience = res.data.list
-			  for (let i = 0; i < this.experience.length; i++) {
-					if(this.experience[i].isSelect){
-						this.submitExperience.push(this.experience[i].id)
-						if(this.workmanshipName == ''){
-							this.workmanshipName = this.experience[i].name
-						} else{
-							this.workmanshipName = this.workmanshipName+','+this.experience[i].name
-						}
-					}
-			  }
-			  // console.log(this.workmanshipName,"workmanshipNameworkmanshipNameworkmanshipName")
-			  // console.log(this.submitExperience,"this.SubmitExperiencethis.SubmitExperiencethis.SubmitExperience")
-		  })
-	  },
-    subscribeClick(){
-      this.workmanship = true;
-      this.getCategoryList();
+    subscribeClick() {
+      this.$router.push('/addSubscribe')
     },
     getMenber() {
       http.get(api.getMenber, {}).then(res => {
@@ -1022,9 +969,8 @@ export default {
       this.$refs.dropMore.toggle();
     },
     // 请求列表数据，init为true时直接更改dataset值，false时代表上拉加载回的数据追加进dataset
-    fetchData(init) {
-      console.log(init, this.params, "222222")
-      let params = { ...this.params, }
+    fetchData(init) { 
+      let params = { ...this.params}
       params.page = this.page
       params.pagesize = this.pagesize
       let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
@@ -1078,6 +1024,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+>>>.van-ellipsis {
+  font-size: 12px;
+
+}
+
 .searchDivMin {
   display: flex;
   align-items: center;
@@ -1105,18 +1056,25 @@ export default {
   color: #fff;
   margin: 0 5px;
 }
-.subscribeIMg{
-  width:43%;display: flex;border-left: 1px solid  #686868; padding: 0px 0px 0px 20px;
+
+.subscribeIMg {
+  width: 43%;
+  display: flex;
+  border-left: 1px solid #686868;
+  padding: 0px 0px 0px 20px;
 }
-.imgSubscribe{
-    display: flex;
-    align-items: center;
-    padding: 0px 10px 0px 0px;
+
+.imgSubscribe {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 0px;
 }
-.subscribe{
+
+.subscribe {
   color: #409EFF;
   font-size: 14px;
 }
+
 .searchDiv2 {
   width: 13.6em;
   height: 2.2em;
@@ -1141,19 +1099,70 @@ export default {
     color: #00aaff !important
   }
 }
-.popbox{font-size: 12px;
-		.headbox{display: flex;  justify-content: center; align-items:center;
-			.text{width: 100%;  line-height: 50px; text-align: center; position: relative; font-size: 18px;height: 50px;
-				span{color: #666666; position: absolute; left: 10px; font-size: 23px;}
-			}
-		}
-		.headText{color: #c9c9c9; padding: 12px 15px;}
-		.experience{display: flex; flex-wrap: wrap; padding: 10px 12px;
-			div{ padding: 5px 12px; background-color: #f3f3f3; color: #999; border-radius: 20px; margin: 0 10px 10px 0;}
-			.div-coGack{color: #1787fb;background-color: #f4f9ff;}
-		}
-		.bottom-ba{background-color: #1989fa;color: #fff; border-radius: 25px; width: 340px; height: 45px; line-height: 45px; text-align: center; color: #fff; font-size: 15px; margin: auto;}
-	}
+
+.popbox {
+  font-size: 12px;
+
+  .headbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+      width: 100%;
+      line-height: 50px;
+      text-align: center;
+      position: relative;
+      font-size: 14px;
+      height: 50px;
+
+      span {
+        color: #666666;
+        position: absolute;
+        left: 10px;
+        font-size: 23px;
+      }
+    }
+  }
+
+  .headText {
+    color: #c9c9c9;
+    padding: 12px 15px;
+  }
+
+  .experience {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+
+    div {
+      padding: 5px 12px;
+      background-color: #f3f3f3;
+      color: #999;
+      border-radius: 20px;
+      margin: 0 10px 10px 0;
+    }
+
+    .div-coGack {
+      color: #1787fb;
+      background-color: #f4f9ff;
+    }
+  }
+
+  .bottom-ba {
+    background-color: #1989fa;
+    color: #fff;
+    border-radius: 25px;
+    width: 340px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    margin: auto;
+  }
+}
+
 >>>.van-tab {
   color: #000;
 }

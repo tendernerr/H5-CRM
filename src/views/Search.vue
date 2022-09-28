@@ -33,7 +33,7 @@
       <div class="van-notice-bar">
         <van-notice-bar color="#409eff" background="#fff">
           <van-swipe vertical class="notice-swipe" :autoplay="2000" :show-indicators="false">
-            <van-swipe-item v-for="(item,index) in notice_list" @click="goLogin('/notice/'+item.id)">{{item.title}}</van-swipe-item>
+            <van-swipe-item v-for="(item,index) in notice_list" @click="goLogin('/notice/'+item.id)" :key="index">{{item.title}}</van-swipe-item>
           </van-swipe>
         </van-notice-bar>
       </div>
@@ -420,4 +420,5 @@ export default {
 	}
   .more{color: #37abfd; font-size: 15px; text-align: center; padding: 20px 0;}
 }
+
 </style>

@@ -4,7 +4,7 @@
      <div class="box">
         <p class="box-t">  您最多可添加3个标签</p>
         <div class="box-list">
-            <div @click="clickLabel(item,index)" class="box-label" :style="[{'width':(item.name.length + 1.5)+'em'}]" :class="{'box-label-check':item.isSelect}" v-for="(item,index) in list">
+            <div @click="clickLabel(item,index)" class="box-label" :style="[{'width':(item.name.length + 1.5)+'em'}]" :class="{'box-label-check':item.isSelect}" v-for="(item,index) in list" :key="index">
                 {{item.name}}
             </div>
         </div>
