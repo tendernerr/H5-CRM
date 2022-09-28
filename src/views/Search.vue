@@ -8,7 +8,7 @@
       <!-- 搜索按钮 -->
       <div class="inpuTex">
         <van-icon name="search" class="inpuTexi" />
-        <span class="inpuTex-key">请输入关键字</span>
+        <span  @click="addsubscribe = true" class="inpuTex-key">请输入关键字</span>
         <div class="inpuTex-search">搜索</div>
       </div>
       <div class="topBab-fast">
@@ -39,15 +39,15 @@
       </div>
     </div>
     <!-- 没登录 -->
-    <div class="box-noLogon" v-if="false">
+    <div class="box-noLogon" v-if="!LoginOrNot">
       <p class="box-noLogon-p">根据您的订阅为您找到一批商机：</p>
       <div class="box-noLogon-text">
         登录订阅商机后<br/>系统将为您推送您感兴趣的商机
       </div>
       <div class="box-noLogon-goLogon" @click="goLogin('/member/login')">去登录</div>
     </div>
-    <!-- 没有订阅 -->
-    <div class="box-noLogon" v-if="true">
+    <!-- 登录并且没有订阅 -->
+    <div class="box-noLogon" v-if="LoginOrNot && idList">
       <p class="box-noLogon-p">根据您的订阅为您找到一批商机：</p>
       <div class="box-noLogon-text">
         您还没有订阅任何商机<br/>订阅后系统将为您推荐您感兴趣的商机
@@ -55,53 +55,66 @@
       <div class="box-noLogon-goLogon box-noLogon-goLogon-add" @click="goLogin('/addSubscribe')">+立即订阅商机</div>
     </div>
     <!-- 列表信息 -->
-    <div class="box_3" v-if="false">
-      <div v-for="(item,index) in joblist" :key="index" @click="goJob(item.id)">
-        <div class="list" style="display: flex;align-items: center;">
-          <div style=" margin-right:10px;">
-            <img :src="item.company_logo"  style="  width: 100px;height: 100px;"/>
-          </div>
-          <div style="flex: 1;">
-            <div class="tx1">
-              <div class="top" v-if="item.stick == 1">置顶</div>
-              <div class="name" style="padding-bottom: 8px;display: flex;align-items: center;width: 100%;" >
-                <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all;font-weight: 500;">{{item.jobname}}</div>
-                <div style="flex: 1;"></div>
-                <div style="max-width: 4.5em;word-break: break-all;color: #F0754A;font-size: 15px;font-weight: 500;padding-right: 1px;">{{item.wage_text}}<span style="color: #A8A8A8;font-size: 12px;" v-if="item.wage_text != '电议'">元</span></div>
-              </div>
-              <div class="worry_ico" v-if="item.emergency == 1">急</div>
-              <div class="clear"></div>
+    <div class="box_3" v-if="dataset.length > 0">
+      <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
+        <div class="listTab2Head">
+          <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
+          <div class="listTab2HeadName">
+            <div class="listTab2HeadName1">
+              <div class="listTab2HeadName1Text1">{{item.title}}</div>
+              
             </div>
-            <div class="tag_wrapper clearfix" v-if="item.tag.length>0">
-              <div class="tag_cell" v-for="(t, key) in item.tag" :key="key">{{ t }}</div>
-            </div>
-            <div class="" style="font-size: 13px;padding-bottom: 8px;color: #828282;">
-              设备交期：{{ item.delivery_date }}
-            </div>
-            <div class="company" style="padding-top: 0;border: 0;padding-bottom: 8px;">
-              <div class="name">{{ item.companyname }}</div>
-              <div class="auth_ico" v-if="item.company_audit == 1"></div>
-              <div class="crw_ico" v-if="item.setmeal_icon != ''">
-                <img :src="item.setmeal_icon" />
-              </div>
-              <div class="clear"></div>
-            </div>
-            <div class="" style="font-size: 13px;padding-bottom: 12px;color: #828282;text-align: right;padding-right: 8px;">
-              {{ item.district_text }}
-            </div>
+            <div class="listTab2HeadName2">{{item.start_end_time}}</div>
           </div>
         </div>
-        <div class="form_split_10"></div>
+        <div class="listTab2Label">
+          <div class="listTab2LabelList" v-for="(ite,inde) in item.category" :key="inde">
+            {{ite}}
+          </div>
+        </div>
+        <div class="updateTime">
+          {{item.refreshtime}}更新<span class="updateTimeSpan" > 项目在：{{item.address}}</span>
+            <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
+        </div>
       </div>
+      <div class="more" @click="goLogin('/recommend')"> 查看更多>> </div>
     </div>
     <Ad v-if="ad_dataset_banner_b.items.length > 0" :dataset="ad_dataset_banner_b"></Ad>
     <indexArticle v-if="moduleRule.article.is_display == 1" :plan_id="moduleRule.article.plan_id" :dataset="article_list"></indexArticle>
     <BottomNav linkName='search'></BottomNav>
     <!-- 弹窗 -->
     <IndexPopup v-if="showPopup" :list="ad_dataset_popup"></IndexPopup>
-    <van-popup v-model="addsubscribe"  position="right" :style="{'height':100+'vh'}"> 
-        <div>
-          123456
+    <van-popup v-model="addsubscribe"  position="top" :style="{'height':80+'vh'}"> 
+        <div class="showSearch">
+          <div style="text-align: right;">
+            <span @click="addsubscribe = false">关闭</span>
+          </div>
+          <div class="showSearch-type">
+            <span class="showSearch-type-1" :class="{'showSearch-type-2':type == 0}" @click="type = 0">前期项目</span>
+            <span class="showSearch-type-1" :class="{'showSearch-type-2':type == 1}" @click="type = 1">委托项目</span>
+          </div>
+          <div>
+            <van-search v-model="showSearch" shape="round" show-action placeholder="请输入搜索关键词" @search="onSearch">
+              <template #action>
+                <div @click="onSearch">搜索</div>
+              </template>
+            </van-search>
+          </div>
+          <div class="history-box">
+            <div class="showSearch-history">
+              <h4>历史搜索</h4>
+              <van-icon @click="delListorySearch" name="delete-o" />
+            </div>
+            <div class="history-list">
+              <span class="history-list-label" @click="onSearch(item)" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in historySearch">{{item}}</span>
+            </div>
+          </div>
+          <div class="showSearch-history showSearch-history-Hot">
+            <h4>热门搜索</h4>
+          </div>
+          <div class="history-list">
+            <span class="history-list-label" @click="onSearch(item.name)" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in projectHotSearch">{{item.name}}</span>
+          </div>
         </div>
     </van-popup>
   </div>
@@ -120,11 +133,16 @@ import indexHotword from '@/components/index/Hotword'
 import indexArticle from '@/components/index/Article'
 import Ad from '@/components/Ad'
 import IndexPopup from '@/components/index/IndexPopup'
+import {mapState} from 'vuex'
 export default {
   name: 'Index',
   data () {
     return {
-		joblist: [],
+      type:0,
+      historySearch:[],
+      showSearch:'',
+      idList:true,
+		  dataset: [],
       moduleRule: {
         header: {alias: '',is_display: 0,plan_id: 0},
         article: { alias: '', is_display: 0, plan_id: 0},
@@ -134,6 +152,7 @@ export default {
         notice: { alias: '', is_display: 0, plan_id: 0},
         section: { alias: '', is_display: 0, plan_id: 0}
       },
+      projectHotSearch:[],
       addsubscribe:false,
       menu_list: [],
       notice_list: [],
@@ -145,21 +164,95 @@ export default {
       ad_dataset_banner_a: { alias: 'QS_index_banner_a', items: [] },
       ad_dataset_banner_b: { alias: 'QS_index_banner_b', items: [] },
       ad_dataset_popup: { alias: 'QS_index_popup', items: [] },
-      showPopup: false
+      showPopup: false,
+      params: {
+        page:1,
+        pagesize:10,
+        date:'',
+        hasPhone:0,
+        keyword: "",
+        district1: 0,
+        district2: 0,
+        district3: 0,
+        experience: "",
+        education: "",
+        sex: "",
+        minage: "",
+        maxage: "",
+        major: "",
+        minwage: "",
+        maxwage: "",
+        tag: "",
+        settr: "",
+      },
     }
   },
   components: {indexHeader,indexMenu,indexLinkBlock,indexNotice,indexFamous,indexHotword,indexArticle,IndexPopup,Ad},
   created () {
-    this.initModule()
-    this.fetchAd()
-    wxshare({}, 'index', location.href.split('#')[0])
+    let key = window.localStorage.getItem('historySearch')
+    console.log(key,"111")
+    let arr = []
+    if(key != undefined && key != null){
+          arr = JSON.parse(key) 
+    }
+    this.historySearch = arr
+    this.getProjectHotSearch()
+    this.getCategoryList()  //判断是否有订阅
+    this.initModule()  // 获取通告等
+    // this.fetchAd()  // 获取广告
+    wxshare({}, 'index', location.href.split('#')[0])  //不清楚
     this.cronRun()
-    this.joblistf()
+    this.fetchData()      //获取数据
   },
+  computed:{
+    ...mapState(['LoginOrNot'])
+   },
   methods: {
+    // 获取订阅信息
+    getCategoryList(){
+        http.get(api.getCategoryList,{}).then(res=>{
+            for (const key in res.data.list) {
+                if (res.data.list[key].isSelect) {
+                    this.idList = false
+                    return
+                }
+            }
+        })
+    },
+    getProjectHotSearch(){
+      http.get(api.getProjectHotSearch,{}).then(res=>{
+        console.log(res,"000")
+        this.projectHotSearch = res.data
+      })
+    },
+    onSearch(e){
+      if( typeof(e) === 'string' ){
+         this.$router.push('/resumelist?key='+e+'&type='+this.type);
+         return
+      } 
+      let key = window.localStorage.getItem('historySearch')
+      let arr = []
+      if(key != undefined && key != null){arr = JSON.parse(key) }
+      if(arr != ''){arr.push(this.showSearch)}
+      arr = JSON.stringify(arr)
+      this.historySearch.push(this.showSearch)
+      window.localStorage.setItem('historySearch',arr)
+      this.$router.push('/resumelist?key='+this.showSearch+'&type='+this.type)
+      this.showSearch = ''
+    },
+    fetchData() {
+		// let url = this.active == 1 ? api.getZProjectRecommend : api.getBProjectRecommend;
+      http.get(api.getBProjectRecommend, this.params).then((res) => {
+        this.dataset = res.data.data
+      }).catch(() => {});
+    },
 	  goJob(id){
 			this.$router.push("/job/" + id);
 	  },
+    delListorySearch(){
+      this.historySearch = []
+      localStorage.removeItem('historySearch')
+    },
     goLogin(url){
       this.$router.push(url+'?redirect=/search')
     },
@@ -175,12 +268,6 @@ export default {
           this.article_list = article_list
         }).catch(() => {})
     },
-	// 请求案例的接口
-	joblistf(){
-	  http.get(api.joblist,{search_type:'list',pagesize:5,page:1}).then(res=>{
-			this.joblist = res.data.items
-	  })
-	},
     fetchAd () {
       http.post(api.ad_list, {
           alias: ['QS_top_slide@mobile','QS_index_banner_a@mobile','QS_index_banner_b@mobile','QS_index_popup@mobile']
@@ -215,6 +302,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.showSearch{font-size: 15px;padding: 17px;
+  &-type{padding: 12px 0 ;
+    &-1{padding: 5px;margin: 20px;}
+    &-2{color: #0089ff;}
+  }
+  &-history{display: flex;justify-content: space-between;align-items: center;padding: 9px 0 0;font-size: 17px; position: relative;
+    &-Hot{
+      h4{padding: 30px 0 0;}
+      &::after{content: "";position: absolute;width: 100vh;left: -20px;height: 5px;background: #f3f3f3;right: 0; top: 12px;}
+    }
+  }
+  .history-list{display: flex;padding: 14px 0 9px; flex-wrap: wrap;
+    &-label{text-align: center;background: #f3f3f3;width: 4em;border-radius: 9px;color: #979797;margin: 0px 20px 10px 0;}
+  }
+}
 .ba {width: 100%;height: 63px;margin-bottom: 9px;
   img { width: 100%; height: 63px;}
 }
@@ -292,5 +395,29 @@ export default {
       .name { font-size: 16px; color: #333333; font-weight: bold; max-width: 240px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; float: left; margin-right: 6px;}
     }
   }
+  .listTab2{display: flex; flex-direction: column; border-bottom:6px solid #eeeeee;
+		.listTab2Head{background-color: #fff; font-size: 15px; display: flex; padding: 5px;
+			.listTab2HeadImg{width: 60px; height: 60px; flex: none; overflow: hidden; border-radius: 50%; background: url("https://www.hangyedaniu.com/upload/resource/user.png") no-repeat center center/ 100% 100%; object-fit: cover;
+				img{width: 100%;height: 100%;}
+			}
+			.listTab2HeadName{display: flex; flex-direction: column; justify-content: space-around; padding:0 5px; flex: 1;
+				.listTab2HeadName1{display: flex; justify-content: space-between; align-items: center;
+					.listTab2HeadName1Text1{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical;word-break: break-all;padding-top: 10px; font-size: 12px; margin-right: 15px; font-weight: 700;}
+					.listTab2HeadName1Text2{ font-size: 13px; flex: none;}
+				}
+				.listTab2HeadName2{font-size: 13px;margin-top: 10px;
+					.listTab2HeadName2Span2{margin-left: 10px;}
+				}
+			}
+		}
+		.listTab2Label{display: flex; flex-wrap: wrap; font-size: 12px; color: #1787fb; padding: 5px 10px;
+			.listTab2LabelList{background-color: #f4f9ff; padding: 3px 8px; margin-right: 8px; border-radius: 5px; margin-bottom: 5px;}
+		}
+		.updateTime{padding: 10px 10px 10px 0px; font-size: 12px;    display: flex;
+    justify-content: space-around;
+			.updateTimeSpan{margin-left: 10px;}
+		}
+	}
+  .more{color: #37abfd; font-size: 15px; text-align: center; padding: 20px 0;}
 }
 </style>

@@ -37,11 +37,11 @@ export default {
   },
   methods: {
     redirectTo () {
-		if(this.register != ''){
-			// 注册这里过来的
-			this.$router.go(-1)
-			return
-		}
+      if(this.register != ''){
+        // 注册这里过来的
+        this.$router.go(-1)
+        return
+      }
       if (this.redirect !== '') {
         this.$router.replace(this.redirect)
       } else {

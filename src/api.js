@@ -600,4 +600,5 @@ export default {
   // 获取天眼查信息
   getResumeKeep:'/home/resume_keep/getResumeKeep',
 
+  getProjectHotSearch:"/home/index/getProjectHotSearch",
 }

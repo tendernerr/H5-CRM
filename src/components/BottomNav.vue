@@ -14,7 +14,25 @@
       <div class="bar_item personal" :class="{'router-link-active':linkName === 'recommend'}" @click="goLink('/recommend')">商机订阅</div>
       <div class="bar_item user" :class="{'router-link-active':linkName === 'my'}" @click="goLink('/member/login')">我的</div>
     </div>
-    <van-popup v-model="show" position="bottom" :style="{ height: '30%' }" />
+    <van-popup v-model="show" position="bottom" closeable :style="{ height: '60%' }">
+      <div class="releasePopup">
+        <div>
+          <h4 class="releasePopup-h4">免费发布信息</h4>
+          <div class="releasePopup-box" v-for="(item,index) in list" @click="goUrl(item)">
+            <p class="releasePopup-p">{{item.title}}</p>
+            <div class="releasePopup-list" v-for="(ite,inde) in item.textImage">
+              <div class="releasePopup-img">
+                <img width="100%" height="100%" :src="ite.img">
+              </div>
+              <div class="releasePopup-text">
+                <p class="releasePopup-text-1">{{ite.text1}}</p>
+                <p class="releasePopup-text-2">{{ite.text2}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -34,7 +52,19 @@ export default {
       thirdClass: 'resume',
       thirdText: '项目',
       thirdTo: '/resumelist',
-      mineTo: '/member/login'
+      mineTo: '/member/login',
+      list:[{
+              title:'我是采购方',
+              textImage:[{img:'https://qiniucdn.hangyedaniu.com/img/shangji.png',text1:'发布采购',text2:'直接对接供应商',link:'',type:'1'}] 
+            },
+            {
+              title:'我是供应方',
+              textImage:[
+                {img:'https://qiniucdn.hangyedaniu.com/img/radio.png',text1:'发布案例视频',text2:'获取更多的曝光机会',link:'/shortvideo/release',type:'2'},
+                {img:'https://qiniucdn.hangyedaniu.com/img/shangji.png',text1:'完善企业资料',text2:'完善企业供应、服务信息',link:'/member/company/profile',type:'2'}
+              ] 
+            },
+      ]
     }
   },
   computed:{
@@ -107,6 +137,13 @@ export default {
     goLink(url){
       this.$router.replace(url)
     },
+    goUrl(e){
+      if(e.type === '2' && !this.LoginOrNot){
+        this.$dialog.confirm({title: '提示',message: '抱歉您还未登录',}).then(() => {
+          this.$router.push(url.link+'?register=0')
+        }).catch(() => {});
+      }
+    },
 	  change(){
 		  if (this.LoginOrNot) {
 		    if (parseInt(this.LoginType) === 1) {
@@ -147,6 +184,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.releasePopup{
+  &-h4{height: 50px;line-height: 50px;text-align: center;}
+  &-box{padding: 20px 20px 0;}
+  &-p{font-size: 15px;}
+  &-list{display: flex;align-items: center;padding: 10px 0 0;}
+  &-img{width: 50px;flex: none;height: 50px;margin: 0 11px 0 0;}
+  &-text{color: #000;font-size: 14px;
+    &-1{font-size: 19px;font-weight: 600; color: #585858;}
+    &-2{font-weight: 500; color: #696969; font-size: 14px;}
+  }
+}
 .bottom_group {position: relative;width: 100%;height: 55px;
   .bottom_bar_wrapper {position: fixed;left: 0;right: 0;bottom: 0;background-color: #ffffff;display: flex;z-index: 9;
     &::after {position: fixed; box-sizing: border-box; content: ' '; pointer-events: none; right: 0; bottom: 55px; left: 0;border-bottom: 1PX solid #e2e2e2; -webkit-transform: scaleY(.5); transform: scaleY(.5);}
