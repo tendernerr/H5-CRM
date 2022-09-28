@@ -26,12 +26,13 @@
         <div  v-if="dataset <=0 && !empty1" class="Unsubscribed" style="margin-top: 50px;">
             <div>您还没有订阅任何商机</div>
             <div>订阅后系统将为您推荐您感兴趣的工艺</div>
-        </div>
-        <div style="display:flex;justify-content: center;">
+            <div style="display:flex;justify-content: center;">
           <div class="subscribeto"   @click="subscribetoClick">
           +立即订阅商机
         </div>
         </div>
+        </div>
+       
         <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" /> -->
 			  <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="true">
 			    <div class="listTab2" v-for="(item,index) in dataset" :key="index" @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
