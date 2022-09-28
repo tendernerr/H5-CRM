@@ -1,94 +1,109 @@
 <template>
   <div id="app">
-    <Meta pagealias="index" />
-    <indexHeader v-if="moduleRule.header.is_display == 1" :plan_id="moduleRule.header.plan_id"></indexHeader>
-    <indexMenu v-if="moduleRule.menu.is_display == 1" :plan_id="moduleRule.menu.plan_id" :dataset="menu_list"></indexMenu>
-    <indexLinkBlock v-if="moduleRule.section.is_display == 1" :plan_id="moduleRule.section.plan_id"></indexLinkBlock>
-    <indexNotice v-if="moduleRule.notice.is_display == 1" :plan_id="moduleRule.notice.plan_id" :dataset="notice_list"></indexNotice>
-    <indexFamous v-if="moduleRule.famous.is_display == 1" :plan_id="moduleRule.famous.plan_id" :dataset="famous_list"></indexFamous>
-    <indexHotword v-if="moduleRule.hotword.is_display == 1" :plan_id="moduleRule.hotword.plan_id" :dataset="hotword_list"></indexHotword>
-    <Ad v-if="ad_dataset_banner_a.items.length > 0" :dataset="ad_dataset_banner_a"></Ad>
-  <!-- <van-list
-      v-if="joblist.length > 0"
-      v-model="loading"
-      :finished="finished"
-      :finished-text="finished_text"
-      @load="onLoad"
-      :immediate-check="true"
-    > -->
-      <div class="box_3">
-        <div v-for="(item,index) in joblist" :key="index" @click="go(item.id)">
-          <div class="list" style="display: flex;align-items: center;">
-           <div style=" margin-right:10px;">
-              <img :src="item.company_logo"  style="  width: 100px;height: 100px;"/>
-           </div>
-            <div style="flex: 1;">
-              <div class="tx1">
-                <div class="top" v-if="item.stick == 1">置顶</div>
-                <div class="name" style="padding-bottom: 8px;display: flex;align-items: center;width: 100%;" >
-                 <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all;font-weight: 500;">{{item.jobname}}</div>
-                  <div style="flex: 1;"></div>
-                  <div style="max-width: 4.5em;word-break: break-all;color: #F0754A;font-size: 15px;font-weight: 500;padding-right: 1px;">{{item.wage_text}}<span style="color: #A8A8A8;font-size: 12px;" v-if="item.wage_text != '电议'">元</span></div>
-                </div>
-                <div class="worry_ico" v-if="item.emergency == 1">急</div>
-                <div class="clear"></div>
-              </div>
-              <div class="tag_wrapper clearfix" v-if="item.tag.length>0">
-                <div class="tag_cell" v-for="(t, key) in item.tag" :key="key">{{ t }}</div>
-              </div>
-              <div class="" style="font-size: 13px;padding-bottom: 8px;color: #828282;">
-                设备交期：{{ item.delivery_date }}
-              </div>
-              <div class="company" style="padding-top: 0;border: 0;padding-bottom: 8px;">
-                <div class="name">{{ item.companyname }}</div>
-                <div class="auth_ico" v-if="item.company_audit == 1"></div>
-                <div class="crw_ico" v-if="item.setmeal_icon != ''">
-                  <img :src="item.setmeal_icon" />
-                </div>
-                <div class="clear"></div>
-              </div>
-              <div class="" style="font-size: 13px;padding-bottom: 12px;color: #828282;text-align: right;padding-right: 8px;">
-                {{ item.district_text }}
-              </div>
-            </div>
-          </div>
-          <div class="form_split_10"></div>
+    <!-- <indexHeader v-if="moduleRule.header.is_display == 1" :plan_id="moduleRule.header.plan_id"></indexHeader> -->
+    <Head>行业大牛</Head>
+    <!-- 蓝色背景 -->
+    <div class="topBab">
+      <h4 class="topBabH4">机械自动化采购服务平台</h4>
+      <!-- 搜索按钮 -->
+      <div class="inpuTex">
+        <van-icon name="search" class="inpuTexi" />
+        <span class="inpuTex-key">请输入关键字</span>
+        <div class="inpuTex-search">搜索</div>
+      </div>
+      <div class="topBab-fast">
+        <div class="topBab-fast-t">快速搜索</div>
+        <div v-if="true" class="goSubscribe">
+          <span>清洗烘干</span>
+          <span>清洗烘干</span>
+          <span>清洗烘干</span>
         </div>
       </div>
-    <!-- </van-list> -->
-	<!-- <div class="centen" >
-		<div class="boxList" v-for="(item,index) in joblist" :key="index" @click="go(item.id)">
-			<div class="img">
-				<img v-if="item.logo" :src="item.logo" width="100%" height="100%"/>
-			</div>
-			<div class="box">
-				<div class="text1">
-					<div class="tx">{{item.jobname}}</div>
-					<div class="worry_ico" v-if="item.emergency == 1">现货</div>
-				</div>
-				<div class="text2">
-					<div class="tx2">案例客户地点: {{item.district_text}}</div>
-					<div>{{item.refreshtime}}</div>
-				</div>
-				<div class="text3" v-if="item.tag.length>0">
-					<div class="boxs" v-for="(ite,inde) in item.tag" :key="inde">{{ite}}</div>
-				</div>
-				<div class="text4">
-					<div>{{item.companyname}}</div>
-					<img v-if="item.company_audit" class="img1" src="@/assets/images/jobs_list_auth_ico.png" />
-					<img v-if="item.setmeal_icon" class="img2" :src="item.setmeal_icon" />
-				</div>
-			</div>
-		</div>
-		<div class="centen-bottom" @click="botGo">
-			查看更多
-		</div>
-	</div> -->
+    </div>
+    <!-- 导航体 -->
+    <indexMenu v-if="moduleRule.menu.is_display == 1" :plan_id="moduleRule.menu.plan_id" :dataset="menu_list"></indexMenu>
+    <!-- <indexLinkBlock v-if="moduleRule.section.is_display == 1" :plan_id="moduleRule.section.plan_id"></indexLinkBlock> -->
+    <!-- <indexNotice v-if="moduleRule.notice.is_display == 1" :plan_id="moduleRule.notice.plan_id" :dataset="notice_list"></indexNotice> -->
+    <!-- <indexFamous v-if="moduleRule.famous.is_display == 1" :plan_id="moduleRule.famous.plan_id" :dataset="famous_list"></indexFamous> -->
+    <!-- 通告 -->
+    <div class="topNotice">
+      <div class="topNotice-t">
+        最 新<br/>公 告
+      </div>
+      <div class="van-notice-bar">
+        <van-notice-bar color="#409eff" background="#fff">
+          <van-swipe vertical class="notice-swipe" :autoplay="2000" :show-indicators="false">
+            <van-swipe-item v-for="(item,index) in notice_list" @click="goLogin('/notice/'+item.id)">{{item.title}}</van-swipe-item>
+          </van-swipe>
+        </van-notice-bar>
+      </div>
+    </div>
+    <!-- 没登录 -->
+    <div class="box-noLogon" v-if="false">
+      <p class="box-noLogon-p">根据您的订阅为您找到一批商机：</p>
+      <div class="box-noLogon-text">
+        登录订阅商机后<br/>系统将为您推送您感兴趣的商机
+      </div>
+      <div class="box-noLogon-goLogon" @click="goLogin('/member/login')">去登录</div>
+    </div>
+    <!-- 没有订阅 -->
+    <div class="box-noLogon" v-if="true">
+      <p class="box-noLogon-p">根据您的订阅为您找到一批商机：</p>
+      <div class="box-noLogon-text">
+        您还没有订阅任何商机<br/>订阅后系统将为您推荐您感兴趣的商机
+      </div>
+      <div class="box-noLogon-goLogon box-noLogon-goLogon-add" @click="goLogin('/addSubscribe')">+立即订阅商机</div>
+    </div>
+    <!-- 列表信息 -->
+    <div class="box_3" v-if="false">
+      <div v-for="(item,index) in joblist" :key="index" @click="goJob(item.id)">
+        <div class="list" style="display: flex;align-items: center;">
+          <div style=" margin-right:10px;">
+            <img :src="item.company_logo"  style="  width: 100px;height: 100px;"/>
+          </div>
+          <div style="flex: 1;">
+            <div class="tx1">
+              <div class="top" v-if="item.stick == 1">置顶</div>
+              <div class="name" style="padding-bottom: 8px;display: flex;align-items: center;width: 100%;" >
+                <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;word-break: break-all;font-weight: 500;">{{item.jobname}}</div>
+                <div style="flex: 1;"></div>
+                <div style="max-width: 4.5em;word-break: break-all;color: #F0754A;font-size: 15px;font-weight: 500;padding-right: 1px;">{{item.wage_text}}<span style="color: #A8A8A8;font-size: 12px;" v-if="item.wage_text != '电议'">元</span></div>
+              </div>
+              <div class="worry_ico" v-if="item.emergency == 1">急</div>
+              <div class="clear"></div>
+            </div>
+            <div class="tag_wrapper clearfix" v-if="item.tag.length>0">
+              <div class="tag_cell" v-for="(t, key) in item.tag" :key="key">{{ t }}</div>
+            </div>
+            <div class="" style="font-size: 13px;padding-bottom: 8px;color: #828282;">
+              设备交期：{{ item.delivery_date }}
+            </div>
+            <div class="company" style="padding-top: 0;border: 0;padding-bottom: 8px;">
+              <div class="name">{{ item.companyname }}</div>
+              <div class="auth_ico" v-if="item.company_audit == 1"></div>
+              <div class="crw_ico" v-if="item.setmeal_icon != ''">
+                <img :src="item.setmeal_icon" />
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="" style="font-size: 13px;padding-bottom: 12px;color: #828282;text-align: right;padding-right: 8px;">
+              {{ item.district_text }}
+            </div>
+          </div>
+        </div>
+        <div class="form_split_10"></div>
+      </div>
+    </div>
     <Ad v-if="ad_dataset_banner_b.items.length > 0" :dataset="ad_dataset_banner_b"></Ad>
     <indexArticle v-if="moduleRule.article.is_display == 1" :plan_id="moduleRule.article.plan_id" :dataset="article_list"></indexArticle>
     <BottomNav linkName='search'></BottomNav>
     <!-- 弹窗 -->
     <IndexPopup v-if="showPopup" :list="ad_dataset_popup"></IndexPopup>
+    <van-popup v-model="addsubscribe"  position="right" :style="{'height':100+'vh'}"> 
+        <div>
+          123456
+        </div>
+    </van-popup>
   </div>
 </template>
 
@@ -111,52 +126,21 @@ export default {
     return {
 		joblist: [],
       moduleRule: {
-        header: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        article: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        famous: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        hotword: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        menu: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        notice: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        },
-        section: {
-          alias: '',
-          is_display: 0,
-          plan_id: 0
-        }
+        header: {alias: '',is_display: 0,plan_id: 0},
+        article: { alias: '', is_display: 0, plan_id: 0},
+        famous: { alias: '', is_display: 0, plan_id: 0},
+        hotword: { alias: '', is_display: 0, plan_id: 0},
+        menu: { alias: '', is_display: 0, plan_id: 0},
+        notice: { alias: '', is_display: 0, plan_id: 0},
+        section: { alias: '', is_display: 0, plan_id: 0}
       },
+      addsubscribe:false,
       menu_list: [],
       notice_list: [],
       famous_list: [],
       hotword_list: [],
       article_list: [],
-      swiperOption: {
-        autoplay: true,
-        freeMode: true,
-        speed: 600
-      },
+      swiperOption: { autoplay: true, freeMode: true, speed: 600},
       ad_dataset_top: { alias: 'QS_top_slide', items: [] },
       ad_dataset_banner_a: { alias: 'QS_index_banner_a', items: [] },
       ad_dataset_banner_b: { alias: 'QS_index_banner_b', items: [] },
@@ -173,12 +157,12 @@ export default {
     this.joblistf()
   },
   methods: {
-	  go(id){
+	  goJob(id){
 			this.$router.push("/job/" + id);
 	  },
-	  botGo(){
-		location.href = 'https://www.hangyedaniu.com/m/#/joblist'
-	  },
+    goLogin(url){
+      this.$router.push(url+'?redirect=/search')
+    },
     initModule () {
       http.get(api.index_common, {}).then(res => {
           const { module_rule, data } = res.data
@@ -189,8 +173,7 @@ export default {
           this.famous_list = famous_list
           this.hotword_list = hotword_list
           this.article_list = article_list
-        })
-        .catch(() => {})
+        }).catch(() => {})
     },
 	// 请求案例的接口
 	joblistf(){
@@ -235,7 +218,24 @@ export default {
 .ba {width: 100%;height: 63px;margin-bottom: 9px;
   img { width: 100%; height: 63px;}
 }
-
+.topBab{background: url(https://qiniucdn.hangyedaniu.com/img/background.png);height: 173px;display: flex;flex-direction: column;justify-content: space-evenly;
+  .topBabH4{color: #fff;text-align: center;font-style: italic;}
+  &-fast{display: flex;color: #fff;height: 30px;
+    &-t{padding: 0 0 0 25px;font-size: 16px;font-weight: 600;font-style: italic;line-height: 30px;}
+  }
+  .goSubscribe{    padding: 0 0 0 20px;font-size: 15px;line-height: 30px;}
+}
+.topNotice{display: flex;border-top: 5px solid #f3f3f3;color: #409eff;
+    &-t{width: 75px; text-align: center; padding: 8px 0; font-size: 15px; position: relative;
+      &::after {position: absolute; content: "|"; right: 0px; color: #000; top: 50%; transform: translate(0%,-50%);}}
+    .van-notice-bar{ color: #cacaca;background: rgb(255, 255, 255);flex: 1;align-self: center;}
+}
+.inpuTex{    display: flex;align-items: center;width: 87%;background: #fff;border-radius: 20px;text-align: center;color: #cecece;text-indent: 9px;margin: 0px auto 0;font-size: 23px;height: 38px;overflow: hidden;
+    &i{font-weight: 900;}
+    &-key{font-size: 15px;}
+    &-search{margin: 0 0 0 auto;width: 82px;background: #e0effe;color: #409eff;font-size: 15px;height: 100%;line-height: 38px;}
+}
+.notice-swipe{height: 40px;line-height: 40px;}
 .centen{background-color: #f3f3f3;padding-top: 5px;
 	.boxList{margin-bottom: 5px;padding: 0px 17px;background-color: #fff; display: flex;align-items:center;
 		.img{width: 100px;height: 100px;margin-right: 10px;flex: none;}
@@ -260,8 +260,14 @@ export default {
 	}
 	.centen-bottom{width: 100%;height: 50px;line-height: 50px;color: #969799;text-align: center;background-color: #fff;font-size: 14px;}
 }
-
-.box_3 {width: 100%;
+.box-noLogon{border-top: 5px solid #f3f3f3; 
+  &-p{color: red;font-size: 14px;padding: 8px 0 0px 19px;}
+  &-text{color: #409eff;text-align: center;font-size: 15px;padding: 19px 0 0;}
+  &-goLogon{margin: 26px auto 0;color: #fff;background: #25afff;font-size: 15px;height: 35px;width: 5em;border-radius: 8px;line-height: 35px;text-align: center;
+    &-add{width: 8em;}
+  }
+}
+.box_3 {width: 100%; border-top: 5px solid #f3f3f3;
   .list {position: relative;width: 100%;background-color: #ffffff;padding: 0 0 0 17px;overflow: hidden;
     .top {position: absolute;right: -25px;top: -25px;width: 50px;height: 50px;background-color: #feae41;color: #ffffff;font-size: 10px;font-weight: bold;text-align: center;transform: rotateZ(45deg);padding-top: 36px;}
     .tx1 {

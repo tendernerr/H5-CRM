@@ -80,7 +80,7 @@
       <div class="box_title">
         项目管理
         <div class="right_txt">
-          <span class="for_link" @click="goLink('/member/company/subscribeProject')">项目太少？试试订阅项目</span>
+          <span class="for_link" @click="goLink('/addSubscribe')">项目太少？试试订阅项目</span>
         </div>
       </div>
       <div class="box_5">
