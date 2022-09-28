@@ -283,6 +283,7 @@
 				<div style="position: absolute;top: -3px;right: 4px;font-size: 17px;" @click="freeView = false">&otimes;</div>
 			</div>
 		</van-popup>
+		<!-- 购买月季套餐 -->
 		<van-popup v-model="gjUser" :style="{ width: '80%'}">
 			<div class="freeView-div-pay">
 				<h3 class="freeView-h3">您暂无法查看权限</h3>

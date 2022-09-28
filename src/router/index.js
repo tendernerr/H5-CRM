@@ -119,7 +119,7 @@ import mySchedule from '../views/mySchedule/index'
 import myPostSale from '../views/myPostSale/index'
 import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
-
+import AddSubscribe from '../views/addSubscribe'
 
 
 Vue.use(VueRouter)
@@ -154,6 +154,16 @@ const routes = [{
   path: '/search',
   name: 'search',
   component: Search,
+  meta: {
+    title: '搜索',
+    keepAlive: true,
+    loginCheck: false
+  }
+},
+{
+  path: '/addSubscribe',
+  name: 'addSubscribe',
+  component: AddSubscribe,
   meta: {
     title: '搜索',
     keepAlive: true,
