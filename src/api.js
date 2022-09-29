@@ -599,6 +599,8 @@ export default {
 
   // 获取天眼查信息
   getResumeKeep:'/home/resume_keep/getResumeKeep',
-
+  // 获取直采项目的热门搜索
   getProjectHotSearch:"/home/index/getProjectHotSearch",
+  // 获取备案项目的热门搜索
+  getBaProjectHotSearch:"/home/index/getBaProjectHotSearch",
 }

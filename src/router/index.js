@@ -120,7 +120,7 @@ import myPostSale from '../views/myPostSale/index'
 import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
 import AddSubscribe from '../views/addSubscribe'
-
+import publishPurchase from '../views/company/publishPurchase'
 
 Vue.use(VueRouter)
 
@@ -246,6 +246,16 @@ const routes = [{
   component: CompanyShow,
   meta: {
     title: '企业详情',
+    keepAlive: false,
+    loginCheck: false
+  }
+},
+{
+  path: '/publishPurchase',
+  name: 'publishPurchase',
+  component: publishPurchase,
+  meta: {
+    title: '行业大牛网',
     keepAlive: false,
     loginCheck: false
   }
