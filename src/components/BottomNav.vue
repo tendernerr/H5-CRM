@@ -37,10 +37,15 @@
 </template>
 
 <script>
-	import {mapState} from "vuex"
+	import { mapState } from "vuex"
 export default {
-  props:['linkName'],
   name: 'BottomNav',
+  props:{
+    "linkName":{
+              type:String,
+              default:'index'
+          },
+      },
   data () {
     return {
       show:false,
