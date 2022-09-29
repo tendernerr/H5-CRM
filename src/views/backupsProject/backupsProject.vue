@@ -37,12 +37,12 @@
 								下文****为隐藏内容，仅对行业大牛用户开放，注册登录后可免费查看内容详情
 							</div>
 							<!-- 登录后并且是免费会员 is_free : true==免费会员 false:不是免费会员  9/27 ok-->
-							<div class="tab1List3 redText" v-if="dataMes.isLogin && dataMes.userinfo.is_free ">
+							<div class="tab1List3 redText" v-else-if=" dataMes.userinfo.is_free && !dataMes.userinfo.isMonthSetmealSee ">
 								<p>（ 下文****为隐藏内容，仅对行业大牛会员开放，您每天可免费查看一条 ）</p>
 								<div class="clickLook" @click="getResumeKeepInfo"> 点击查看 </div>
 							</div>
 							<!-- 登录后查询是否购买了月季套餐 如何可以查看这个详情，就隐藏这个按钮 -->
-							<div class="tab1List3 redText" v-if="dataMes.userinfo.isMonthSetmeal && !dataMes.userinfo.isMonthSetmealSee">
+							<div class="tab1List3 redText" v-else-if="dataMes.userinfo.isMonthSetmeal && !dataMes.userinfo.isMonthSetmealSee">
 								<p>（ 消耗查看点获取项目详细资料 ）</p>
 								<div class="clickLook" @click="getResumeKeepInfos"> 点击查看 </div>
 							</div>
@@ -81,10 +81,19 @@
 						</div>
 						<!-- 其他项目内容 -->
 						<div v-if="dataMes.basemain&&dataMes.basemain.project_type === 1" class="" v-html="dataMes.basemain.other_content"></div>
+						<div class="tab2" style="border:0;padding: 0;" v-if="!dataMes.userinfo.isMember">
+							<p style="color: #000;">项目进展：</p>
+							<p style="color: red;text-align:left;padding: 5px 0px 16px; font-size:12px">
+								项目进展是行业大牛网通过一定渠道获得的项目进度，帮您提前把握商机！需要高级会员权限才能查询！
+							</p>
+							<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
+							<span class="buttonSpan" style="filter: blur(4px);">****</span>
+							<span class="buttonSpan" style="background:#ccc;filter: blur(4px);">****</span>
+						</div>
 				  </div>
 			  </van-tab>
 			  <!-- //  项目进展  如果 isMember:true === 成为了会员  is_free == 免费会员  -->
-			  <van-tab v-if="!dataMes.userinfo.isMember && dataMes.userinfo.is_free" title="项目进展（1）">
+			  <van-tab v-if="!dataMes.userinfo.isMember && dataMes.userinfo.is_free && !dataMes.userinfo.isMonthSetmealSee" title="项目进展（1）">
 				<div class="tab2">
 					<p style="color: red;text-align:left;padding: 16px 0; font-size:12px">
 						项目进展是行业大牛网通过一定渠道获得的项目进度，帮您提前把握商机！需要高级会员权限才能查询！
@@ -98,31 +107,30 @@
 				<!-- 如果登录或者是免费会员 is_free:true==免费会员    -->
 				  <div class="tab2" v-if="!dataMes.isLogin || dataMes.userinfo.is_free">
 				  	<p style="color: #000;padding: 16px 0;font-size: 13px;color: red;" v-if="dataMes.basemain&&dataMes.basemain.project_name !== '****'">
-						该项目信息仅对行业大牛高级会员及以上开放，您也可以通过 
-						<span class="buttonSpan" @click="go(2)">百度>></span> 搜索一下
+						您暂未开通权限，点击立即联系即可查看全部信息；您也可以通过 <span style="color: #1787fb;" @click="go(2)">百度>></span> 搜索一下 
 					</p>
 					<p style="color: #000;padding: 3px 0;">公司名称：<span class="redText">****</span> </p>
 					<p style="color: #000;padding: 3px 0;">项目地区：<span class="redText">****</span></p>
 					<p style="color: #000;padding: 3px 0;">姓 名：<span class="redText">****</span></p>
 					<p style="color: #000;padding: 3px 0;">岗 位：<span class="redText">****</span></p>
 					<p style="color: #000;padding: 3px 0;">联系电话：
-						<span style="color: #ff3e3e;" @click="gjUser = true">点击查看</span> 
+						<span style="color: #ff3e3e;" @click="look()">点击查看</span> 
 					</p>
-					<p style="color: #00a1ff;padding: 3px 0;" @click="gjUser = true">更多项目联系人>></p>
+					<p style="color: #00a1ff;padding: 3px 0;" @click="look()">更多项目联系人>></p>
 				  </div>
 				  <!-- 登录 && 不是高级会员 && 是免费会员 && 也不是月季套餐会员 isMember:true == 高级级以上  is_free:true == 免费会员 isMonthSetmeal:true == 月季套餐会员身份 -->
-				  <div class="tab2" style="color: #000;" v-if="dataMes.isLogin && !dataMes.userinfo.isMember && dataMes.userinfo.is_free && !dataMes.userinfo.isMonthSetmeal">
+				  <div class="tab2" style="color: #000;" v-else-if="dataMes.isLogin && !dataMes.userinfo.isMember && dataMes.userinfo.is_free && !dataMes.userinfo.isMonthSetmeal">
 						<p style="padding: 0 52px;color: #000;">姓名：***</p>
 						<p style="padding: 0 52px;color: #000;">岗位：***</p>
 						<p style="padding: 0 52px 10px;color: #000;">联系电话：135****</p>
 						想要深入了解项目详情，点击<span style="color: #409eff; padding:0 4px;" @click="contactUs();">联系我们</span>预计30分钟内项目经理会联系您，请注意来电提醒
 				  </div>
-				  <!--  如果是月季套餐   会员在这里显示卡住以下的高级会员套餐 -->
-				  <div v-else-if="dataMes.userinfo.isMonthSetmeal">
+				  <!--  如果是月季套餐 需要点击查看 并且暂时不能查看信息，就会来这里，要是看过的  isMonthSetmealSee:可查看信息 -->
+				  <div v-else-if="dataMes.userinfo.isMonthSetmeal && !dataMes.userinfo.isMonthSetmealSee">
 					<div class="tab2">
-						<div v-if="!dataMes.userinfo.isMonthSetmealSee"> 
+						<div> 
 							<span @click="getResumeKeepInfos" class="consume">获取信息</span>
-							消耗查看点目
+							消耗查看点数
 						</div>
 						<div class="tab2Information" style="border-top:0">
 							<div class="tab1List" v-if="dataMes.userinfo.nikename">
@@ -279,14 +287,14 @@
 				</div>
 				<p class="freeView-p1">进入<span class="freeView-span">会员专场</span>，查看更多权益</p>
 				<p class="freeView-p2">90%选择开通会员用户,成交10万单!</p>
-				<div class="freeView-button" @click="$router.push('/member/order/add/common?type=setmeal')">进入会员专场</div>
+				<div class="freeView-button" @click='goCommon()'>进入会员专场</div>
 				<div style="position: absolute;top: -3px;right: 4px;font-size: 17px;" @click="freeView = false">&otimes;</div>
 			</div>
 		</van-popup>
 		<!-- 购买月季套餐 -->
 		<van-popup v-model="gjUser" :style="{ width: '80%'}">
 			<div class="freeView-div-pay">
-				<h3 class="freeView-h3">您暂无法查看权限</h3>
+				<h3 class="freeView-h3">{{title}}</h3>
 				<p class="freeView-text">大数据精准计算挖掘 为您找到该项目更多联系人</p>
 				<div class="freeView-img" >
 					<div class="freeView-img-list-pay" :class="{'freeView-img-list-pay-hvo':item.id === service_id}" @click="clickListPay(item)" v-for="(item,index) in resumeKeepSetmeal" :key="index" >
@@ -318,6 +326,7 @@ import {mapState} from 'vuex'
 export default {
   data () {
     return {
+		 title:'您暂无法查看权限',
 		 isCollection:0,
 		 active:0,
 		 id:'',				//详情id
@@ -430,6 +439,11 @@ export default {
 			// this.homeResumeKeepShow()
 		})
 	  },
+	  async goCommon(){
+		let data = await this.contactUs()
+		console.log(data,"1111")
+		this.$router.push('/member/order/add/common?type=setmeal')
+	   },
 	  checkFav(){
 		http.get(api.checkFav,{id:this.id}).then(res=>{
 			this.isCollection = res.data.has_fav
@@ -438,7 +452,7 @@ export default {
 	  getContact(){
 		this.$dialog.confirm({
 			title: '提示',
-			message: '消耗查看点目',
+			message: '消耗查看点数',
 			}).then(() => {
 				// 调用接口
 				this.getResumeKeepInfos()
@@ -451,7 +465,6 @@ export default {
 			return
 		}
 		this.$dialog.alert({
-				title: '标题',
 				confirmButtonText:'会员专区',
 				closeOnClickOverlay:true,
 				message: '<p style="text-align:left;">您目前只能查看项目基本信息，成为行业大牛会员，掌握项目全部商机！</p>\n进入<span style="color:red;">会员专区</span>，查看更多权益\n<p style="color:#4ea5ff;padding: 5px 0 0;">90%企业选择开通会员，共成交10万单！</p>',
@@ -518,17 +531,23 @@ export default {
 			  this.textareaText = ''
 		  })
 	  },
-	  contactUs(){
-		http.post(api.projectApply,{id:this.id}).then(res=>{
-			console.log(res,"11111")
-			this.$notify({ type: 'success', message: '已收到您的申请，预计30分钟内平台项目经理会联系您，请您注意来电提醒'});
-		})
+	  async contactUs(){
+	 	return await http.post(api.projectApply,{id:this.id})
 	  },
 	  getResumeKeepInfos(){
 		http.get(api.getResumeKeepInfo,{uid:this.userInfo.uid,rid:this.id}).then(res=>{
 			this.homeResumeKeepShow()
 			this.$notify({ type: 'success', message: res.message });
+		}).catch(e=>{
+			if(e.code === 300){
+				this.title = '您的会员权限已使用完！'
+				this.gjUser = true
+			}
 		})
+	  },
+	  look(){
+		this.contactUs();
+		this.gjUser = true
 	  },
 	  getResumeKeep(){
 		// 天眼查

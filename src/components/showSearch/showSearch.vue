@@ -20,14 +20,14 @@
             <van-icon @click="delListorySearch" name="delete-o" />
         </div>
             <div class="history-list">
-                <span class="history-list-label" @click="onSearch({text:item.text,type:item.type})" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in historySearch">{{item.text}}</span>
+                <span class="history-list-label" @click="onSearch({text:item.text,type:item.type})" :style="[{'width':(item.text.length+1.5)+'em'}]" v-for="(item,index) in historySearch">{{item.text}}</span>
             </div>
         </div>
         <div class="showSearch-history showSearch-history-Hot">
              <h4>热门搜索</h4>
         </div>
         <div class="history-list">
-             <span class="history-list-label" @click="onSearch(item.name)" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in projectHotSearch">{{item.name}}</span>
+             <span class="history-list-label" @click="onSearch(item.name)" :style="[{'width':(item.name.length+1.5)+'em'}]" v-for="(item,index) in projectHotSearch">{{item.name}}</span>
         </div>
     </div>
 </template>
@@ -149,7 +149,7 @@ export default {
             }
         }
         .history-list{display: flex;padding: 14px 0 9px; flex-wrap: wrap;
-            &-label{text-align: center;background: #f3f3f3;width: 4em;border-radius: 9px;color: #979797;margin: 0px 20px 10px 0; animation: rotate 1s linear 1 ;
+            &-label{text-align: center;background: #f3f3f3;border-radius: 9px;color: #979797;margin: 0px 20px 10px 0; animation: rotate 1s linear 1 ;
             }
         }
     }

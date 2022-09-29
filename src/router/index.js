@@ -156,7 +156,7 @@ const routes = [{
   component: Search,
   meta: {
     title: '搜索',
-    keepAlive: true,
+    keepAlive: false,
     loginCheck: false
   }
 },
