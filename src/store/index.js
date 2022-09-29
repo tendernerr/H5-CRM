@@ -30,7 +30,7 @@ const store = new Vuex.Store({
     imUnreaded: false, // 未读消息状态
     videoShowPlay: false,
     isHeadShow: true, // 是否显示头部
-    LoginOrNot: false, // 用户是否登录
+    LoginOrNot: false, // 用户是否登录 
     LoginType: 0, // 用户类型-1为企业 2位个人
     userToken: 'user_token',
     userMobile: '',
