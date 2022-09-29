@@ -6,17 +6,15 @@
     <div class="topBab">
       <h4 class="topBabH4">机械自动化采购服务平台</h4>
       <!-- 搜索按钮 -->
-      <div class="inpuTex">
+      <div class="inpuTex" @click="addsubscribe = true">
         <van-icon name="search" class="inpuTexi" />
-        <span  @click="addsubscribe = true" class="inpuTex-key">请输入关键字</span>
+        <span class="inpuTex-key">{{showSearch?showSearch:'请输入关键字'}}</span>
         <div class="inpuTex-search">搜索</div>
       </div>
       <div class="topBab-fast">
         <div class="topBab-fast-t">快速搜索</div>
-        <div v-if="true" class="goSubscribe">
-          <span>清洗烘干</span>
-          <span>清洗烘干</span>
-          <span>清洗烘干</span>
+        <div class="goSubscribe">
+          <span class="goSubscribe-span" v-for="(item,index) in idList">{{item}}</span>
         </div>
       </div>
     </div>
@@ -47,7 +45,7 @@
       <div class="box-noLogon-goLogon" @click="goLogin('/member/login')">去登录</div>
     </div>
     <!-- 登录并且没有订阅 -->
-    <div class="box-noLogon" v-if="LoginOrNot && idList">
+    <div class="box-noLogon" v-if="LoginOrNot && idList.length <= 0">
       <p class="box-noLogon-p">根据您的订阅为您找到一批商机：</p>
       <div class="box-noLogon-text">
         您还没有订阅任何商机<br/>订阅后系统将为您推荐您感兴趣的商机
@@ -85,37 +83,7 @@
     <!-- 弹窗 -->
     <IndexPopup v-if="showPopup" :list="ad_dataset_popup"></IndexPopup>
     <van-popup v-model="addsubscribe"  position="top" :style="{'height':80+'vh'}"> 
-        <div class="showSearch">
-          <div style="text-align: right;">
-            <span @click="addsubscribe = false">关闭</span>
-          </div>
-          <div class="showSearch-type">
-            <span class="showSearch-type-1" :class="{'showSearch-type-2':type == 0}" @click="type = 0">前期项目</span>
-            <span class="showSearch-type-1" :class="{'showSearch-type-2':type == 1}" @click="type = 1">委托项目</span>
-          </div>
-          <div>
-            <van-search v-model="showSearch" shape="round" show-action placeholder="请输入搜索关键词" @search="onSearch">
-              <template #action>
-                <div @click="onSearch">搜索</div>
-              </template>
-            </van-search>
-          </div>
-          <div class="history-box">
-            <div class="showSearch-history">
-              <h4>历史搜索</h4>
-              <van-icon @click="delListorySearch" name="delete-o" />
-            </div>
-            <div class="history-list">
-              <span class="history-list-label" @click="onSearch(item)" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in historySearch">{{item}}</span>
-            </div>
-          </div>
-          <div class="showSearch-history showSearch-history-Hot">
-            <h4>热门搜索</h4>
-          </div>
-          <div class="history-list">
-            <span class="history-list-label" @click="onSearch(item.name)" :style="[{'width':(item.length+1.5)+'em'}]" v-for="(item,index) in projectHotSearch">{{item.name}}</span>
-          </div>
-        </div>
+        <ShowSearch :close='close' :changeInput='changeInput' url='/resumelist' />
     </van-popup>
   </div>
 </template>
@@ -132,16 +100,15 @@ import indexFamous from '@/components/index/Famous'
 import indexHotword from '@/components/index/Hotword'
 import indexArticle from '@/components/index/Article'
 import Ad from '@/components/Ad'
+import ShowSearch from '@/components/showSearch/showSearch'
 import IndexPopup from '@/components/index/IndexPopup'
 import {mapState} from 'vuex'
 export default {
   name: 'Index',
   data () {
     return {
-      type:0,
-      historySearch:[],
       showSearch:'',
-      idList:true,
+      idList:[],
 		  dataset: [],
       moduleRule: {
         header: {alias: '',is_display: 0,plan_id: 0},
@@ -152,7 +119,6 @@ export default {
         notice: { alias: '', is_display: 0, plan_id: 0},
         section: { alias: '', is_display: 0, plan_id: 0}
       },
-      projectHotSearch:[],
       addsubscribe:false,
       menu_list: [],
       notice_list: [],
@@ -187,16 +153,8 @@ export default {
       },
     }
   },
-  components: {indexHeader,indexMenu,indexLinkBlock,indexNotice,indexFamous,indexHotword,indexArticle,IndexPopup,Ad},
+  components: {indexHeader,indexMenu,indexLinkBlock,indexNotice,indexFamous,indexHotword,indexArticle,IndexPopup,Ad,ShowSearch},
   created () {
-    let key = window.localStorage.getItem('historySearch')
-    console.log(key,"111")
-    let arr = []
-    if(key != undefined && key != null){
-          arr = JSON.parse(key) 
-    }
-    this.historySearch = arr
-    this.getProjectHotSearch()
     this.getCategoryList()  //判断是否有订阅
     this.initModule()  // 获取通告等
     // this.fetchAd()  // 获取广告
@@ -208,37 +166,21 @@ export default {
     ...mapState(['LoginOrNot'])
    },
   methods: {
+    changeInput(e){
+      this.showSearch = e
+    },
+    close(){
+        this.addsubscribe = false
+    },
     // 获取订阅信息
     getCategoryList(){
         http.get(api.getCategoryList,{}).then(res=>{
             for (const key in res.data.list) {
                 if (res.data.list[key].isSelect) {
-                    this.idList = false
-                    return
+                    this.idList.push(res.data.list[key].name)
                 }
             }
         })
-    },
-    getProjectHotSearch(){
-      http.get(api.getProjectHotSearch,{}).then(res=>{
-        console.log(res,"000")
-        this.projectHotSearch = res.data
-      })
-    },
-    onSearch(e){
-      if( typeof(e) === 'string' ){
-         this.$router.push('/resumelist?key='+e+'&type='+this.type);
-         return
-      } 
-      let key = window.localStorage.getItem('historySearch')
-      let arr = []
-      if(key != undefined && key != null){arr = JSON.parse(key) }
-      if(arr != ''){arr.push(this.showSearch)}
-      arr = JSON.stringify(arr)
-      this.historySearch.push(this.showSearch)
-      window.localStorage.setItem('historySearch',arr)
-      this.$router.push('/resumelist?key='+this.showSearch+'&type='+this.type)
-      this.showSearch = ''
     },
     fetchData() {
 		// let url = this.active == 1 ? api.getZProjectRecommend : api.getBProjectRecommend;
@@ -249,10 +191,6 @@ export default {
 	  goJob(id){
 			this.$router.push("/job/" + id);
 	  },
-    delListorySearch(){
-      this.historySearch = []
-      localStorage.removeItem('historySearch')
-    },
     goLogin(url){
       this.$router.push(url+'?redirect=/search')
     },
@@ -302,22 +240,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.showSearch{font-size: 15px;padding: 17px;
-  &-type{padding: 12px 0 ;
-    &-1{padding: 5px;margin: 20px;}
-    &-2{color: #0089ff;}
-  }
-  &-history{display: flex;justify-content: space-between;align-items: center;padding: 9px 0 0;font-size: 17px; position: relative;
-    &-Hot{
-      h4{padding: 30px 0 0;}
-      &::after{content: "";position: absolute;width: 100vh;left: -20px;height: 5px;background: #f3f3f3;right: 0; top: 12px;}
-    }
-  }
-  .history-list{display: flex;padding: 14px 0 9px; flex-wrap: wrap;
-    &-label{text-align: center;background: #f3f3f3;width: 4em;border-radius: 9px;color: #979797;margin: 0px 20px 10px 0;}
-  }
-}
 .ba {width: 100%;height: 63px;margin-bottom: 9px;
   img { width: 100%; height: 63px;}
 }
@@ -326,7 +248,9 @@ export default {
   &-fast{display: flex;color: #fff;height: 30px;
     &-t{padding: 0 0 0 25px;font-size: 16px;font-weight: 600;font-style: italic;line-height: 30px;}
   }
-  .goSubscribe{    padding: 0 0 0 20px;font-size: 15px;line-height: 30px;}
+  .goSubscribe{    padding: 0 0 0 20px;font-size: 15px;line-height: 30px; flex: 1;
+    &-span{padding: 0 8px 0 0;}
+  }
 }
 .topNotice{display: flex;border-top: 5px solid #f3f3f3;color: #409eff;
     &-t{width: 75px; text-align: center; padding: 8px 0; font-size: 15px; position: relative;

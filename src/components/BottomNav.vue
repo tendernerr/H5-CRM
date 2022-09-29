@@ -18,9 +18,9 @@
       <div class="releasePopup">
         <div>
           <h4 class="releasePopup-h4">免费发布信息</h4>
-          <div class="releasePopup-box" v-for="(item,index) in list" @click="goUrl(item)">
+          <div class="releasePopup-box" v-for="(item,index) in list">
             <p class="releasePopup-p">{{item.title}}</p>
-            <div class="releasePopup-list" v-for="(ite,inde) in item.textImage">
+            <div class="releasePopup-list" v-for="(ite,inde) in item.textImage"  @click="goUrl(ite)">
               <div class="releasePopup-img">
                 <img width="100%" height="100%" :src="ite.img">
               </div>
@@ -138,11 +138,18 @@ export default {
       this.$router.replace(url)
     },
     goUrl(e){
-      if(e.type === '2' && !this.LoginOrNot){
-        this.$dialog.confirm({title: '提示',message: '抱歉您还未登录',}).then(() => {
-          this.$router.push(url.link+'?register=0')
-        }).catch(() => {});
+      console.log(e,'11')
+      if(e.type === '1'){
+        this.$router.push('/publishPurchase')
+        return
       }
+      if(e.type === '2' && !this.LoginOrNot){
+        this.$dialog.confirm({title: '您还未登录',message: '注册登录行业大牛用户账号，免费查看项目信息！！<br/>已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机！</span>',messageAlign:'left',}).then(() => {
+          this.$router.push('/member/login?register=0')
+        }).catch(() => {});
+        return
+      }
+      this.$router.push(e.link+'?register=0')
     },
 	  change(){
 		  if (this.LoginOrNot) {
