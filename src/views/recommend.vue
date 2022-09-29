@@ -29,21 +29,31 @@
             无号码</div>
         </div>
         <div class="form_split_10"></div>
-        <!-- 已订阅 没数据的情况 -->
-        <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
-          v-if="dataset < 1 && empty1 " />
-        <!-- 未订阅的情况 -->
-        <div v-if="dataset <=0 && !empty1" class="Unsubscribed" style="margin-top: 50px;">
-          <div>您还没有订阅任何商机</div>
-          <div>订阅后系统将为您推荐您感兴趣的工艺</div>
-          <div style="display:flex;justify-content: center;">
-            <div class="subscribeto" @click="subscribetoClick">
-              +立即订阅商机
+        <div v-if="empty1">
+           <!-- 已订阅 没数据的情况 -->
+            <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
+              v-if="dataset < 1 && empty1 " />
+            <!-- 未订阅的情况 --> 
+            <div v-if="dataset <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
+              <div>您还没有订阅任何商机</div>
+              <div>订阅后系统将为您推荐您感兴趣的工艺</div>
+              <div style="display:flex;justify-content: center;">
+                <div class="subscribeto" @click="subscribetoClick">
+                  +立即订阅商机
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" /> -->
+            <div v-if="dataset <=0 &&LoginOrNot==false" class="Unsubscribed" style="margin-top: 50px;">
+              <div>登录后订阅商机后</div>
+              <div>系统将为您推送您感兴趣的商机</div>
+              <div style="display:flex;justify-content: center;">
+                <div class="subscribeto" @click="loginTo">
+                  去登录
+                </div>
+              </div>
+            </div>
+        </div> 
+        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="!empty1" /> -->
         <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
           @load="onLoad" :immediate-check="true">
           <div class="listTab2" v-for="(item,index) in dataset" :key="index"
@@ -72,8 +82,33 @@
       </van-tab>
       <van-tab title="直采项目" :title-class='labelRed'>
         <div class="form_split_10"></div>
-        <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
-        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
+        <div v-if="empty1">
+                  <!-- 已订阅 没数据的情况 -->
+            <!-- <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
+          v-if="dataset < 1 && empty1 " /> -->
+        <!-- 未订阅的情况 --> 
+        <div v-if="dataset <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
+          <div>您还没有订阅任何商机</div>
+          <div>订阅后系统将为您推荐您感兴趣的工艺</div>
+          <div style="display:flex;justify-content: center;">
+            <div class="subscribeto" @click="subscribetoClick">
+              +立即订阅商机
+            </div>
+          </div>
+        </div>
+        <div v-if="dataset <=0&&LoginOrNot==false" class="Unsubscribed" style="margin-top: 50px;">
+          <div>登录后订阅商机后</div>
+          <div>系统将为您推送您感兴趣的商机</div>
+          <div style="display:flex;justify-content: center;">
+            <div class="subscribeto" @click="loginTo">
+              去登录
+            </div>
+          </div>
+        </div>
+        </div>
+           
+        <!-- <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" /> -->
+        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="!empty1" /> -->
         <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
           @load="onLoad" :immediate-check="true">
           <div class="box_3">
@@ -307,13 +342,12 @@ export default {
     this.fetchData(true);		//获取列表信息
     this.classify()				//获取下啦数据
     //  this.getClassify()
-    this.getCategoryList();
   },
   mounted() {
 
   },
   computed: {
-    ...mapState(['userInfo', 'userIminfo', 'openId'])
+    ...mapState(['userInfo', 'userIminfo', 'openId','LoginOrNot'])
   },
   methods: {
     addExperience(i) {
@@ -397,6 +431,9 @@ export default {
     // 	 this.workmanship = false;
     //    this.classify()		
     //  },
+    loginTo(){
+      this.$router.push('/member/login')
+    },
     subscribetoClick() {
       // this.$router.push('/recommend')
       this.workmanship = true;

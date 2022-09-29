@@ -116,62 +116,65 @@ export default {
         .catch(() => {})
     },
     redirectTo () {
-      
+      // utype ==1 是采购商 新注册的肯定说采购商 
       // 到时候要删掉
-      this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
+      // this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
        //  下面的要恢复
-      // if (this.utype === 1) {
-      //   this.$router.push('/member/company/index')
-      // } else {
-      //   this.$router.push('/member/personal/index')
-      // }
+      if (this.utype === 1) {
+        this.$router.push('/member/company/index')
+      } else {
+        this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
+
+        // this.$router.push('/member/personal/index')
+      }
     },
     handleSubmit () {
-      this.redirectTo();  // 到时候要删掉
-      // if (!this.mobile) {
-      //   this.$notify('请输入手机号')
-      //   return false
-      // }
-      // if (!this.regularMobile.test(this.mobile)) {
-      //   this.$notify('手机号格式不正确')
-      //   return false
-      // }
-      // if (!this.code) {
-      //   this.$notify('请输入验证码')
-      //   return false
-      // }
-      // let postData = {
-      //   mobile: this.mobile,
-      //   code: this.code,
-      //   utype: this.utype,
-      //   openid: this.openid,
-      //   unionid: this.unionid,
-      //   nickname: this.nickname,
-      //   avatar: this.avatar
-      // }
-      // let apiUrl = this.bindType == 'weixin' ? api.bind_weixin : api.bind_qq
-      // http
-      //   .post(apiUrl, postData)
-      //   .then(response => {
-      //     if (parseInt(response.code) === 200) {
-      //       this.$store.commit('clearCountDownFun')
-      //       this.$store.commit('setLoginState', {
-      //         whether: true,
-      //         utype: response.data.utype,
-      //         token: response.data.token,
-      //         mobile: response.data.mobile,
-      //         userIminfo: response.data.user_iminfo
-      //       })
-      //       if (response.data.next_code != 200) {
-      //            handlerHttpError({ code: response.data.next_code, message: '' })
-      //       } else {
-      //         this.redirectTo()
-      //       }
-      //     } else {
-      //       this.$notify(response.message)
-      //     }
-      //   })
-      //   .catch(() => {})
+      // this.redirectTo();  // 到时候要删掉 
+      if (!this.mobile) {
+        this.$notify('请输入手机号')
+        return false
+      }
+      if (!this.regularMobile.test(this.mobile)) {
+        this.$notify('手机号格式不正确')
+        return false
+      }
+      if (!this.code) {
+        this.$notify('请输入验证码')
+        return false
+      }
+      let postData = {
+        mobile: this.mobile,
+        code: this.code,
+        utype: this.utype,
+        openid: this.openid,
+        unionid: this.unionid,
+        nickname: this.nickname,
+        avatar: this.avatar
+      }
+      let apiUrl = this.bindType == 'weixin' ? api.bind_weixin : api.bind_qq
+      http
+        .post(apiUrl, postData)
+        .then(response => {
+          if (parseInt(response.code) === 200) {
+            this.$store.commit('clearCountDownFun')
+            this.$store.commit('setLoginState', {
+              whether: true,
+              utype: response.data.utype,
+              token: response.data.token,
+              mobile: response.data.mobile,
+              userIminfo: response.data.user_iminfo
+            })
+            // this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
+            if (response.data.next_code != 200) {
+                 handlerHttpError({ code: response.data.next_code, message: '' })
+            } else {
+              this.redirectTo()
+            }
+          } else {
+            this.$notify(response.message)
+          }
+        })
+        .catch(() => {})
     },
     // 发送验证码
     sendSms () {

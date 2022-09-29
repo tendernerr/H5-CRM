@@ -4,7 +4,7 @@
       <!-- <router-link class="bar_item home" :to="index" @click="change">首页</router-link>
       <router-link :class="'bar_item ' + secondClass" :to="secondTo">{{ secondText }}</router-link>
       <router-link :class="'bar_item ' + thirdClass" :to="thirdTo">{{ thirdText }}</router-link>
-      <router-link class="bar_item user" :to="mineTo">我的</router-link> -->
+      <router-link class="bar_item user" :to="mineTo">我的</router-link>   resumelist--> 
       <div class="bar_item home" :class="{'router-link-active':linkName === 'index'}" @click="goLink('/index')">项目</div>
       <div class="bar_item resume" :class="{'router-link-active':linkName === 'search'}" @click="goLink('/search')">搜索</div>
       <div @click="show = true" class="bar_item release" :class="{'router-link-active':linkName === ''}">

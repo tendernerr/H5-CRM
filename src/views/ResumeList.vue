@@ -50,7 +50,9 @@
                 <div class="subscribe">商机订阅</div>
               </div>
             </div>
-            <div>
+          </div>
+        </div>
+        <div>
               <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
                 <van-swipe-item>1</van-swipe-item>
                 <van-swipe-item>2</van-swipe-item>
@@ -58,9 +60,6 @@
                 <van-swipe-item>4</van-swipe-item>
               </van-swipe>
             </div>
-          </div>
-
-        </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
@@ -90,48 +89,32 @@
         </van-list>
       </van-tab>
       <van-tab title="委托项目" :title-class='labelRed' style="font-size:16px;">
-        <div class="box_2">
-          <!-- <van-dropdown-menu class="filter_menu">
-			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
-			        <DistrictFilter :districts="[params.district1, params.district2, params.district3]" :type="true" @doSearch="doSearchByDistrict"></DistrictFilter>
-			      </van-dropdown-item>
-			      <van-dropdown-item :title="experienceTitle" v-model="params.experience" :options="optionExperience" @change="handleExperience" @opened="openedExperience"/>
-			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
-			      />
-			    </van-dropdown-menu> -->
-          <!-- <van-dropdown-menu class="filter_menu">
-            <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-            <van-dropdown-item :title="title1" ref="item">
-              <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
-                @cancel='$refs.item.toggle();' />
-            </van-dropdown-item>
-            <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-          </van-dropdown-menu> -->
+        <div class="box_2"  style="background: #FFF;">
           <div style="display:flex;align-items: center;">
-            <div style="width:67%">
-              <van-dropdown-menu class="filter_menu">
-                <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-                <van-dropdown-item :title="title1" ref="items">
-                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
-                    @cancel='$refs.items.toggle();' />
-                </van-dropdown-item>
-                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
-              </van-dropdown-menu>
+              <div style="width:67%">
+                <van-dropdown-menu class="filter_menu">
+                  <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                  <van-dropdown-item :title="title1" ref="items">
+                    <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
+                      :columns-num="2" @cancel='$refs.items.toggle();' />
+                  </van-dropdown-item>
+                  <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+                </van-dropdown-menu>
+              </div>
+              <div class="subscribeIMg" @click="subscribeClick">
+                <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
+                <div class="subscribe">商机订阅</div>
+              </div>
             </div>
-            <div class="subscribeIMg" @click="subscribeClick">
-              <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
-              <div class="subscribe">商机订阅</div>
-            </div>
-          </div>
-          <div>
-            <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-              <van-swipe-item>1</van-swipe-item>
-              <van-swipe-item>2</van-swipe-item>
-              <van-swipe-item>3</van-swipe-item>
-              <van-swipe-item>4</van-swipe-item>
-            </van-swipe>
-          </div>
         </div>
+        <div>
+              <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+                <van-swipe-item>1</van-swipe-item>
+                <van-swipe-item>2</van-swipe-item>
+                <van-swipe-item>3</van-swipe-item>
+                <van-swipe-item>4</van-swipe-item>
+              </van-swipe>
+            </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
@@ -389,14 +372,14 @@ export default {
     // }
     //   },
     active: {
-      immediate: true,
       handler(ne, ol) {
         this.labelRed = ''
         this.loading = false;
         this.finished = false;
         this.dataset = []
         this.page = 1
-          this.fetchData()
+        this.fetchData()
+        
       }
     }
   },
@@ -415,24 +398,23 @@ export default {
     }
   },
   created() {
-      // active 0 为备案项目 1为直采项目
-        // 如果为直采项目 我应该做的操作
-        // if (ne == 1) {
-          // console.log("我是制裁项目", this.$route.query.key);
-          // 如果key值不为空的话
-    if (this.$route.query.key !== null && this.$route.query.key!=undefined) {
-            // 就赋值
-            // console.log(879,this.$route.query.key);
-        this.params.keyword = this.$route.query.key
+    // active 0 为备案项目 1为直采项目
+    // 如果为直采项目 我应该做的操作
+    // if (ne == 1) {
+    // console.log("我是制裁项目", this.$route.query.key);
+    // 如果key值不为空的话
+    if (this.$route.query.key) {
+      // 就赋值
+      this.params.keyword = this.$route.query.key
     }
-    if( this.$route.query.type !== null && this.$route.query.type!=undefined){
-      this.params.active = this.$route.query.type
-    }
-    console.log(this.$route, "44444444444444444444444")
+    if (this.$route.query.type) {
+          this.active = parseInt(this.$route.query.type) 
+          console.log(this.$route.query.type, "1111111111111111111111111111111133333333333333")
+        }
     console.log(this.LoginOrNot, "LoginOrNotLoginOrNotLoginOrNotLoginOrNot")
-    if (this.$route.query.active || this.$route.query.active === '0') {
-      this.active = this.$route.query.active
-    }
+    // if (this.$route.query.active || this.$route.query.active === '0') {
+    //   this.active = this.$route.query.active
+    // }
     if (this.$route.query.times) {
       this.params.date = this.$route.query.times
     }
@@ -969,8 +951,8 @@ export default {
       this.$refs.dropMore.toggle();
     },
     // 请求列表数据，init为true时直接更改dataset值，false时代表上拉加载回的数据追加进dataset
-    fetchData(init) { 
-      let params = { ...this.params}
+    fetchData(init) {
+      let params = { ...this.params }
       params.page = this.page
       params.pagesize = this.pagesize
       let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
@@ -1062,6 +1044,7 @@ export default {
   display: flex;
   border-left: 1px solid #686868;
   padding: 0px 0px 0px 20px;
+  background: #FFF;
 }
 
 .imgSubscribe {
@@ -1551,7 +1534,7 @@ export default {
   position: sticky;
   top: 44px;
   z-index: 100;
-
+  background-color: #FFF;
   .van-hairline--top-bottom {
     &::after {
       border: 0;
