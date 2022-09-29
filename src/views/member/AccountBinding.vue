@@ -121,11 +121,11 @@ export default {
       // this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
        //  下面的要恢复
       if (this.utype === 1) {
-        this.$router.push('/member/company/index')
-      } else {
         this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
+        // this.$router.push('/member/company/index')
+      } else {
 
-        // this.$router.push('/member/personal/index')
+        this.$router.push('/member/personal/index')
       }
     },
     handleSubmit () {
@@ -165,11 +165,11 @@ export default {
               userIminfo: response.data.user_iminfo
             })
             // this.$router.push( {path:"/member/certification",query:{phone:this.mobile}})
-            if (response.data.next_code != 200) {
-                 handlerHttpError({ code: response.data.next_code, message: '' })
-            } else {
+            // if (response.data.code != 200) {
+            //      handlerHttpError({ code: response.data.next_code, message: '' })
+            // } else {
               this.redirectTo()
-            }
+            // }
           } else {
             this.$notify(response.message)
           }
