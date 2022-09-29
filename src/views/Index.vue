@@ -211,7 +211,7 @@
         联系客服：{{ $store.state.config.contact_tel }}
       </div>
     </div>
-    <BottomNav></BottomNav>
+    <BottomNav linkName='index'></BottomNav>
   </div>
 </template>
 
