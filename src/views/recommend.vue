@@ -5,17 +5,17 @@
     <Head :zIndex="true">商机订阅</Head>
     <!-- 搜索按钮 -->
     <div class="searchDivMin" :style="[top]" @touchstart.stop="down" @touchmove.stop="move" @touchend.stop="end">
-      <div @click.stop="search = !search" class="searchDiv">
+      <!-- <div @click.stop="search = !search" class="searchDiv">
         <van-icon v-if="!search" name="search" />
         <van-icon v-else name="cross" />
-      </div>
+      </div> -->
       <div class="searchDiv2" v-if="search">
         <input class="searchInput" style="width: 100%;height: 100%;padding: 0 5px;border-radius: 5px;"
           :placeholder="`搜索${active?'备案':'直采'}项目（按钮可拖动）`" v-model="params.keyword" />
       </div>
     </div>
     <van-tabs v-model="active" style="border-top: 1px solid #e6e6e6; z-index: 3;" sticky offset-top="50">
-      <van-tab title="备案项目" v-if="true">
+      <van-tab title="前期项目" v-if="true">
         <div v-if="menber.is_setmeal" class="box_2"
           style="display: flex;justify-content:space-around;padding: 4px 8px 8px;font-size:12px;background:#fff;">
           <div @click="params.hasPhone=0" :class="{'box_2Div':params.hasPhone === 0}"
@@ -29,35 +29,36 @@
             无号码</div>
         </div>
         <div class="form_split_10"></div>
+        <!-- 如果说没登录的场景 -->
+        <div v-if="!LoginOrNot" class="Unsubscribed" style="margin-top: 50px;">
+          <div>登录后订阅商机后</div>
+          <div>系统将为您推送您感兴趣的商机</div>
+          <div style="display:flex;justify-content: center;">
+            <div class="subscribeto" @click="loginTo">
+              去登录
+            </div>
+          </div>
+        </div>
         <div v-if="empty1">
-           <!-- 已订阅 没数据的情况 -->
-            <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
-              v-if="dataset < 1 && empty1 " />
-            <!-- 未订阅的情况 --> 
-            <div v-if="dataset <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
-              <div>您还没有订阅任何商机</div>
-              <div>订阅后系统将为您推荐您感兴趣的工艺</div>
-              <div style="display:flex;justify-content: center;">
-                <div class="subscribeto" @click="subscribetoClick">
-                  +立即订阅商机
-                </div>
+          <!-- 已订阅 没数据的情况 -->
+          <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
+            v-if="dataset.length <= 0 && empty1 " />
+          <!-- 未订阅的情况 -->
+          <div v-if="dataset.length <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
+            <div>您还没有订阅任何商机</div>
+            <div>订阅后系统将为您推荐您感兴趣的工艺</div>
+            <div style="display:flex;justify-content: center;">
+              <div class="subscribeto" @click="subscribetoClick">
+                +立即订阅商机
               </div>
             </div>
-            <div v-if="dataset <=0 &&LoginOrNot==false" class="Unsubscribed" style="margin-top: 50px;">
-              <div>登录后订阅商机后</div>
-              <div>系统将为您推送您感兴趣的商机</div>
-              <div style="display:flex;justify-content: center;">
-                <div class="subscribeto" @click="loginTo">
-                  去登录
-                </div>
-              </div>
-            </div>
-        </div> 
-        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="!empty1" /> -->
+          </div>
+        </div>
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset.length<=0&&!empty1&&LoginOrNot" />
         <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
           @load="onLoad" :immediate-check="true">
           <div class="listTab2" v-for="(item,index) in dataset" :key="index"
-            @click="$router.push('/backupsProject/backupsProject?id='+item.id)">
+            @click="backUpTo(item)">
             <div class="listTab2Head">
               <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
               <div class="listTab2HeadName">
@@ -65,7 +66,11 @@
                   <div class="listTab2HeadName1Text1">{{item.title}}</div>
 
                 </div>
+               <div style="display: flex;justify-content: space-between;"> 
                 <div class="listTab2HeadName2">{{item.start_end_time}}</div>
+                <div  class="Viewed" v-if="item.isView">已查看</div>
+                <div  class="Vieweds" v-if="!item.isView">未查看</div>
+              </div>
               </div>
             </div>
             <div class="listTab2Label">
@@ -80,23 +85,10 @@
           </div>
         </van-list>
       </van-tab>
-      <van-tab title="直采项目" :title-class='labelRed'>
+      <van-tab title="委托项目" :title-class='labelRed'>
         <div class="form_split_10"></div>
-        <div v-if="empty1">
-                  <!-- 已订阅 没数据的情况 -->
-            <!-- <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
-          v-if="dataset < 1 && empty1 " /> -->
-        <!-- 未订阅的情况 --> 
-        <div v-if="dataset <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
-          <div>您还没有订阅任何商机</div>
-          <div>订阅后系统将为您推荐您感兴趣的工艺</div>
-          <div style="display:flex;justify-content: center;">
-            <div class="subscribeto" @click="subscribetoClick">
-              +立即订阅商机
-            </div>
-          </div>
-        </div>
-        <div v-if="dataset <=0&&LoginOrNot==false" class="Unsubscribed" style="margin-top: 50px;">
+        <!-- 如果说没登录的场景 -->
+        <div v-if="!LoginOrNot" class="Unsubscribed" style="margin-top: 50px;">
           <div>登录后订阅商机后</div>
           <div>系统将为您推送您感兴趣的商机</div>
           <div style="display:flex;justify-content: center;">
@@ -105,10 +97,23 @@
             </div>
           </div>
         </div>
+        <!-- 如果已经订阅 没有数据的情况-->
+        <div v-if="empty1">
+          <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff"
+            v-if="dataset.length < 1 && empty1 " />
+          <!-- 未订阅的情况  -->
+          <div v-if="dataset.length <=0 &&LoginOrNot==true" class="Unsubscribed" style="margin-top: 50px;">
+            <div>您还没有订阅任何商机</div>
+            <div>订阅后系统将为您推荐您感兴趣的工艺</div>
+            <div style="display:flex;justify-content: center;">
+              <div class="subscribeto" @click="subscribetoClick">
+                +立即订阅商机
+              </div>
+            </div>
+          </div>
         </div>
-           
-        <!-- <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" /> -->
-        <!-- <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="!empty1" /> -->
+        <!-- 有数据的情况 -->
+        <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset.length <=0&&!empty1&&LoginOrNot" />
         <van-list v-if="dataset.length > 0" v-model:loading="loading" :finished="finished" finished-text="没有更多了"
           @load="onLoad" :immediate-check="true">
           <div class="box_3">
@@ -306,7 +311,7 @@ export default {
       }
     },
     active: {
-      immediate:true,
+      immediate: true,
       handler(ne, ol) {
         this.labelRed = ''
         this.loading = false;
@@ -347,7 +352,7 @@ export default {
 
   },
   computed: {
-    ...mapState(['userInfo', 'userIminfo', 'openId','LoginOrNot'])
+    ...mapState(['userInfo', 'userIminfo', 'openId', 'LoginOrNot'])
   },
   methods: {
     addExperience(i) {
@@ -431,7 +436,12 @@ export default {
     // 	 this.workmanship = false;
     //    this.classify()		
     //  },
-    loginTo(){
+    backUpTo(item){
+      this.$router.push('/backupsProject/backupsProject?id='+item.id);
+      // 浅拷贝
+      item.isView = true;
+    },
+    loginTo() {
       this.$router.push('/member/login')
     },
     subscribetoClick() {
@@ -650,7 +660,26 @@ export default {
     }
   }
 }
-
+.Viewed{
+    font-size: 14px;
+    background: rgb(193, 193, 193);
+    border-radius: 5px;
+    letter-spacing: 1px;
+    width: 50px;
+    height: 25px;
+    color: #FFF;
+    padding: 2px;
+}
+.Vieweds{
+    font-size: 14px;
+    background:  #1787fb;;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    width: 50px;
+    height: 25px;
+    color: #FFF;
+    padding: 2px;
+}
 >>>.van-tab {
   color: #000;
 }

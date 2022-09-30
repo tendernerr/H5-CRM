@@ -596,6 +596,8 @@ export default {
   registerNowtwo:'company/profile/completeCompanyOne',
   //擅长工艺 getCategoryList
   // goodatCraft:'/home/resume/getCategoryList', 
+  //轮播图
+  getBaBanner:'/home/index/getBaBanner',
 
   // 获取天眼查信息
   getResumeKeep:'/home/resume_keep/getResumeKeep',
@@ -603,4 +605,5 @@ export default {
   getProjectHotSearch:"/home/index/getProjectHotSearch",
   // 获取备案项目的热门搜索
   getBaProjectHotSearch:"/home/index/getBaProjectHotSearch",
+
 }

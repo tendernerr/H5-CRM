@@ -97,7 +97,7 @@
         <div class="item" :class="resumeShow === 'video' ? 'active' : 'resource'" @click="resumeShow = 'video'">
           <span style="position: relative; display: inline-block;">
             参考资料
-            <div v-if="hasImg" style="padding: 5px;border-radius: 50%;background-color: red;position: absolute;right: -6px;top: -2px;"></div>
+            <div v-if="hasImg && !LoginOrNot" style="padding: 5px;border-radius: 50%;background-color: red;position: absolute;right: -6px;top: -2px;"></div>
           </span>
           <!-- ({{videonum}}) -->
         </div>

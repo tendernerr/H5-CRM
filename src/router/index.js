@@ -1274,16 +1274,16 @@ const routes = [{
     loginCheck: false
   }
 },
-{
-  path: '/shortvideo/personalList',
-  name: 'videopersonallist',
-  component: videopersonallist,
-  meta: {
-    title: '视频采购',
-    keepAlive: false,
-    loginCheck: false
-  }
-},
+// {
+//   path: '/shortvideo/personalList',
+//   name: 'videopersonallist',
+//   component: videopersonallist,
+//   meta: {
+//     title: '视频采购',
+//     keepAlive: false,
+//     loginCheck: false
+//   }
+// },
 {
   path: '/shortvideo/videoManage',
   name: 'videoManage',

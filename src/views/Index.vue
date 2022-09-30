@@ -3,6 +3,17 @@
     <Meta pagealias="resumelist" :query_data="$route.query" />
 
     <Head>项目列表</Head>
+    <van-search v-model="params.keyword"   show-action
+  placeholder="请输入搜索关键词"  @search="onSearch">
+      <template #action>
+        <div @click="onSearch">搜索</div>
+      </template>
+    </van-search>
+
+    <!-- <div class="inpuTex" @click="addsubscribe = true">
+        <van-icon name="search" class="inpuTexi" />
+        <span class="inpuTex-key">{{showSearch?showSearch:'请输入关键字'}}</span>
+      </div> -->
     <van-popup v-model="show" position="top" :overlay="true" :style="{ height: '90%', width: '100%' }">
       <TopSearch type="resume" @hideSearch="toggleSearch" @doSearch="doSearchByKeyword"></TopSearch>
     </van-popup>
@@ -38,9 +49,9 @@
               <div style="width:67%">
                 <van-dropdown-menu class="filter_menu">
                   <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-                  <van-dropdown-item :title="title1" ref="items">
+                  <van-dropdown-item :title="title1" ref="item">
                     <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
-                      :columns-num="2" @cancel='$refs.items.toggle();' />
+                      :columns-num="2" @cancel='$refs.item.toggle();' />
                   </van-dropdown-item>
                   <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
                 </van-dropdown-menu>
@@ -53,13 +64,12 @@
           </div>
         </div>
         <div>
-              <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-                <van-swipe-item>1</van-swipe-item>
-                <van-swipe-item>2</van-swipe-item>
-                <van-swipe-item>3</van-swipe-item>
-                <van-swipe-item>4</van-swipe-item>
-              </van-swipe>
-            </div>
+          <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+            <van-swipe-item v-for="item in carousel" >
+              <div class="my-swipe-item" :style="`background-image: url(${item.img_src})`">  </div>
+            </van-swipe-item>
+          </van-swipe>
+        </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
@@ -90,49 +100,32 @@
       </van-tab>
       <van-tab title="委托项目" :title-class='labelRed' style="font-size:16px;">
         <div class="box_2">
-          <!-- <van-dropdown-menu class="filter_menu">
-			      <van-dropdown-item :title="districtTitle" :lock-scroll="false" ref="dropDistrict" @opened="openedDistrict" @closed="closedDistrict" >
-			        <DistrictFilter :districts="[params.district1, params.district2, params.district3]" :type="true" @doSearch="doSearchByDistrict"></DistrictFilter>
-			      </van-dropdown-item>
-			      <van-dropdown-item :title="experienceTitle" v-model="params.experience" :options="optionExperience" @change="handleExperience" @opened="openedExperience"/>
-			      <van-dropdown-item :title="educationTitle" v-model="params.education" :options="optionEducation" @change="handleEducation" @opened="openedEducation"
-			      />
-			    </van-dropdown-menu> -->
-          <!-- <van-dropdown-menu class="filter_menu">
-            <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-            <van-dropdown-item :title="title1" ref="item">
-              <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
-                @cancel='$refs.item.toggle();' />
-            </van-dropdown-item>
-            <van-dropdown-item :options="education" :title="title3" @change="changeItems" />
-          </van-dropdown-menu> -->
           <div style="display:flex;align-items: center;background: #FFF;">
             <div style="width:67%">
-              <van-dropdown-menu class="filter_menu">
-                <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-                <van-dropdown-item :title="title1" ref="items">
-                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
-                    @cancel='$refs.items.toggle();' />
-                </van-dropdown-item>
-                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
-              </van-dropdown-menu>
-            </div>
+                <van-dropdown-menu class="filter_menu">
+                  <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                  <van-dropdown-item :title="title1" ref="items">
+                    <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
+                      :columns-num="2" @cancel='$refs.items.toggle();' />
+                  </van-dropdown-item>
+                  <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+                </van-dropdown-menu>
+              </div>
             <div style="background: #FFF;">
               <div class="subscribeIMgs" @click="subscribeClick">
-              <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
-              <div class="subscribe">商机订阅</div>
-            </div>
+                <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
+                <div class="subscribe">商机订阅</div>
+              </div>
             </div>
           </div>
         </div>
         <div>
-            <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-              <van-swipe-item>1</van-swipe-item>
-              <van-swipe-item>2</van-swipe-item>
-              <van-swipe-item>3</van-swipe-item>
-              <van-swipe-item>4</van-swipe-item>
-            </van-swipe>
-          </div>
+          <van-swipe :autoplay="3000"  class="my-swipe"  indicator-color="white">
+          <van-swipe-item v-for="item in carousel" >
+            <div class="my-swipe-item" :style="`background-image:url(${item.img_src})`"></div>
+          </van-swipe-item>
+        </van-swipe>
+        </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
         <van-empty image="search" description="正在加载中~" style="background-color: #fff" v-if="dataset < 1 && !empty1" />
@@ -314,6 +307,7 @@ export default {
       householdaddress: [],		//项目类型
       education: [],				//涉及工艺
       workmanship: false,
+      carousel:[],
     };
   },
   watch: {
@@ -397,7 +391,7 @@ export default {
         this.finished = false;
         this.dataset = []
         this.page = 1
-          this.fetchData()
+        this.fetchData()
       }
     }
   },
@@ -416,17 +410,18 @@ export default {
     }
   },
   created() {
-      // active 0 为备案项目 1为直采项目
-        // 如果为直采项目 我应该做的操作
-        // if (ne == 1) {
-          // console.log("我是制裁项目", this.$route.query.key);
-          // 如果key值不为空的话
-    if (this.$route.query.key !== null && this.$route.query.key!=undefined) {
-            // 就赋值
-            // console.log(879,this.$route.query.key);
-        this.params.keyword = this.$route.query.key
+    this.getBaBanner();
+    // active 0 为备案项目 1为直采项目
+    // 如果为直采项目 我应该做的操作
+    // if (ne == 1) {
+    // console.log("我是制裁项目", this.$route.query.key);
+    // 如果key值不为空的话
+    if (this.$route.query.key !== null && this.$route.query.key != undefined) {
+      // 就赋值
+      // console.log(879,this.$route.query.key);
+      this.params.keyword = this.$route.query.key
     }
-    if( this.$route.query.type !== null && this.$route.query.type!=undefined){
+    if (this.$route.query.type !== null && this.$route.query.type != undefined) {
       this.active = this.$route.query.type
     }
     if (this.$route.query.active || this.$route.query.active === '0') {
@@ -485,8 +480,22 @@ export default {
     this.restoreFilter();
   },
   methods: {
+    getBaBanner(){
+      http.get(api.getBaBanner, {}).then(res => {
+        console.log(res, "lunbo")
+        this.carousel = res.data
+      })
+    },
+    onSearch() {
+      this.fetchData();
+    },
     subscribeClick() {
-      this.$router.push('/addSubscribe')
+      // 如果说已经登录的场景  用这个属性判断是否登录 LoginOrNot 如果说是true就说已经登录  false就说未登录 
+      if(this.LoginOrNot==true){
+        this.$router.push('/addSubscribe')
+      }else{
+        this.$router.push('/member/login')
+      }
     },
     getMenber() {
       http.get(api.getMenber, {}).then(res => {
@@ -968,8 +977,8 @@ export default {
       this.$refs.dropMore.toggle();
     },
     // 请求列表数据，init为true时直接更改dataset值，false时代表上拉加载回的数据追加进dataset
-    fetchData(init) { 
-      let params = { ...this.params}
+    fetchData(init) {
+      let params = { ...this.params }
       params.page = this.page
       params.pagesize = this.pagesize
       let url = this.active != 0 ? api.resumelist : api.homeResume_keepIndex;
@@ -1034,15 +1043,15 @@ export default {
   position: fixed;
   flex-direction: row-reverse;
   z-index: 9999;
-}
+} 
 
-.my-swipe .van-swipe-item {
-  color: #fff;
-  font-size: 20px;
-  line-height: 50px;
-  text-align: center;
-  background-color: #39a9ed;
-}
+// .my-swipe .van-swipe-item {
+//   color: #fff;
+//   font-size: 20px;
+//   line-height: 50px;
+//   text-align: center;
+//   background-color: #39a9ed;
+// }
 
 .searchDiv {
   font-size: 34px;
@@ -1063,12 +1072,14 @@ export default {
   padding: 0px 0px 0px 20px;
 
 }
+
 .subscribeIMgs {
   display: flex;
   border-left: 1px solid #686868;
   padding: 0px 0px 0px 20px;
 
 }
+
 .imgSubscribe {
   display: flex;
   align-items: center;
@@ -1189,6 +1200,43 @@ export default {
   }
 }
 
+.inpuTex {
+  display: flex;
+  align-items: center;
+  width: 87%;
+  background: #fff;
+  border-radius: 20px;
+  text-align: center;
+  color: #cecece;
+  text-indent: 9px;
+  margin: 0px auto 0;
+  font-size: 23px;
+  height: 38px;
+  overflow: hidden;
+
+  &i {
+    font-weight: 900;
+  }
+
+  &-key {
+    font-size: 15px;
+  }
+
+  &-search {
+    margin: 0 0 0 auto;
+    width: 82px;
+    background: #e0effe;
+    color: #409eff;
+    font-size: 15px;
+    height: 100%;
+    line-height: 38px;
+  }
+}
+.my-swipe-item{
+  height: 80px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 .listTab2 {
   display: flex;
   flex-direction: column;

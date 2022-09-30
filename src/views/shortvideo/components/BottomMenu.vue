@@ -4,7 +4,7 @@
       <router-link class="bar_item index" to="/index">网站首页</router-link>
       <router-link class="bar_item job" to="/shortvideo/companylist">成功案例</router-link>
       <!-- <div class="bar_item release" @click="linkrelease"></div> -->
-      <router-link class="bar_item resume"  to="/shortvideo/personalList">视频采购</router-link>
+      <!-- <router-link class="bar_item resume"  to="/shortvideo/personalList">视频采购</router-link> -->
       <div class="bar_item my" @click="myvideo">我的视频</div>
     </div>
   </div>
