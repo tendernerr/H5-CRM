@@ -54,7 +54,7 @@
         </div>
         <div>
           <van-swipe :autoplay="3000"  class="my-swipe"  indicator-color="white">
-          <van-swipe-item v-for="item in carousel" >
+            <van-swipe-item  v-for="(item,index) in carousel"  :key="index">
             <div class="my-swipe-item" :style="`background-image:url(${item.img_src})`"></div>
           </van-swipe-item>
         </van-swipe>
@@ -108,7 +108,7 @@
         </div>
         <div>
           <van-swipe :autoplay="3000"  class="my-swipe"  indicator-color="white">
-          <van-swipe-item v-for="item in carousel" >
+            <van-swipe-item  v-for="(item,index) in carousel"  :key="index">
             <div class="my-swipe-item" :style="`background-image:url(${item.img_src})`"></div>
           </van-swipe-item>
         </van-swipe>
