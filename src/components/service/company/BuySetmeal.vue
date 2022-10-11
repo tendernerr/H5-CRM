@@ -3,10 +3,12 @@
     <div class="inv-top-menu-bar">
       <div class="top-menu">
         <div class="top-menu-list" id="top-menu-list">
-          <div class="item" :class="{ active: active_index == index, recommend: item.recommend == 1, time: item.preferential_open == 1}" v-for="(item, index) in dataset" :key="index" @click="changeItem(item, index)">
+          <div class="item"
+            :class="{ active: active_index == index, recommend: item.recommend == 1, time: item.preferential_open == 1}"
+            v-for="(item, index) in dataset" :key="index" @click="changeItem(item, index)">
             <div class="tx1">{{ item.name }}</div>
             <div class="tx2" @click="getElement(index)">
-              <span class="unit">￥</span>{{ item.expense1 }}.<span class="tofix" >{{ item.expense2 }}</span>
+              <span class="unit">￥</span>{{ item.expense1 }}.<span class="tofix">{{ item.expense2 }}</span>
             </div>
             <div class="tx3" v-if="item.preferential_open == 1">限时特惠价</div>
             <div class="tx4" v-if="item.preferential_open == 1">
@@ -18,16 +20,97 @@
             </div>
           </div>
         </div>
+        <div class="numberItem">充值数量越高，获得权益越多</div>
       </div>
     </div>
     <div class="box_3">
       <div class="content">
-        <div class="tx1">套餐资源</div>
+        <div>
+          <div class="more">精准商机免费看</div>
+          <div style="background: #ffffff;line-height: 50px;">
+            <div class="Tickets">
+              <div>赠送项目点劵</div>
+              <div>4500个</div>
+            </div>
+            <div class="TicketOne">
+              <div>前期项目免费看</div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="TicketOne">
+              <div>新项目优先看</div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="more">客户轨迹追寻</div>
+          <div style="background: #ffffff;line-height: 50px;">
+            <div class="TicketOne">
+              <div>赠送CRM客户管理系统</div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="TicketOne">
+              <div>新项目优先看</div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="TicketOne">
+              <div>赠送微信公众号</div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="TicketOne">
+              <div>轻松找人脉</div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="more">赠送企业店铺</div>
+          <div style="background: #ffffff;line-height: 50px;">
+            <div class="TicketOne">
+              <div>享受管网建设项目</div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="Tickets">
+              <div>赠送时长</div>
+              <div>一年</div>
+            </div>
+            <div class="Tickets">
+              <div>官方认证服务商</div>
+              <div>实力企业</div>
+            </div>
+            <div class="TicketOne">
+              <div>优先推荐</div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+            </div>
+            <div class="Tickets">
+              <div>案例刷新</div>
+              <div>5次/天</div>
+            </div>
+            <div class="Tickets">
+              <div>发布案例</div>
+              <div>30条</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="more">更多特权</div>
+          <div style="background: #ffffff;line-height: 50px;">
+            <div class="Tickets">
+              <div>赠送项目积分</div>
+              <div style="padding: 0px 25px 0px 0px;">50</div>
+            </div>
+            <div class="box_4" @click="handlerCouponPicker">
+              优惠券
+              <div class="right_txt">{{ couponName }}</div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="tx1">套餐资源</div>
         <div class="tx2">
           <span>发布案例数量：{{ setmealDetail.jobs_meanwhile }}</span
           ><span>赠送项目点数：{{ setmealDetail.download_resume_point }}</span>
-        </div>
-        <div class="tx2">
+        </div> -->
+        <!-- <div class="tx2">
           <span
             >赠送会员{{ $store.state.config.points_byname }}：{{
               setmealDetail.gift_point
@@ -37,15 +120,15 @@
               setmealDetail.refresh_jobs_free_perday
             }}次/天</span
           >
-        </div>
-        <div class="tx2">
+        </div> -->
+        <!-- <div class="tx2">
           <span
             >下载项目上限：{{
               setmealDetail.download_resume_max_perday
             }}份/天</span
           >
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           class="tx3"
           v-show="openDetail"
           @click="toggleOpen"
@@ -57,8 +140,8 @@
           "
         >
           <div class="hide">展开全部特权</div>
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           v-show="!openDetail"
           v-if="
             setmealDetail.service_added_discount > 0 ||
@@ -83,31 +166,20 @@
           <div class="tx2" v-if="setmealDetail.note" style="padding-top:0">
             <span class="dec">说明：{{ setmealDetail.note }}</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="box_4" @click="handlerCouponPicker">
-      优惠券
-      <div class="right_txt">{{ couponName }}</div>
-    </div>
+
     <div class="form_split_10"></div>
     <div class="box_pay_pop">
       <van-radio-group v-model="submitData.payment">
         <div class="pay_item wx" @click="choosePayment('wxpay')">
           微信支付
-          <van-radio
-            class="self_check"
-            name="wxpay"
-            icon-size="18px"
-          ></van-radio>
+          <van-radio class="self_check" name="wxpay" icon-size="18px"></van-radio>
         </div>
         <div class="pay_item ali" @click="choosePayment('alipay')">
           支付宝支付
-          <van-radio
-            class="self_check"
-            name="alipay"
-            icon-size="18px"
-          ></van-radio>
+          <van-radio class="self_check" name="alipay" icon-size="18px"></van-radio>
         </div>
       </van-radio-group>
     </div>
@@ -115,23 +187,13 @@
       <div class="content">
         应付金额：
         <div class="price"><span>￥</span>{{ amount }}</div>
-        <van-button
-          color="linear-gradient(to right, #f1cd91, #dab577)"
-          text-color="#92672c"
-          round
-          size="small"
-          @click="submit"
-          >立即支付</van-button
-        >
+        <van-button color="linear-gradient(to right, #f1cd91, #dab577)" text-color="#92672c" round size="small"
+          @click="submit">立即支付</van-button>
       </div>
     </div>
-    <van-popup v-model="showCouponPicker" round position="bottom"
-      ><van-picker
-        show-toolbar
-        :columns="couponList"
-        @confirm="chooseCoupon"
-        @cancel="showCouponPicker = false"
-    /></van-popup>
+    <van-popup v-model="showCouponPicker" round position="bottom">
+      <van-picker show-toolbar :columns="couponList" @confirm="chooseCoupon" @cancel="showCouponPicker = false" />
+    </van-popup>
     <PaySubmit ref="paySubmit" :payment="submitData.payment" success-url="/member/order/list"></PaySubmit>
   </div>
 </template>
@@ -147,17 +209,17 @@ export default {
     PaySubmit
   },
   filters: {
-    timeFilter (timestamp) {
+    timeFilter(timestamp) {
       return parseTime(timestamp, '{m}-{d}')
     }
   },
-  props:{
-    "position":{
-            type:[String,Number],
-            default:0   //默认参数
-        },
+  props: {
+    "position": {
+      type: [String, Number],
+      default: 0   //默认参数
+    },
   },
-  data () {
+  data() {
     return {
       showCouponPicker: false,
       active_index: 0,
@@ -185,11 +247,11 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
   methods: {
-    handlerQuery () {
+    handlerQuery() {
       if (
         this.$route.query.setmeal_id !== undefined &&
         this.$route.query.setmeal_id > 0 &&
@@ -212,50 +274,50 @@ export default {
         }
       }
     },
-    getElement(i){
+    getElement(i) {
       this.$nextTick(() => {
         let meun = document.getElementById('top-menu-list')
         meun.scrollTo({
-            left: 95*i,
-            behavior: 'smooth' //  smooth(平滑滚动),instant(瞬间滚动),默认auto
-          });
+          left: 95 * i,
+          behavior: 'smooth' //  smooth(平滑滚动),instant(瞬间滚动),默认auto
         });
+      });
     },
-    toggleOpen () {
+    toggleOpen() {
       this.openDetail = !this.openDetail
     },
-    fetchData () {
+    fetchData() {
       http.get(api.company_setmeallist, {}).then(res => {
-          this.active_index = this.position
-          this.$nextTick(() => {
-            this.getElement(this.active_index)
-          });
-          this.dataset = []
-          let list = res.data.items
-          for (const iterator of list) {
-            let expense_arr = iterator.expense.split('.')
-            iterator.expense1 = expense_arr[0]
-            iterator.expense2 = expense_arr[1]
-            this.dataset.push(iterator)
+        this.active_index = this.position
+        this.$nextTick(() => {
+          this.getElement(this.active_index)
+        });
+        this.dataset = []
+        let list = res.data.items
+        for (const iterator of list) {
+          let expense_arr = iterator.expense.split('.')
+          iterator.expense1 = expense_arr[0]
+          iterator.expense2 = expense_arr[1]
+          this.dataset.push(iterator)
+        }
+        if (list.length > 0) {
+          this.submitData.service_id = list[0].id
+          this.old_amount = list[0].expense
+          this.amount = list[0].expense
+          list[0].couponList.forEach(element => {
+            element.text = element.name + '(-￥' + element.face_value + ')'
+            this.couponList.push(element)
+          })
+          if (this.couponList.length > 1) {
+            this.couponName = '选择优惠券'
           }
-          if (list.length > 0) {
-            this.submitData.service_id = list[0].id
-            this.old_amount = list[0].expense
-            this.amount = list[0].expense
-            list[0].couponList.forEach(element => {
-              element.text = element.name + '(-￥' + element.face_value + ')'
-              this.couponList.push(element)
-            })
-            if (this.couponList.length > 1) {
-              this.couponName = '选择优惠券'
-            }
-            this.setmealDetail = list[0]
-            this.handlerQuery()
-          }
-        })
-        .catch(() => {})
+          this.setmealDetail = list[0]
+          this.handlerQuery()
+        }
+      })
+        .catch(() => { })
     },
-    changeItem (item, index) {
+    changeItem(item, index) {
       this.active_index = index
       this.submitData.service_id = item.id
       this.old_amount = item.expense
@@ -273,17 +335,17 @@ export default {
         this.couponName = '暂无可用优惠券'
       }
     },
-    submit () {
+    submit() {
       this.submitData.return_url = this.$store.state.config.mobile_domain + 'member/order/list'
       this.$refs.paySubmit.handlerSubmit(api.company_pay, this.submitData)
     },
-    handlerCouponPicker () {
+    handlerCouponPicker() {
       if (this.couponList.length <= 1) {
         return false
       }
       this.showCouponPicker = true
     },
-    chooseCoupon (value) {
+    chooseCoupon(value) {
       this.amount = this.old_amount
       this.submitData.coupon_id = value.id
       this.couponName = value.name
@@ -296,7 +358,7 @@ export default {
         }
       }
     },
-    choosePayment (payment) {
+    choosePayment(payment) {
       this.submitData.payment = payment
     }
   }
@@ -304,6 +366,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.more{
+   font-size: 13px;
+    letter-spacing: 2px;
+    background: #f9f9f9;
+    color: rgb(66, 66, 66);
+    height: 30px;
+    padding: 0px 0px 0px 20px;
+    display: flex;
+    align-items: center;
+}
+.Tickets {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 0px 20px 0px 20px;
+}
+
+.TicketOne {
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  padding: 0px 20px 0px 20px;
+}
+
+.numberItem {
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #3E3E3E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
 .box_5 {
   .content {
     .van-button {
@@ -316,11 +413,13 @@ export default {
       height: auto;
       line-height: 1;
     }
+
     .price {
       span {
         font-size: 12px;
         font-weight: normal;
       }
+
       position: absolute;
       left: 88px;
       top: 50%;
@@ -329,6 +428,7 @@ export default {
       font-size: 18px;
       font-weight: bold;
     }
+
     position: relative;
     width: 100%;
     height: 100%;
@@ -336,6 +436,7 @@ export default {
     font-size: 15px;
     color: #333333;
   }
+
   width: 100%;
   background-color: #ffffff;
   position: fixed;
@@ -344,23 +445,25 @@ export default {
   right: 0;
   bottom: 0;
 }
+
 .box_pay_pop {
   .pay_item {
     &.wx {
-      background: url("../../../assets/images/wx_pay_ico.svg") 3px center
-        no-repeat;
+      background: url("../../../assets/images/wx_pay_ico.svg") 3px center no-repeat;
       background-size: 18px;
     }
+
     &.ali {
-      background: url("../../../assets/images/ali_pay_ico.svg") 3px center
-        no-repeat;
+      background: url("../../../assets/images/ali_pay_ico.svg") 3px center no-repeat;
       background-size: 20px;
     }
+
     .self_check {
       position: absolute;
       right: 15px;
       top: 19px;
     }
+
     position: relative;
     width: 345px;
     margin: 0 auto;
@@ -369,22 +472,24 @@ export default {
     font-size: 16px;
     color: #666666;
   }
+
   background-color: #ffffff;
   width: 100%;
   padding-bottom: 78px;
 }
+
 .box_4 {
   .right_txt {
     position: absolute;
-    right: 17px;
+    right: 0px;
     top: 18px;
     font-size: 14px;
     color: #666666;
     padding-right: 17px;
-    background: url("../../../assets/images/form_choose_arrow.svg") right center
-      no-repeat;
+    background: url("../../../assets/images/form_choose_arrow.svg") right center no-repeat;
     background-size: 14px;
   }
+
   padding: 17px 17px 22px;
   width: 100%;
   background-color: #ffffff;
@@ -392,6 +497,7 @@ export default {
   font-size: 14px;
   color: #333333;
 }
+
 .box_3 {
   .content {
     .tx3 {
@@ -400,61 +506,74 @@ export default {
         padding: 15px 18px 0 0;
         font-size: 13px;
         color: #2199ff;
-        background: url("../../../assets/images/open_more_info.png") right 18px
-          no-repeat;
+        background: url("../../../assets/images/open_more_info.png") right 18px no-repeat;
         background-size: 13px;
       }
+
       text-align: center;
     }
+
     .tx2 {
       padding-top: 13px;
       font-size: 12px;
       color: #666666;
+
       span {
         &:first-child {
           width: 153px;
           display: inline-block;
           vertical-align: top;
         }
+
         &.dec {
-          width: 100%;line-height: 1.7;
+          width: 100%;
+          line-height: 1.7;
         }
       }
+
       .tq {
         width: 49%;
         display: inline-block;
         padding-bottom: 15px;
       }
     }
+
     .tx1 {
       padding-top: 17px;
       font-size: 15px;
       font-weight: bold;
       color: #333333;
     }
+
     width: 100%;
-    background-color: #f9f9f9;
+    // background-color: #f9f9f9;
     border-radius: 5px;
-    padding: 0 15px 12px;
+    // padding: 0 15px 12px;
   }
+
   width: 100%;
   background-color: #ffffff;
-  padding: 0 17px;
+  // padding: 0 17px;
 }
+
 .inv-top-menu-bar {
   background-color: #ffffff;
   padding: 0 17px 20px;
+
   .top-menu {
     overflow: hidden;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
+
     &::-webkit-scrollbar {
       display: none;
     }
   }
+
   .top-menu-list {
     white-space: nowrap;
     overflow-x: auto;
+
     .item {
       &.recommend::after {
         content: "推荐";
@@ -467,6 +586,7 @@ export default {
         border-radius: 5px 0 5px 0;
         padding: 3.5px;
       }
+
       &.time::after {
         content: "限时";
         position: absolute;
@@ -478,39 +598,47 @@ export default {
         border-radius: 5px 0 5px 0;
         padding: 3.5px;
       }
+
       .tx5 {
         font-size: 11px;
         color: #999999;
         padding-top: 15px;
       }
+
       .tx4 {
         font-size: 11px;
         color: #92672c;
         padding-top: 5px;
       }
+
       .tx3 {
         font-size: 11px;
         color: #92672c;
         padding-top: 9px;
       }
+
       .tx2 {
         font-size: 20px;
         font-weight: bold;
         color: #92672c;
         padding-top: 10px;
+
         .unit {
           font-weight: normal;
           font-size: 10px;
         }
+
         .tofix {
           font-size: 14px;
         }
       }
+
       .tx1 {
         font-size: 14px;
         font-weight: bold;
         color: #666666;
       }
+
       position: relative;
       width: 100px;
       height: 135px;
@@ -522,14 +650,18 @@ export default {
       display: inline-block;
       white-space: nowrap;
       vertical-align: top;
+
       &.active {
+
         .tx1,
         .tx5 {
           color: #92672c;
         }
+
         border: 2px solid #dab577;
         background-color: #fffcf5;
       }
+
       &:not(:first-child) {
         margin-left: 10px;
       }

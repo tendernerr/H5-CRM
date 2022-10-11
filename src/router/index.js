@@ -120,6 +120,7 @@ import myPostSale from '../views/myPostSale/index'
 import addPostSale from '../views/myPostSale/addPostSale'
 import postSaleDetails from '../views/myPostSale/details'
 import AddSubscribe from '../views/addSubscribe'
+import educationHuse from '../views/educationHuse'
 import publishPurchase from '../views/company/publishPurchase'
 
 Vue.use(VueRouter)
@@ -166,6 +167,16 @@ const routes = [{
   component: AddSubscribe,
   meta: {
     title: '搜索',
+    keepAlive: true,
+    loginCheck: false
+  }
+},
+{
+  path: '/educationHuse',
+  name: 'educationHuse',
+  component: educationHuse,
+  meta: {
+    title: '下拉数据',
     keepAlive: true,
     loginCheck: false
   }
