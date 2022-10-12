@@ -14,7 +14,7 @@
       <div class="topBab-fast">
         <div class="topBab-fast-t">快速搜索</div>
         <div class="goSubscribe">
-          <span class="goSubscribe-span" v-for="(item,index) in idList" :key="index" @click="goFast(item)">{{item}}</span>
+          <span class="goSubscribe-span" v-for="(item,index) in idList" :key="index" @click="goFast(item)">{{item.name}}</span>
         </div>
       </div>
     </div>
@@ -177,7 +177,7 @@ export default {
         http.get(api.getCategoryList,{}).then(res=>{
             for (const key in res.data.list) {
                 if (res.data.list[key].isSelect) {
-                    this.idList.push(res.data.list[key].name)
+                    this.idList.push(res.data.list[key])
                 }
             }
         })
@@ -195,7 +195,7 @@ export default {
       this.$router.push(url+'?redirect=/search')
     },
     goFast(e){
-      this.$router.push('/resumelist?key='+e+'&type=0')
+      this.$router.push('/resumelist?experience='+e.id+'&type=0')
     },
     initModule () {
       http.get(api.index_common, {}).then(res => {

@@ -448,6 +448,11 @@ export default {
       // 就赋值
       this.params.keyword = this.$route.query.key
     }
+    if (this.$route.query.experience) {
+      // 就赋值
+      this.params.experience = this.$route.query.experience
+    }
+    
     if (this.$route.query.type) {
       this.active = parseInt(this.$route.query.type)
       console.log(this.$route.query.type, "1111111111111111111111111111111133333333333333")
