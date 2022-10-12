@@ -52,7 +52,7 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 110px;">
+                      <div style="display: flex;margin-left: 12px;position: relative;">
                         <button type="info" class="determine" @click='changeItemClick'>确定</button>
                       </div>
                     </van-dropdown-item>
@@ -123,7 +123,7 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 110px;">
+                      <div style="display: flex;margin-left: 12px;position: relative;">
                         <button type="info" class="determine" @click='changeItemClick'>确定</button>
                       </div>
                     </van-dropdown-item>
@@ -1156,6 +1156,7 @@ export default {
   background-color: rgba(243, 243, 243, 1);
   padding: 2px;
   width: 85px;
+  font-size: 12px;
   color: #333333;
   display: flex;
   justify-content: center;

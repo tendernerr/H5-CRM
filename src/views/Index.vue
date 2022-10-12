@@ -135,7 +135,7 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 110px;">
+                      <div style="display: flex;margin-left: 12px;position: relative;">
                         <button type="info" class="determine" @click='changeItemClick'>确定</button>
                       </div>
                     </van-dropdown-item>
@@ -1170,6 +1170,7 @@ export default {
 .houseList {
   height: 30px;
   line-height: 30px;
+  font-size: 12px;
   margin-top: 20px;
   margin-left: 30px;
   background-color: rgba(243, 243, 243, 1);
