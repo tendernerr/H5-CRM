@@ -1446,7 +1446,7 @@ export default {
                 message: `<div style='text-align: left;color: #ffba20;padding: 3px 0;'>该项目为会员项目，您无权参与该报价！</div><div  style='text-align: left;padding: 3px 0;'>项目报价原则：</div><div  style='text-align: left;padding: 3px 0;'>1.会员单位优先于非会员单位<span style='color:#0089ff'>>查看会员价格<</span></div><div  style='text-align: left;padding: 3px 0;'>2.会员单位报价后，非会员单位不得参与报价；</div><div  style='text-align: left;padding: 3px 0;'>3.会员单位2小时内不参与报价，非会员会员方可参与报价；</div>`,
                 confirmButtonText: "查看会员价格",
               }).then(() => {
-                this.go('/member/order/add/common?type=service')
+                this.go('/member/order/add/common?type=setmeal')
               })
               .catch(() => {});
             return
