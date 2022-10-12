@@ -3,8 +3,7 @@
     <Meta pagealias="resumelist" :query_data="$route.query" />
 
     <Head>项目列表</Head>
-    <van-search v-model="params.keyword"   show-action
-  placeholder="请输入搜索关键词"  @search="onSearch">
+    <van-search v-model="params.keyword" show-action placeholder="请输入搜索关键词" @search="onSearch" >
       <template #action>
         <div @click="onSearch">搜索</div>
       </template>
@@ -48,7 +47,26 @@
             <div style="display:flex;align-items: center;background: #FFF;">
               <div style="width:67%">
                 <van-dropdown-menu class="filter_menu">
-                  <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
+                  <!-- <div class="filter_drop">
+                    <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' >
+                      <button type="info" class="determine"  @click='changeItemClick'>确定</button>
+                    </van-dropdown-item>
+                  </div>  -->
+                  <div class="filter_drop">
+                    <van-dropdown-item :title="title2" @change='changeItem'  ref="changess">
+                      <div v-for="(item,index) in householdaddress" :key="index" @click=" clickLabel(item,index)">
+                        <div v-if="item.typeCode==0" class='houseList'>
+                          {{item.text}}
+                        </div>
+                        <div v-else class="classTwo">
+                          {{item.text}}
+                        </div>
+                      </div>
+                      <div style="display: flex;margin-left: 110px;">
+                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
+                      </div>
+                    </van-dropdown-item>
+                  </div>
                   <van-dropdown-item :title="title1" ref="item">
                     <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
                       :columns-num="2" @cancel='$refs.item.toggle();' />
@@ -65,8 +83,8 @@
         </div>
         <div>
           <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-            <van-swipe-item  v-for="(item,index) in carousel"  :key="index">
-              <div class="my-swipe-item" :style="`background-image: url(${item.img_src})`">  </div>
+            <van-swipe-item v-for="(item,index) in carousel" :key="index">
+              <div class="my-swipe-item" :style="`background-image: url(${item.img_src})`"> </div>
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -80,7 +98,8 @@
               <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
               <div class="listTab2HeadName">
                 <div class="listTab2HeadName1">
-                  <div class="listTab2HeadName1Text1">{{item.title}}</div>
+                  <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div> -->
+                  <div class="listTab2HeadName1Text1" v-html="brightenKeyword(item.title, params.keyword)"></div>
                 </div>
                 <div class="listTab2HeadName2">{{item.end_time}} <span
                     class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
@@ -93,38 +112,52 @@
             </div>
             <div class="updateTime">
               <span>{{item.refreshtime}}更新<span class="updateTimeSpan"> 项目在：{{item.address}}</span></span>
-              <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div>
+              <!-- <div class="listTab2HeadName1Text2">总投资: {{item.project_investment}}</div> -->
             </div>
           </div>
         </van-list>
       </van-tab>
       <van-tab title="委托项目" :title-class='labelRed' style="font-size:16px;">
         <div class="box_2">
-          <div style="display:flex;align-items: center;background: #FFF;">
+          <div style="display:flex;align-items: center;">
             <div style="width:67%">
-                <van-dropdown-menu class="filter_menu">
-                  <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' />
-                  <van-dropdown-item :title="title1" ref="items">
-                    <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm'
-                      :columns-num="2" @cancel='$refs.items.toggle();' />
-                  </van-dropdown-item>
-                  <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
-                </van-dropdown-menu>
-              </div>
-            <div style="background: #FFF;">
-              <div class="subscribeIMgs" @click="subscribeClick">
-                <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
-                <div class="subscribe">商机订阅</div>
-              </div>
+              <van-dropdown-menu class="filter_menu">
+                <div class="filter_drop">
+                    <van-dropdown-item :title="title2" @change='changeItem'  ref="changess">
+                      <div v-for="(item,index) in householdaddress" :key="index" @click=" clickLabel(item,index)">
+                        <div v-if="item.typeCode==0" class='houseList'>
+                          {{item.text}}
+                        </div>
+                        <div v-else class="classTwo">
+                          {{item.text}}
+                        </div>
+                      </div>
+                      <div style="display: flex;margin-left: 110px;">
+                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
+                      </div>
+                    </van-dropdown-item>
+                  </div>
+                <!-- <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' /> -->
+                <van-dropdown-item :title="title1" ref="items">
+                  <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
+                    @cancel='$refs.items.toggle();' />
+                </van-dropdown-item>
+                <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
+              </van-dropdown-menu>
+            </div>
+            
+            <div class="subscribeIMg" @click="subscribeClick">
+              <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
+              <div class="subscribe">商机订阅</div>
             </div>
           </div>
         </div>
         <div>
-          <van-swipe :autoplay="3000"  class="my-swipe"  indicator-color="white">
-          <van-swipe-item v-for="(item,index) in carousel"  :key="index">
-            <div class="my-swipe-item" :style="`background-image:url(${item.img_src})`"></div>
-          </van-swipe-item>
-        </van-swipe>
+          <van-swipe :autoplay="3000" class="my-swipe" indicator-color="white">
+            <van-swipe-item v-for="(item,index) in carousel" :key="index">
+              <div class="my-swipe-item" :style="`background-image:url(${item.img_src})`"></div>
+            </van-swipe-item>
+          </van-swipe>
         </div>
         <div class="form_split_10"></div>
         <van-empty image="search" description="没有找到对应的数据" style="background-color: #fff" v-if="empty1" />
@@ -214,11 +247,13 @@ import { obj2Param } from "@/utils/index";
 import http from "@/utils/http";
 import api from "@/api";
 import DistrictFilter from "@/components/DistrictFilter";
+import companyTag from "@/components/CompanyTag"
 import { mapState } from "vuex"
 export default {
   name: "ResumeList",
   components: {
     DistrictFilter,
+    companyTag,
   },
   data() {
     return {
@@ -307,7 +342,8 @@ export default {
       householdaddress: [],		//项目类型
       education: [],				//涉及工艺
       workmanship: false,
-      carousel:[],
+      carousel: [],
+      idList: [],
     };
   },
   watch: {
@@ -480,7 +516,18 @@ export default {
     this.restoreFilter();
   },
   methods: {
-    getBaBanner(){
+       // 搜索关键字高亮
+       brightenKeyword(title, keyword) {
+      const Reg = new RegExp(keyword, "i");
+      if (title) {
+        const res = title.replace(
+          Reg,
+          `<span style="color: red;">${keyword}</span>`
+        );
+        return res;
+      }
+    },
+    getBaBanner() {
       http.get(api.getBaBanner, {}).then(res => {
         console.log(res, "lunbo")
         this.carousel = res.data
@@ -491,9 +538,9 @@ export default {
     },
     subscribeClick() {
       // 如果说已经登录的场景  用这个属性判断是否登录 LoginOrNot 如果说是true就说已经登录  false就说未登录 
-      if(this.LoginOrNot==true){
+      if (this.LoginOrNot == true) {
         this.$router.push('/addSubscribe')
-      }else{
+      } else {
         this.$router.push('/member/login')
       }
     },
@@ -523,7 +570,7 @@ export default {
         let householdaddress = []
         let education = []
         householdaddress.unshift({
-          text: '不限', value: 0
+          text: '全部', value: 0
         })
         education.unshift({
           text: '不限', value: 0
@@ -535,13 +582,18 @@ export default {
           education.push({ text: res.data.education[i].name, value: res.data.education[i].id })
         }
         this.citycategorys = res.data.citycategorys
-        this.householdaddress = householdaddress
+        this.householdaddress = householdaddress.map(val => {
+          return {
+            ...val,
+            typeCode: 0
+          }
+        })
         this.education = education
       })
     },
     // 地区选择器的确认按钮
     confirm(e) {
-      console.log(e, "eeeee")
+      // console.log(e, "eeeee")
       this.loading = false;
       this.finished = false;
       this.dataset = []
@@ -563,24 +615,65 @@ export default {
       if (this.active == 0) { this.$refs.item.toggle(); }
       if (this.active == 1) { this.$refs.items.toggle(); }
     },
+    clickLabel(e, index) {
+      console.log(e, "e的数据");
+      // this.params.experience= this.params.experience.concat(e.value)
+      this.params.experience = this.params.experience + e.value + ','
+      console.log(this.params.experience, "数据");
+
+
+      if (this.householdaddress[index] && this.householdaddress[index].typeCode == 1) {
+        this.householdaddress[index].typeCode = 0
+      } else {
+        this.householdaddress[index].typeCode = 1
+      }
+
+      // if(e.text){
+      //    let idIndex = this.idList.indexOf(e.value)
+      //    console.log(this.idList ,"啥");
+      //    this.idList.splice(idIndex,1)
+      //    console.log(this.idList ,"");
+      // }
+      //       if(e.isSelect){
+      //           // 高亮的情况下 需 取消
+      //           let idIndex = this.idList.indexOf(e.id)
+      //           console.log(this.idIndex,"111,111111");
+      //           this.idList.splice(idIndex,1)
+      //       } else{
+      //           this.idList.push(e.id)
+      //       }
+      //       this.list[i].isSelect = !this.list[i].isSelect
+    },
+    changeItemClick() {
+      this.fetchData();
+      this.$refs.changess.toggle();
+    },
     changeItem(e) {
-      this.params.experience = e
+      // this.params.experience =e
+      if (e !== 0) {
+        this.params.experience = this.params.experience + e
+        console.log(this.params.experience, "数据数据111");
+      }
+      console.log(this.params.experience, "pin逛街1111")
       this.dataset = []
       this.loading = false;
       this.finished = false;
       this.page = 1
-      if (e == 0) {
-        this.title2 = '涉及工艺'
-        this.fetchData()
-        return
-      }
-      for (var i = 0; i < this.householdaddress.length; i++) {
-        if (this.householdaddress[i].value == e) {
-          this.title2 = this.householdaddress[i].text
-          this.fetchData()
-          break;
-        }
-      }
+
+      // if (e == 0) {
+      //   this.params.experience = this.params.experience + e
+      //   this.title2 = '涉及工艺'
+      //   this.fetchData()
+      //   return
+      // }
+      // console.log( this.householdaddress.length,"1111")
+      // for (var i = 0; i < this.householdaddress.length; i++) {
+      //   if (this.householdaddress[i].value == e) {
+      //     this.title2 = this.householdaddress[i].text
+      //     this.fetchData()
+      //     break;
+      //   }
+      // }
     },
     changeItems(e) {
       console.log(e)
@@ -737,14 +830,14 @@ export default {
     },
     goDetails(id) {
       if (!this.LoginOrNot) {
-        this.$dialog({
-          message: '注册登录行业大牛用户账号，免费查看项目信息！！\n\n已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机</span>！',
-          closeOnClickOverlay: true,
-          confirmButtonText: '去登录',
-          messageAlign: "left",
-        }).then(_ => {
-          this.$router.push('/member/login?redirect=' + window.location.pathname)
-        })
+        // this.$dialog({
+        //   message: '注册登录行业大牛用户账号，免费查看项目信息！！\n\n已超过<span style="color:red">10000</span>家设备同行通过行业大牛<span style="color:red">获取商机</span>！',
+        //   closeOnClickOverlay: true,
+        //   confirmButtonText: '去登录',
+        //   messageAlign: "left",
+        // }).then(_ => {
+        this.$router.push('/member/login?redirect=' + window.location.pathname)
+        // })
         return
       }
       this.$router.push('/backupsProject/backupsProject?id=' + id)
@@ -987,7 +1080,6 @@ export default {
           // 下拉加载
           let list = res.data.items
           console.log(list, "11111")
-          console.log(list.length, "2322222")
           this.loading = false;
           this.empty1 = list.length === 0 ? true : false;
           if (list.length < this.pagesize) {
@@ -997,6 +1089,11 @@ export default {
           this.dataset = this.page == 1 ? list : [...this.dataset, ...list];
         }
       }).catch(() => { });
+
+      this.params.experience = "";
+	    this.householdaddress.forEach(item => {
+		     item.typeCode = 0;
+	  })
     },
     onLoad() {
       this.page++
@@ -1030,11 +1127,85 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.filter_drop {
+  .van-popup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
+  .van-cell {
+    width: 95px;
+    padding: 2px 2px 2px 2px;
+    margin-top: 20px;
+    margin-left: 20px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .van-cell__title,
+  .van-cell__value {
+    line-height: inherit;
+    background: #F8F8F8;
+    width: 60px;
+    display: flex;
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>
 <style lang="scss" scoped>
 >>>.van-ellipsis {
   font-size: 12px;
 
+}
+
+.houseList {
+  height: 30px;
+  line-height: 30px;
+  margin-top: 20px;
+  margin-left: 30px;
+  background-color: rgba(243, 243, 243, 1);
+  padding: 2px;
+  width: 85px;
+  color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.classTwo {
+  height: 30px;
+  line-height: 30px;
+  margin-top: 20px;
+  margin-left: 30px;
+  background-color:  #409eff;
+  padding: 2px;
+  width: 85px;
+  color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.determine {
+  width: 97px;
+  height: 30px;
+  line-height: 30px;
+  margin-left: 20px;
+  color: #fff;
+  background-color: #1989fa;
+  border: 0.026667rem solid #1989fa;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  border-radius: 2px;
 }
 
 .searchDivMin {
@@ -1043,7 +1214,7 @@ export default {
   position: fixed;
   flex-direction: row-reverse;
   z-index: 9999;
-} 
+}
 
 // .my-swipe .van-swipe-item {
 //   color: #fff;
@@ -1232,11 +1403,13 @@ export default {
     line-height: 38px;
   }
 }
-.my-swipe-item{
+
+.my-swipe-item {
   height: 80px;
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+
 .listTab2 {
   display: flex;
   flex-direction: column;
@@ -1310,7 +1483,7 @@ export default {
     padding: 5px 10px;
 
     .listTab2LabelList {
-      background-color: #f4f9ff;
+      background-color: #a8bdd6;
       padding: 3px 8px;
       margin-right: 8px;
       border-radius: 5px;

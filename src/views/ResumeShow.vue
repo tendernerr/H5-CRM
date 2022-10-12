@@ -360,11 +360,11 @@
           </div>
         </div>
       </div>
-      <div v-if="!isLogin" style="text-align:center;font-size:15px;padding:20px 0">
+      <!-- <div v-if="!isLogin" style="text-align:center;font-size:15px;padding:20px 0">
           <p>您尚未登录，点击登录后可获取联系方式</p>
           <p style="padding: 5px;color: #0072ff;" @click="showLogin = true">去登录>></p>
-      </div>
-      <div class="box_video_some" v-if="resumeShow === 'video' && isLogin">
+      </div> -->
+      <div class="box_video_some" v-if="resumeShow === 'video'">
         <div style="font-size: 16px; padding: 20px; color: #000">
           参考图片：
         </div>
@@ -872,6 +872,7 @@ export default {
   },
   data() {
     return {
+      LoginOrNot:'',
       hasImg:'',
       isLogin:false,
       imgs_src_hell:"",

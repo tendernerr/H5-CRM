@@ -3,9 +3,7 @@
 
     <Head>合作账号登录</Head>
     <div class="log_wrapper">
-      <div style="display: flex;
-    justify-content: center;
-    margin-top: 50px;">免费<span style="color: #FF4000;">注册</span>查询<span style="color: #FF4000;">最新</span>项目信息</div>
+      <div class="free">免费<span style="color: #FF4000;">注册</span>查询<span style="color: #FF4000;">最新</span>项目信息</div>
       <!-- <div class="tx1">{{bindType=='weixin'?'微信':'QQ'}}账号绑定</div> -->
       <div class="tx2">您已登录：<span>{{nickname}}</span></div>
       <div class="tx3">请关联您的{{$store.state.config.sitename}}账号，以便您下次直接登录</div>
@@ -221,7 +219,13 @@ export default {
   width: 323px;
   margin: 0 auto;
 }
-
+.free{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    font-size: 17px;
+    font-weight: bold;
+}
 .tx1 {
   padding: 55px 0 28px;
   font-size: 26px;

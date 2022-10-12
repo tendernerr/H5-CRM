@@ -3,8 +3,8 @@
     <van-dialog v-model="showDialog" @confirm="handlerConfirm" @cancel="showDialog=false" :before-close="beforeClose" title="输入验证码" show-cancel-button>
       <div class="captcha_box">
         <img class="captcha_img" :src="src" @click="changeImg" />
-        <van-cell-group :border="false">
-          <van-field label-width="120" :border="false" v-model="code" label=" " placeholder="请输入左侧验证码" />
+        <van-cell-group :border="false" style="margin-left: 20px;">
+            <van-field label-width="120" :border="false" v-model="code" label=" " placeholder="请输入左侧验证码" />
         </van-cell-group>
         <div class="little-border">&nbsp;</div>
       </div>
@@ -64,6 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .captcha_box{
   position:relative;
   margin:20px 10px 15px;
