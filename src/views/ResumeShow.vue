@@ -778,7 +778,8 @@
 			<div>关闭</div>
 		</div>
 	</div>
-	<div class="appear" v-if="appear">
+  <!-- -->
+	<div class="appear"  v-if="appear" >
 		该项目为付费项目，参与报价需支付{{base_info.service_amount}}元服务费，支付后即可获得采购方联系方式
 		<br /><br />
 		平台承诺：所有采购项目均为真实有效，若发现信息虚假，可全额退款！

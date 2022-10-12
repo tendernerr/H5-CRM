@@ -41,13 +41,7 @@ export default {
             fieldValue: '',
             fieldValueNb:'',
             cascaderValue: '',
-            options: [
-                // {
-                //     text: '浙江省',
-                //     value: '330000',
-                //     children: [],
-                // },
-            ],
+            options: [],
             productList: [{
                 name: ""
             }]

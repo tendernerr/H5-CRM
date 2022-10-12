@@ -62,7 +62,7 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 110px;">
+                      <div style="display: flex;margin-left: 12px;position: relative; ">
                         <button type="info" class="determine" @click='changeItemClick'>确定</button>
                       </div>
                     </van-dropdown-item>
@@ -100,6 +100,9 @@
                 <div class="listTab2HeadName1">
                   <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div> -->
                   <div class="listTab2HeadName1Text1" v-html="brightenKeyword(item.title, params.keyword)"></div>
+                  <span style="color: red;" v-if="params.keyword"> 
+                         {{item.title.indexOf(params.keyword) >-1 ?`${params.keyword}在文中`:''}}
+                  </span>
                 </div>
                 <div class="listTab2HeadName2">{{item.end_time}} <span
                     class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
@@ -1483,7 +1486,8 @@ export default {
     padding: 5px 10px;
 
     .listTab2LabelList {
-      background-color: #a8bdd6;
+      // background-color: #a8bdd6;
+      background: #f4f9ff;
       padding: 3px 8px;
       margin-right: 8px;
       border-radius: 5px;

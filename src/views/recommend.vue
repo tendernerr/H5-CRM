@@ -440,6 +440,7 @@ export default {
       this.$router.push('/backupsProject/backupsProject?id='+item.id);
       // 浅拷贝
       item.isView = true;
+      this.fetchData();
     },
     loginTo() {
       this.$router.push('/member/login')
