@@ -303,7 +303,7 @@
 						</div>
 						<div class="pay-month"><span>{{item.name}}</span>个月</div>
 						<p class="pay-consult">查阅{{item.seeCount}}次</p>
-						<p class="pay-amount">{{item.seeCount}}/条</p>
+						<p class="pay-amount">{{item.onePrice}}/条</p>
 						<div class="pay-use">{{item.expense}}</div>
 					</div>
 				</div>
