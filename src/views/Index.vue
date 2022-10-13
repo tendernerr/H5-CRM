@@ -100,8 +100,8 @@
                 <div class="listTab2HeadName1">
                   <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div> -->
                   <div class="listTab2HeadName1Text1" v-html="brightenKeyword(item.title, params.keyword)"></div>
-                  <span style="color: red;" v-if="params.keyword"> 
-                         {{item.title.indexOf(params.keyword) >-1 ?`${params.keyword}在文中`:''}}
+                  <span style="color: red;" v-if="item.hasProjectScale && params.keyword"  > 
+					            	{{ `(${params.keyword}在文中)` }}
                   </span>
                 </div>
                 <div class="listTab2HeadName2">{{item.end_time}} <span
