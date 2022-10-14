@@ -52,8 +52,11 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 12px;position: relative;">
-                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
+                      <div style="position: fixed;bottom: 120px;width: 100%;margin: 0 auto;padding: 10px 10px 10px 10px;background: white;">
+                        <div style="display: flex;width: 100%;justify-content: center;">
+                          <van-button type="info" style="flex:1;margin-right: 10px;" class="default" @click='changeItemClick'>重置</van-button>
+                          <van-button type="info" style="flex:1;" color="linear-gradient(to right, #1989fa, #1989fa)" @click='changeItemClick'>确定</van-button>
+                        </div>
                       </div>
                     </van-dropdown-item>
                   </div>
@@ -92,7 +95,7 @@
                   <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div> -->
                   <div class="listTab2HeadName1Text1" v-html="brightenKeyword(item.title, params.keyword)"></div>
                   <span style="color: red;" v-if="item.hasProjectScale && params.keyword"  > 
-						              {{ `(${params.keyword}在文中)` }}
+						            {{ `(${params.keyword}在文中)` }}
                   </span>
                 </div>
                 <div class="listTab2HeadName2">{{item.end_time}} <span
@@ -126,8 +129,11 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 12px;position: relative;">
-                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
+                      <div style="position: fixed;bottom: 120px;width: 100%;margin: 0 auto;padding: 10px 10px 10px 10px;background: white;">
+                        <div style="display: flex;width: 100%;justify-content: center;">
+                          <van-button type="info" style="flex:1;margin-right: 10px;" class="default" @click='changeItemClick'>重置</van-button>
+                          <van-button type="info" style="flex:1;" color="linear-gradient(to right, #1989fa, #1989fa)" @click='changeItemClick'>确定</van-button>
+                        </div>
                       </div>
                     </van-dropdown-item>
                   </div>
@@ -1168,6 +1174,7 @@ export default {
 
 .classTwo {
   height: 30px;
+  font-size: 12px;
   line-height: 30px;
   margin-top: 20px;
   margin-left: 30px;

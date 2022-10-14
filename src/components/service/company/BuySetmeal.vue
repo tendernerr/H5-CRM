@@ -34,11 +34,11 @@
             </div>
             <div class="TicketOne">
               <div>前期项目免费看</div>
-              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="TicketOne">
               <div>新项目优先看</div>
-              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
           </div>
         </div>
@@ -47,19 +47,19 @@
           <div style="background: #ffffff;line-height: 50px;">
             <div class="TicketOne">
               <div>赠送CRM客户管理系统</div>
-              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="TicketOne">
               <div>新项目优先看</div>
-              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="TicketOne">
               <div>赠送微信公众号</div>
-              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="TicketOne">
               <div>轻松找人脉</div>
-              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <div style="background: #ffffff;line-height: 50px;">
             <div class="TicketOne">
               <div>享受管网建设项目</div>
-              <div><img src="../../../assets/images/u24.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u24.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="Tickets">
               <div>赠送时长</div>
@@ -80,7 +80,7 @@
             </div>
             <div class="TicketOne">
               <div>优先推荐</div>
-              <div><img src="../../../assets/images/u14.png" style="padding: 0px 25px 0px 0px;" /></div>
+              <div><img src="../../../assets/images/u14.png" style="padding: 0px 18px 0px 0px;" /></div>
             </div>
             <div class="Tickets">
               <div>案例刷新</div>
@@ -97,7 +97,7 @@
           <div style="background: #ffffff;line-height: 50px;">
             <div class="Tickets">
               <div>赠送项目积分</div>
-              <div style="padding: 0px 25px 0px 0px;">50</div>
+              <div style="padding: 0px 18px 0px 0px;">50</div>
             </div>
             <div class="box_4" @click="handlerCouponPicker">
               优惠券

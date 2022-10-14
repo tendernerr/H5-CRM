@@ -20,12 +20,16 @@
       <div class="item" :class="{ active: type == 'setmeal' }" @click="$router.push('/member/order/add/common?type=setmeal')">
         套餐升级
       </div>
+      <!-- <div class="item" :class="{ active: type == 'setmeal' }" @click="$router.push('/member/order/add/common?type=setmeal')">
+        点劵充值
+      </div> -->
       <div class="item" :class="{ active: type == 'service' }" @click="$router.push('/member/order/add/common?type=service')">
         增值服务
       </div>
     </div>
     <keep-alive>
       <BuySetmeal v-if="type == 'setmeal'" :position='position'></BuySetmeal>
+      <!-- <Buyticketsrecharge v-if="type == 'setmeal'" :position='position'></BuyticketsRecharge> -->
       <BuyIncrement v-if="type == 'service'" :mySetmeal="mySetmeal" :resumePackage='resumePackage'></BuyIncrement>
     </keep-alive>
   </div>
@@ -34,6 +38,7 @@
 <script>
 import BuySetmeal from '@/components/service/company/BuySetmeal'
 import BuyIncrement from '@/components/service/company/BuyIncrement'
+// import Buyticketsrecharge from '@/components/service/company/Buyticketsrecharge'
 import { parseTime } from '@/utils/index'
 import http from '@/utils/http'
 import api from '@/api'
@@ -41,7 +46,8 @@ export default {
   name: 'BuyService',
   components: {
     BuySetmeal,
-    BuyIncrement
+    BuyIncrement,
+    // Buyticketsrecharge
   },
   filters: {
     timeFilter (timestamp) {

@@ -3,7 +3,7 @@
     <Meta pagealias="resumelist" :query_data="$route.query" />
 
     <Head>项目列表</Head>
-    <van-search v-model="params.keyword" show-action placeholder="请输入搜索关键词" @search="onSearch" >
+    <van-search v-model="params.keyword" show-action placeholder="请输入搜索关键词" @search="onSearch">
       <template #action>
         <div @click="onSearch">搜索</div>
       </template>
@@ -53,7 +53,7 @@
                     </van-dropdown-item>
                   </div>  -->
                   <div class="filter_drop">
-                    <van-dropdown-item :title="title2" @change='changeItem'  ref="changess">
+                    <van-dropdown-item :title="title2" @change='changeItem' ref="changess" style="position: absolute;">
                       <div v-for="(item,index) in householdaddress" :key="index" @click=" clickLabel(item,index)">
                         <div v-if="item.typeCode==0" class='houseList'>
                           {{item.text}}
@@ -62,8 +62,11 @@
                           {{item.text}}
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 12px;position: relative; ">
-                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
+                      <div style="position: fixed;bottom: 120px;width: 100%;margin: 0 auto;padding: 10px 10px 10px 10px;background: white;">
+                        <div style="display: flex;width: 100%;justify-content: center;">
+                          <van-button type="info" style="flex:1;margin-right: 10px;" class="default" @click='changeItemClick'>重置</van-button>
+                          <van-button type="info" style="flex:1;" color="linear-gradient(to right, #1989fa, #1989fa)" @click='changeItemClick'>确定</van-button>
+                        </div>
                       </div>
                     </van-dropdown-item>
                   </div>
@@ -98,12 +101,20 @@
               <!-- <div class="listTab2HeadImg"><img v-if="item.pimg" :src="item.pimg" /></div> -->
               <div class="listTab2HeadName">
                 <div class="listTab2HeadName1">
-                  <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div> -->
+                  <!-- <div class="listTab2HeadName1Text1">{{item.title}}</div>
                   <div class="listTab2HeadName1Text1" v-html="brightenKeyword(item.title, params.keyword)"></div>
                   <span style="color: red;" v-if="item.hasProjectScale && params.keyword"  > 
 					            	{{ `(${params.keyword}在文中)` }}
-                  </span>
+                  </span> -->
+                  <div class="listTab2HeadName1Text1">
+                    <span v-html="brightenKeyword(item.title, params.keyword)"></span>
+                    <span style="color: red;" v-if="item.hasProjectScale && params.keyword">
+                      {{ `(${params.keyword}在文中)` }}
+                    </span>
+                  </div>
+
                 </div>
+
                 <div class="listTab2HeadName2">{{item.end_time}} <span
                     class="listTab2HeadName2Span2">{{item.education_text}}</span></div>
               </div>
@@ -122,24 +133,27 @@
       </van-tab>
       <van-tab title="委托项目" :title-class='labelRed' style="font-size:16px;">
         <div class="box_2">
-          <div style="display:flex;align-items: center;">
+          <div style="display:flex;align-items: center;background: #FFF;">
             <div style="width:67%">
               <van-dropdown-menu class="filter_menu">
                 <div class="filter_drop">
-                    <van-dropdown-item :title="title2" @change='changeItem'  ref="changess">
-                      <div v-for="(item,index) in householdaddress" :key="index" @click=" clickLabel(item,index)">
-                        <div v-if="item.typeCode==0" class='houseList'>
-                          {{item.text}}
-                        </div>
-                        <div v-else class="classTwo">
-                          {{item.text}}
+                  <van-dropdown-item :title="title2" @change='changeItem' ref="changess">
+                    <div v-for="(item,index) in householdaddress" :key="index" @click=" clickLabel(item,index)">
+                      <div v-if="item.typeCode==0" class='houseList'>
+                        {{item.text}}
+                      </div>
+                      <div v-else class="classTwo">
+                        {{item.text}}
+                      </div>
+                    </div>
+                    <div style="position: fixed;bottom: 120px;width: 100%;margin: 0 auto;padding: 10px 10px 10px 10px;background: white;">
+                        <div style="display: flex;width: 100%;justify-content: center;">
+                          <van-button type="info" style="flex:1;margin-right: 10px;" class="default" @click='changeItemClick'>重置</van-button>
+                          <van-button type="info" style="flex:1;" color="linear-gradient(to right, #1989fa, #1989fa)" @click='changeItemClick'>确定</van-button>
                         </div>
                       </div>
-                      <div style="display: flex;margin-left: 12px;position: relative;">
-                        <button type="info" class="determine" @click='changeItemClick'>确定</button>
-                      </div>
-                    </van-dropdown-item>
-                  </div>
+                  </van-dropdown-item>
+                </div>
                 <!-- <van-dropdown-item :options="householdaddress" :title="title2" @change='changeItem' /> -->
                 <van-dropdown-item :title="title1" ref="items">
                   <van-area :columns-placeholder="['不限']" :area-list="citycategorys" @confirm='confirm' :columns-num="2"
@@ -148,7 +162,7 @@
                 <!-- <van-dropdown-item :options="education" :title="title3" @change="changeItems" /> -->
               </van-dropdown-menu>
             </div>
-            
+
             <div class="subscribeIMg" @click="subscribeClick">
               <div class="imgSubscribe"><img src="../assets/images/u25.svg" /></div>
               <div class="subscribe">商机订阅</div>
@@ -519,8 +533,8 @@ export default {
     this.restoreFilter();
   },
   methods: {
-       // 搜索关键字高亮
-       brightenKeyword(title, keyword) {
+    // 搜索关键字高亮
+    brightenKeyword(title, keyword) {
       const Reg = new RegExp(keyword, "i");
       if (title) {
         const res = title.replace(
@@ -1094,9 +1108,9 @@ export default {
       }).catch(() => { });
 
       this.params.experience = "";
-	    this.householdaddress.forEach(item => {
-		     item.typeCode = 0;
-	  })
+      this.householdaddress.forEach(item => {
+        item.typeCode = 0;
+      })
     },
     onLoad() {
       this.page++
@@ -1184,10 +1198,11 @@ export default {
 
 .classTwo {
   height: 30px;
+  font-size: 12px;
   line-height: 30px;
   margin-top: 20px;
   margin-left: 30px;
-  background-color:  #409eff;
+  background-color: #409eff;
   padding: 2px;
   width: 85px;
   color: #333333;
