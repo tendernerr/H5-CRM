@@ -20,16 +20,16 @@
       <div class="item" :class="{ active: type == 'setmeal' }" @click="$router.push('/member/order/add/common?type=setmeal')">
         套餐升级
       </div>
-      <!-- <div class="item" :class="{ active: type == 'setmeal' }" @click="$router.push('/member/order/add/common?type=setmeal')">
+      <div class="item" :class="{ active: type == 'resume_package' }" @click="$router.push('/member/order/add/common?type=resume_package')">
         点劵充值
-      </div> -->
+      </div>
       <div class="item" :class="{ active: type == 'service' }" @click="$router.push('/member/order/add/common?type=service')">
         增值服务
       </div>
     </div>
     <keep-alive>
       <BuySetmeal v-if="type == 'setmeal'" :position='position'></BuySetmeal>
-      <!-- <Buyticketsrecharge v-if="type == 'setmeal'" :position='position'></BuyticketsRecharge> -->
+      <Buyticketsrecharge v-if="type == 'resume_package'" :position='position'></BuyticketsRecharge>
       <BuyIncrement v-if="type == 'service'" :mySetmeal="mySetmeal" :resumePackage='resumePackage'></BuyIncrement>
     </keep-alive>
   </div>
@@ -38,7 +38,7 @@
 <script>
 import BuySetmeal from '@/components/service/company/BuySetmeal'
 import BuyIncrement from '@/components/service/company/BuyIncrement'
-// import Buyticketsrecharge from '@/components/service/company/Buyticketsrecharge'
+import Buyticketsrecharge from '@/components/service/company/Buyticketsrecharge'
 import { parseTime } from '@/utils/index'
 import http from '@/utils/http'
 import api from '@/api'
@@ -47,7 +47,7 @@ export default {
   components: {
     BuySetmeal,
     BuyIncrement,
-    // Buyticketsrecharge
+    Buyticketsrecharge
   },
   filters: {
     timeFilter (timestamp) {
@@ -60,12 +60,15 @@ export default {
       type: '',
       top_loading: true,
       mySetmeal: {},
-		resumePackage:''
+	   	resumePackage:''
     }
   },
   watch: {
     $route: function (to, from) {
       this.type = to.query.type === undefined ? 'setmeal' : to.query.type
+    },
+    $route: function (to, from) {
+      this.type = to.query.type === undefined ? 'resume_package' : to.query.type
     }
   },
   created () {
@@ -77,6 +80,7 @@ export default {
 		  this.position = this.$route.query.position
 	  }
     this.type = this.$route.query.type === undefined ? 'setmeal' : this.$route.query.type
+    this.type = this.$route.query.type === undefined ? 'resume_package' : this.$route.query.type
     this.fetchSetmeal()
   },
   methods: {

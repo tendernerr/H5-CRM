@@ -338,7 +338,9 @@ export default {
       }
     },
     getlook (id) {
-      http.get(api.shortvideo_record, {id: id, type: this.videoType}).then((r) => {})
+      http.get(api.shortvideo_record, {id: id, type: this.videoType}).then((r) => {
+        console.log(r,"!!!!!")
+      })
     },
     wxshare (v) {
       if (this.videoType == 1) {

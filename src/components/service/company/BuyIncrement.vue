@@ -10,9 +10,6 @@
 					<div class="tag" :class="{ active: params.type == 'emergency' }" @click="changeType('emergency')">
 						现货供应
 					</div>
-					<div class="tag" :class="{ active: params.type == 'resume_package' }" @click="changeType('resume_package')">
-						项目点券
-					</div>
 					<div class="tag" :class="{ active: params.type == 'job_refresh' }"
 						@click="changeType('job_refresh')">
 						智能刷新
@@ -20,6 +17,13 @@
 					<div class="tag" :class="{ active: params.type == 'im' }" @click="changeType('im')">
 						职聊增值包
 					</div>
+					<div class="tag" :class="{ active: params.type == 'customer_development_system' }" @click="changeType('customer_development_system')">
+					   客服开发系统
+					</div>
+					<div class="tag" :class="{ active: params.type == 'intelligent_salesAfter_system' }" @click="changeType('intelligent_salesAfter_system')">
+						智能售后系统
+					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -40,7 +44,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="box_4" v-if="params.type != 'resume_package' && params.type != 'im' " @click="showPicker = true">
+		<div class="box_4" v-if="params.type != 'resume_package' && params.type != 'im' && params.type != 'intelligent_salesAfter_system' && params.type != 'customer_development_system'" @click="showPicker = true">
 			<div class="content">
 				设备名称
 				<div class="right_txt">{{ jobname }}</div>
@@ -81,6 +85,10 @@
 				</div>
 				<van-checkbox v-model="is_deduct" icon-size="14px" @change="changeDeduct"></van-checkbox>
 			</div>
+		</div>
+		<div  class="introduction"  v-if="has_function_text">
+			<div>功能介绍：</div>
+			<div  v-for="(item,index) in function_text" :key="index">{{item}}</div>
 		</div>
 		<div class="form_split_10" v-if="amount > 0"></div>
 		<div class="box_pay_pop" v-if="amount > 0">
@@ -128,6 +136,8 @@
 		components: { PaySubmit },
 		data() {
 			return {
+				function_text:[],
+				has_function_text:false,
 				options_timerange: [],
 				showTimerangePicker: false,
 				minDate: '',
@@ -219,6 +229,8 @@
 					.get(api.company_servicelist, this.params)
 					.then(res => {
 						console.log(res)
+						this.function_text=res.data.function_text;
+						this.has_function_text=res.data.has_function_text;
 						this.active_index = 0
 						this.dataset = []
 						let list = res.data.items
@@ -634,4 +646,18 @@
 		background-color: #ffffff;
 		padding: 0 17px;
 	}
+	.introduction{
+		line-height: 23px;
+		font-size: 14px;
+		padding: 5px 15px 5px 15px;
+		font-family: 微软雅黑, sans-serif;
+		color: #333333;
+	}
+     .contents{
+			font-size: 14px;
+			color: #333333;
+			padding: 16px 15px;
+			display: flex;
+			justify-content: space-between;
+	 }
 </style>

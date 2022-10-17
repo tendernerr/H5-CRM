@@ -94,6 +94,7 @@ export default {
 	},
 	created() {
 		this.fetchData()
+		this.getResume() 
 	},
 	methods: {
 		browsingClick(item) {
@@ -109,9 +110,13 @@ export default {
 			this.$router.push(url)
 		},
 		fetchData() {
-			http.get(api.get_publish_jobs, {}).then(res => {
-				this.id = res.data.items[0].id
-				this.getResume()
+			http.get(api.get_publish_jobs, {}).then(async res => {
+				if (res && res.data && res.data.items){
+					this.id = res.data.items[0].id
+				}
+				// console.log(res,"resss")
+				// console.log(this.id,"this.id")
+				await this.getResume()
 			})
 				.catch(() => { })
 		},

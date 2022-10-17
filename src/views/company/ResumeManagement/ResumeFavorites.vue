@@ -88,6 +88,7 @@ export default {
 	},
 	created() {
 		this.fetchData()
+		this.getResume()
 	},
 	methods: {
 		collectionClick(item) {
