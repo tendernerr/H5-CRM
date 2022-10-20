@@ -171,6 +171,16 @@ const routes = [{
     loginCheck: false
   }
 },
+// {
+//   path: '/nextStep',
+//   name: 'nextStep',
+//   component: NextStep,
+//   meta: {
+//     title: '下一步',
+//     keepAlive: true,
+//     loginCheck: false
+//   }
+// },
 {
   path: '/educationHuse',
   name: 'educationHuse',

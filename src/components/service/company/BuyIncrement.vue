@@ -7,16 +7,16 @@
 					<div class="tag" :class="{ active: params.type == 'jobstick' }" @click="changeType('jobstick')">
 						案例置顶
 					</div>
-					<div class="tag" :class="{ active: params.type == 'emergency' }" @click="changeType('emergency')">
+					<!-- <div class="tag" :class="{ active: params.type == 'emergency' }" @click="changeType('emergency')">
 						现货供应
-					</div>
-					<div class="tag" :class="{ active: params.type == 'job_refresh' }"
+					</div> -->
+					<!-- <div class="tag" :class="{ active: params.type == 'job_refresh' }"
 						@click="changeType('job_refresh')">
 						智能刷新
-					</div>
-					<div class="tag" :class="{ active: params.type == 'im' }" @click="changeType('im')">
+					</div> -->
+					<!-- <div class="tag" :class="{ active: params.type == 'im' }" @click="changeType('im')">
 						职聊增值包
-					</div>
+					</div> -->
 					<div class="tag" :class="{ active: params.type == 'customer_development_system' }" @click="changeType('customer_development_system')">
 					   客服开发系统
 					</div>

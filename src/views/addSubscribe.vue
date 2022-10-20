@@ -8,6 +8,7 @@
                 {{item.name}}
             </div>
         </div>
+        <!-- <div class="box-preservation" @click="nextStep">下一步</div> -->
         <div class="box-preservation" @click="preservation">保存</div>
      </div>
   </div>
@@ -63,6 +64,9 @@ export default {
             },800)
         })
     },
+    nextStep(){
+        this.$router.push('/addSubscribe')
+    }
   }
 }
 </script>
